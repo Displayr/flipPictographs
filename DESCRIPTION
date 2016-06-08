@@ -1,12 +1,14 @@
 Package: flipPictographs
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Create Pictographs
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Carmen Chan <carmen.chan@numbers.net.au>
+Maintainer: Carmen Chan <carmen.chan@numbers.net.au>
+Description: Wrappers for the rhtmlPictographs package, using the flip project conventions.
+License: Copyright Numbers International Pty Ltd 2016
 LazyData: TRUE
 Suggests:
     testthat
+Imports:
+    rhtmlPictographs
 RoxygenNote: 5.0.1
