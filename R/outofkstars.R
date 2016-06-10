@@ -15,12 +15,16 @@ OutOfKStars <- function (x, number.rows, number.columns, auto.size = FALSE, widt
     prop <- x/number.images
     if (prop < 0 | prop > 1)
         stop("x must be between 0 and ", number.images, "\n")
+    if (number.rows == 0 || round(number.rows) != number.rows)
+        stop("number.rows must be an integer greater than 0\n")
+    if (number.columns == 0 || round(number.columns) != number.columns)
+        stop("number.columns must be an integer greater than 0\n")
 
     base.image <- "http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg"
     variable.image <- "horizontal:http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg"
 
 
-    json.string <- paste("{\"percentage\":", prop,
+    json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", number.images,
           ",\"numRows\":", number.rows,
           ",\"baseImage\":\"", base.image, "\", ",

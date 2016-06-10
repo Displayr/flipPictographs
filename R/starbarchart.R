@@ -38,7 +38,7 @@ StarBarChart <- function(x,
     row.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
                          \"font-family\":\"%s\",\"font-size\":\"%dpx\",\"font-weight\":\"%s\",
                          \"font-color\":\"%s\", \"padding-top\":%f}},
-                        {\"type\":\"graphic\", \"value\":{\"percentage\":%f,\"numImages\":%d,
+                        {\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
                          \"baseImage\":\"%s\", \"variableImage\":\"%s\", \"width\":100, \"numRows\":1}}",
                         x.labels, label.font, label.size, label.weight, label.color, cell.pad.top,
                         prop, K, base.image, variable.image)
