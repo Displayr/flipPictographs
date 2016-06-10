@@ -4,10 +4,10 @@
 \alias{OutOfKStars}
 \title{OutOfKStars}
 \usage{
-OutOfKStars(x, number.rows, number.columns, auto.size = FALSE, width = 100)
+OutOfKStars(x, number.rows, number.columns, auto.size = FALSE, width = 25)
 }
 \arguments{
-\item{x}{A number out of \code{K = number.rows * number.columns}.}
+\item{x}{Number of filled stars (out of \code{K = number.rows * number.columns})}
 
 \item{number.rows}{The number of rows of stars.}
 
@@ -15,7 +15,7 @@ OutOfKStars(x, number.rows, number.columns, auto.size = FALSE, width = 100)
 
 \item{auto.size}{Automatically sizes the plot based on the size of the window/slot.}
 
-\item{width}{Width of the image when \code{auto.size} is FALSE.}
+\item{width}{Width of a single star in pixels when \code{auto.size} is FALSE.}
 }
 \description{
 OutOfKStars

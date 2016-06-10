@@ -1,16 +1,16 @@
 #' OutOfKStars
 #'
-#' @param x A number out of \code{K = number.rows * number.columns}.
+#' @param x Number of filled stars (out of \code{K = number.rows * number.columns})
 #' @param number.rows The number of rows of stars.
 #' @param number.columns The number of columns of stars.
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
-#' @param width Width of the image when \code{auto.size} is FALSE.
+#' @param width Width of a single star in pixels when \code{auto.size} is FALSE.
 #'
 #' @importFrom  rhtmlPictographs graphic
 #' @export
-OutOfKStars <- function (x, number.rows, number.columns, auto.size = FALSE, width = 100)
+OutOfKStars <- function (x, number.rows, number.columns, auto.size = FALSE, width = 25)
 {
-    image.height <- 25*number.rows
+    image.height <- width*number.rows
     number.images <- number.columns * number.rows
     prop <- x/number.images
     if (prop < 0 | prop > 1)
@@ -25,7 +25,7 @@ OutOfKStars <- function (x, number.rows, number.columns, auto.size = FALSE, widt
           ",\"numRows\":", number.rows,
           ",\"baseImage\":\"", base.image, "\", ",
           "\"variableImage\":\"", variable.image, "\", ",
-          "\"width\":", width,
+          "\"width\":", number.columns*width,
           ",\"height\":", image.height,
           sep="")
 
