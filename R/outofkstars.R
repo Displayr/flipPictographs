@@ -20,7 +20,7 @@ OutOfKStars <- function (x, number.rows, number.columns, auto.size = FALSE, widt
     if (number.columns == 0 || round(number.columns) != number.columns)
         stop("number.columns must be an integer greater than 0\n")
 
-    base.image <- "http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg"
+    base.image <- "url:http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg"
     variable.image <- "horizontal:http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg"
 
 

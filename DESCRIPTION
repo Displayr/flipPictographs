@@ -10,5 +10,6 @@ LazyData: TRUE
 Suggests:
     testthat
 Imports:
-    rhtmlPictographs
+    rhtmlPictographs,
+    flipChartBasics
 RoxygenNote: 5.0.1
