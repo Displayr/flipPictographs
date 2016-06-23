@@ -39,7 +39,7 @@ PictoChart <- function( x,
                         base.image="",
                         K=max(ceiling(x)),
                         direction="horizontal",
-                        show.table=FALSE,
+                        show.lines=FALSE,
                         show.legend=FALSE,
                         legend.text="",
                         icon.nrow=1,
@@ -287,9 +287,9 @@ PictoChart <- function( x,
 
     # Adding lines to make table
     lines.str <- ""
-    if (show.table)
+    if (show.lines)
     lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>1), collapse=","), "],
-                       \"padding-left\":", 0.1*column.width[1],", \"padding-right\":", 0.1*column.width[m]+3*pad.col+leg.rpad, ",",
+                       \"padding-left\":", 0.0*column.width[1],", \"padding-right\":", 0.0*column.width[m]+3*pad.col+leg.rpad, ",",
                        "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep="")
 
 
