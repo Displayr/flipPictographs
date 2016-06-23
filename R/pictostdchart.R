@@ -26,15 +26,13 @@ PictoStdChart <- function(x,
                           K=0,
                           read.KfromX=FALSE,
                           units=1,
-                          show.legend=FALSE,
                           legend.text=sprintf("= %d", units),
                           aggregate.period="month",
                           direction="horizontal",
                           icon.autosize=FALSE,
                           icon.halign="left",
                           transpose=FALSE,
-                          hide.labels=FALSE,
-                          show.table=FALSE, ...)
+                          hide.labels=FALSE, ...)
 {
     x <- x/units
     if (read.KfromX && is.null(groupBy))
@@ -81,11 +79,9 @@ PictoStdChart <- function(x,
                 fish = "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png")
 
     return(PictoChart(x, variable.image=URL[image], base.image=URL[base.image],
-                      K, icon.ncol=icon.ncol,
-                      icon.fixedsize=1-icon.autosize, icon.halign = icon.halign,
+                      K, icon.ncol=icon.ncol, icon.fixedsize=1-icon.autosize, icon.halign = icon.halign,
                       label.left=label.left, label.top=label.top,
-                      direction=direction, show.table=show.table,
-                      show.legend=show.legend, legend.text=legend.text, ...))
+                      direction=direction, legend.text=legend.text, ...))
 }
 
 
