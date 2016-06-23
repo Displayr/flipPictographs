@@ -87,6 +87,10 @@ x6 <- rbind(Algeria=c(4,0,6.2,6.7),
 colnames(x6) <- c("Beef","Pork","Poultry","Sheep")
 p6 <- PictoChart(x6/10, rep(c(cow,pig,chicken,sheep), each=nrow(x6)), show.lines=T,
                  label.top.halign="left")
+p6b <- PictoStdChart(x6, image="cow", base.image="none",
+                     show.lines=T, show.legend=T, units=10)
+p6c <- PictoStdChart(x6, image="cow", base.image="none", transpose=T, direction="vertical",
+                     show.lines=T, show.legend=T, units=10)
 
 # Columns
 x7 <- sample(1:10, 12, replace=T)
@@ -113,8 +117,9 @@ p10 <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=0, sho
 p10a <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T)
 p10b <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.text="10kg per capita")
 p10c <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.color="red")
-p10d <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.color="red", hide.labels=T)
+p10d <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.color="red", hide.label.left=T)
+p10e <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.color="red", hide.label.top=T)
 
 x11 <- data.frame(A=1:10, B=1:5)
-p11 <- PictoStdChart(x, image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)
-p11a <- PictoStdChart(x[,1], image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)
+p11 <- PictoStdChart(x11, image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)
+p11a <- PictoStdChart(x11[,1], image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)

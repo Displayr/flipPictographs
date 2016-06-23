@@ -22,7 +22,7 @@
 PictoStdChart <- function(x,
                           groupBy=NULL,
                           image="star.filled",
-                          base.image="star.empty",
+                          base.image="none",
                           K=0,
                           read.KfromX=FALSE,
                           units=1,
@@ -32,7 +32,8 @@ PictoStdChart <- function(x,
                           icon.autosize=FALSE,
                           icon.halign="left",
                           transpose=FALSE,
-                          hide.labels=FALSE, ...)
+                          hide.label.left=FALSE,
+                          hide.label.top=FALSE, ...)
 {
     x <- x/units
     if (read.KfromX && is.null(groupBy))
@@ -51,17 +52,18 @@ PictoStdChart <- function(x,
 
     label.left <- c()
     label.top <- c()
-    if (hide.labels)
+    if (hide.label.left)
     {
         n <- if (is.null(nrow(x))) length(x)
              else nrow(x)
+        label.left <- rep("", n)
+    }
+    if (hide.label.top)
+    {
         m <- if (is.null(ncol(x))) 1
              else ncol(x)
-
-        label.left <- rep("", n)
         label.top <- rep("", m)
     }
-
     URL <- c(none = "",
                 star.filled = "http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg",
                 star.empty = "http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg",
