@@ -95,12 +95,12 @@ p7 <- PictoChart(t(x7)+0.5, fish, direction="vertical",
                  icon.ncol = 1, column.width=10, label.top.size=2, label.top.height=2)
 
 # Pyramids
-#x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
-#colnames(x8) <- c("Women", "Total")
-#p8 <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, icon.halign="center")
-#p8b <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T)
-#p8c <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, transpose=F, direction="vertical")
-#p8d <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, transpose=F, direction="vertical", icon.autosize=T)
+x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
+colnames(x8) <- c("Women", "Total")
+p8 <- PictoStdChart(x8, image="ppl.red", base.image="ppl.grey", read.KfromX = T, icon.halign="center")
+p8b <- PictoStdChart(x8, image="ppl.red", base.image="ppl.grey", read.KfromX = T)
+p8c <- PictoStdChart(x8, image="ppl.red", base.image="ppl.grey", read.KfromX = T, transpose=F, direction="vertical")
+p8d <- PictoStdChart(x8, image="ppl.red", base.image="ppl.grey", read.KfromX = T, transpose=F, direction="vertical", icon.autosize=T)
 
 
 # Aggregating
@@ -114,3 +114,7 @@ p10a <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, sh
 p10b <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.text="10kg per capita")
 p10c <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.color="red")
 p10d <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.lines=T, legend.color="red", hide.labels=T)
+
+x11 <- data.frame(A=1:10, B=1:5)
+p11 <- PictoStdChart(x, image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)
+p11a <- PictoStdChart(x[,1], image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)

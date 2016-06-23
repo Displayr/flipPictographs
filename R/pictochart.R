@@ -59,7 +59,7 @@ PictoChart <- function( x,
                         label.color="#2C2C2C",
                         label.top.font=label.font,
                         label.top.size=label.size,
-                        label.top.weight=label.weight,
+                        label.top.weight="400",
                         label.top.color=label.color,
                         label.top.height=1.2*label.top.size,
                         label.right.font=label.font,
@@ -79,7 +79,7 @@ PictoChart <- function( x,
                         label.left.width=0,
                         label.left.halign="right",
                         label.right.halign="left",
-                        label.top.halign="left",
+                        label.top.halign="center",
                         label.bottom.halign="left",
                         label.left.valign="center",
                         label.right.valign="center",
@@ -215,10 +215,10 @@ PictoChart <- function( x,
                          label.left, label.left.font, label.left.size, label.left.weight,
                          label.left.color, label.left.halign, lab.left.tpad)
 
-    pad.left=0
-    pad.right=0
-    pad.top=0
-    pad.bottom=0
+    pad.left=matrix(0, n, m)
+    pad.right=matrix(0, n, m)
+    pad.top=matrix(0, n, m)
+    pad.bottom=matrix(0, n, m)
     if (icon.fixedsize)
     {
         icon.width <- min(column.width/icon.ncol)
@@ -231,6 +231,14 @@ PictoChart <- function( x,
         pad.right <- r.coef[icon.halign] * (column.width - (icon.width)*icon.ncol)
         pad.top <- 0.5 * (row.height - icon.height*icon.nrow)
         pad.bottom <- pad.top
+    }
+    row.height[n] <- pad.row/2 + row.height[n]
+    pad.bottom[n,] <- pad.bottom[n,] + pad.row/2
+
+    if (!(any(nchar(label.top) > 0)))
+    {
+        pad.top[1,] <- pad.top[1,] + pad.row/2
+        row.height[1] <- row.height[1] + pad.row/2
     }
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
@@ -288,7 +296,7 @@ PictoChart <- function( x,
     # Adding lines to make table
     lines.str <- ""
     if (show.lines)
-    lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>1), collapse=","), "],
+    lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>0), collapse=","), "],
                        \"padding-left\":", 0.0*column.width[1],", \"padding-right\":", 0.0*column.width[m]+3*pad.col+leg.rpad, ",",
                        "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep="")
 
