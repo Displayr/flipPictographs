@@ -4,35 +4,37 @@
 \alias{PictoStdChart}
 \title{Wrapper function to create Pictographs}
 \usage{
-PictoStdChart(x, variable.image, base.image = NULL, K = 0,
-  read.KfromX = FALSE, groupBy = NULL, aggregate.period = "month",
-  icon.autosize = FALSE, icon.halign = "left", direction = "horizontal",
-  transpose = TRUE, show.labels = TRUE, show.table = FALSE)
+PictoStdChart(x, groupBy = NULL, image = "star.filled",
+  base.image = "star.empty", K = 0, read.KfromX = FALSE, units = 1,
+  show.legend = FALSE, legend.text = sprintf("= \%d", units),
+  aggregate.period = "month", direction = "horizontal",
+  icon.autosize = FALSE, icon.halign = "left", transpose = FALSE,
+  hide.labels = FALSE, show.table = FALSE)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
 
-\item{variable.image}{URL of icon image.}
+\item{groupBy}{Optional vector for aggregating \code{x}.}
 
 \item{base.image}{URL of base image (optional).}
 
 \item{K}{Maximum number of icons in each table cell. This variable is ignored if \code{read.KfromX} is \code{true}.}
 
-\item{groupBy}{Optional vector for aggregating \code{x}.}
+\item{direction}{Direction in which icons are filled (\code{horizontal} or \code{vertical}).}
 
 \item{icon.autosize}{Rescale icons to fill up table cell}
 
 \item{icon.halign}{Alignment of icons when \code{icon.autosize} is \code{false}. Should be one of left, center or right.}
 
-\item{direction}{Direction in which icons are filled (\code{horizontal} or \code{vertical}).}
-
 \item{transpose}{Transpose \code{x}.}
-
-\item{show.labels}{Use default labels based on row/column names.}
 
 \item{show.table}{Put table lines around row/column labels.}
 
+\item{variable.image}{URL of icon image.}
+
 \item{read.KfromX.}{If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.}
+
+\item{show.labels}{Use default labels based on row/column names.}
 }
 \description{
 \code{PictoStdChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.

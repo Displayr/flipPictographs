@@ -20,25 +20,29 @@
 #' @export
 #'
 PictoStdChart <- function(x,
-                          variable.image,
-                          base.image=NULL,
+                          groupBy=NULL,
+                          image="star.filled",
+                          base.image="star.empty",
                           K=0,
                           read.KfromX=FALSE,
-                          groupBy=NULL,
+                          units=1,
+                          show.legend=FALSE,
+                          legend.text=sprintf("= %d", units),
                           aggregate.period="month",
+                          direction="horizontal",
                           icon.autosize=FALSE,
                           icon.halign="left",
-                          direction="horizontal",
-                          transpose=TRUE,
-                          show.labels=TRUE,
-                          show.table=FALSE)
+                          transpose=FALSE,
+                          hide.labels=FALSE,
+                          show.table=FALSE, ...)
 {
+    x <- x/units
     if (read.KfromX && is.null(groupBy))
     {
-        K <- x[,ncol(x)]
+        K <- ceiling(x[,ncol(x)])
         x <- x[,-ncol(x)]
     }
-    x <- AsChartMatrix(x, groupBy, transpose, aggregate.period)
+    x <- AsChartMatrix(y=x, x=groupBy, transpose=(!transpose), aggregate.period=aggregate.period)
 
     if (K == 0 && !read.KfromX)
         K <- ifelse(icon.autosize, ceiling(x), ceiling(max(x)))
@@ -49,7 +53,7 @@ PictoStdChart <- function(x,
 
     label.left <- c()
     label.top <- c()
-    if (!show.labels)
+    if (hide.labels)
     {
         n <- if (is.null(nrow(x))) length(x)
              else nrow(x)
@@ -60,11 +64,28 @@ PictoStdChart <- function(x,
         label.top <- rep("", m)
     }
 
-    return(PictoChart(x, variable.image, base.image, K,
-                      icon.ncol=icon.ncol,
+    URL <- c(none = "",
+                star.filled = "http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg",
+                star.empty = "http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg",
+                ppl.filled = "http://wiki.q-researchsoftware.com/images/9/98/Stick_man_black.svg",
+                ppl.red = "http://wiki.q-researchsoftware.com/images/0/00/Stick_man_dark_red.svg",
+                ppl.grey = "http://wiki.q-researchsoftware.com/images/8/89/Stick_man_light_grey.svg",
+                wine.filled = "http://www.iconsdb.com/icons/preview/black/bar-2-xxl.png",
+                drink.filled = "http://wiki.q-researchsoftware.com/images/3/3a/Cocktail.svg",
+                drink.grey = "http://wiki.q-researchsoftware.com/images/a/a5/Cocktail_light_grey.svg",
+                drop.pic = "http://wiki.q-researchsoftware.com/images/7/70/Water-drop.jpg",
+                sheep = "http://wiki.q-researchsoftware.com/images/6/6a/Sheep-black.jpeg",
+                pig = "http://wiki.q-researchsoftware.com/images/d/d4/Pig-black.png",
+                cow = "http://wiki.q-researchsoftware.com/images/3/32/Cow-black.png",
+                chicken = "http://wiki.q-researchsoftware.com/images/7/7d/Chicken-black.png",
+                fish = "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png")
+
+    return(PictoChart(x, variable.image=URL[image], base.image=URL[base.image],
+                      K, icon.ncol=icon.ncol,
                       icon.fixedsize=1-icon.autosize, icon.halign = icon.halign,
                       label.left=label.left, label.top=label.top,
-                      direction=direction, show.table=show.table))
+                      direction=direction, show.table=show.table,
+                      show.legend=show.legend, legend.text=legend.text, ...))
 }
 
 

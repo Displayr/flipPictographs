@@ -1,8 +1,8 @@
-#OutOfKStars(3.5, 2, 4)
-require("rhtmlPictographs")
-require("flipChartBasics")
-source("pictochart.R")
-source("pictostdchart.R")
+#require("rhtmlPictographs")
+#require("flipChartBasics")
+#source("pictochart.R")
+#source("pictostdchart.R")
+require(flipPictographs)
 
 # Images
 star.filled <-  "http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg"
@@ -23,10 +23,7 @@ fish <- "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png"
 # Simple vector (movie ratings)
 x1 <- c(First=1, Second=2, Third=3)
 p1 <- PictoChart(x1, variable.image=star.filled, base.image=star.empty) #, column.width=100)
-p1b <- PictoStdChart(x1, star.filled, star.empty)
-p1c <- PictoStdChart(x1, star.filled, star.empty, show.labels=F)
-p1d <- PictoStdChart(x1, star.filled, star.empty, show.table=T)
-p1e <- PictoStdChart(x1, star.filled, star.empty, direction="vertical", show.table=T)
+
 
 # Simple dataframe (drink size popularity) and autosize
 x2 <- data.frame(Large=1:4, Medium=5:8, Small=9:12)
@@ -45,11 +42,6 @@ p3 <- PictoChart(x3/1000, ppl.filled, K=ceiling(x3/1000),
                 label.top=c("Migration in", "Migration out"), label.top.halign=c("right", "left"),
                 label.left=rownames(x3), label.left.size=5,
                 label.right=rownames(x3), label.right.size=5)
-p3b <- PictoStdChart(x3/1000, ppl.filled)
-p3c <- PictoStdChart(t(x3)/1000, ppl.filled, direction="vertical", transpose=T)
-p3d <- PictoStdChart(x3/1000, ppl.filled, show.table=T, transpose=T)
-p3e <- PictoStdChart(x3/1000, ppl.filled, show.table=T, direction="vertical")
-
 
 # Control sizing (wine consumption/production)
 # 2014 data from wineinstitute.org (units=1000 L)
@@ -96,28 +88,19 @@ colnames(x6) <- c("Beef","Pork","Poultry","Sheep")
 p6 <- PictoChart(x6/10, rep(c(cow,pig,chicken,sheep), each=nrow(x6)), show.table=T,
                  label.top.halign="left")
 
-p6b <- PictoChart(x6/10, rep(c(cow,pig,chicken,sheep), each=nrow(x6)), show.table=T,
-                 label.top=rep("", 4))
-p6c <- PictoStdChart(x6/10, cow)
-p6d <- PictoStdChart(x6/10, cow, show.table=T)
-p6e <- PictoStdChart(x6/10, cow, show.table=T, direction="vertical")
-
 # Columns
 x7 <- sample(1:10, 12, replace=T)
 names(x7) <- format(seq(from=as.Date("2016-1-1"), length=12, by="month"), "%b")
 p7 <- PictoChart(t(x7)+0.5, fish, direction="vertical",
                  icon.ncol = 1, column.width=10, label.top.size=2, label.top.height=2)
-p7b <- PictoStdChart(x7+0.5, fish)
-p7c <- PictoStdChart(x7+0.5, fish, direction="vertical")
-p7d <- PictoStdChart(x7+0.5, fish, show.table = T)
 
 # Pyramids
-x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
-colnames(x8) <- c("Women", "Total")
-p8 <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, icon.halign="center")
-p8b <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T)
-p8c <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, transpose=F, direction="vertical")
-p8d <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, transpose=F, direction="vertical", icon.autosize=T)
+#x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
+#colnames(x8) <- c("Women", "Total")
+#p8 <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, icon.halign="center")
+#p8b <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T)
+#p8c <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, transpose=F, direction="vertical")
+#p8d <- PictoStdChart(x8, ppl.red, ppl.grey, read.KfromX = T, transpose=F, direction="vertical", icon.autosize=T)
 
 
 # Aggregating
@@ -125,3 +108,8 @@ n <- 50
 x9.y <- data.frame(A=1:n, B=(1:n)+0.5)
 x9.x <- sample(1:4, n, replace=T)
 p9 <- PictoStdChart(x9.y, drink.filled, drink.grey, groupBy=x9.x, transpose=F)
+
+p10 <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=F, show.table=T)
+p10a <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.table=T)
+p10b <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.table=T, legend.text="10kg per capita")
+p10c <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, show.table=T, legend.color="red")

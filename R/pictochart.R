@@ -34,23 +34,25 @@
 #' @importFrom  rhtmlPictographs graphic
 #' @export
 
-PictoChart <- function( x,    # should be able to be a vector, a dataframe or a matrix
-                        variable.image,     # url
-                        base.image="",      # optional base image
-                        K=max(ceiling(x)),   #ignored if icon.nrow and icon.ncol is supplied
+PictoChart <- function( x,
+                        variable.image,
+                        base.image="",
+                        K=max(ceiling(x)),
                         direction="horizontal",
                         show.table=FALSE,
+                        show.legend=FALSE,
+                        legend.text="",
                         icon.nrow=1,
                         icon.ncol=unlist(K)/icon.nrow,
-                        icon.fixedsize=FALSE,   # is TRUE, pad.left, pad.right will be ignored (but not pad.row and pad.col)
-                        icon.halign="left",     # alignment when icon.fixedsize=T, can be left, right or center, if used, pad.left and pad.right are ignored
-                        label.left=c(),       # multiple labels can be supplied
+                        icon.fixedsize=FALSE,
+                        icon.halign="left",
+                        label.left=c(),
                         label.right=c(),
                         label.top=c(),
                         label.bottom=c(),
-                        label.overlay=c(),    # same dimension as x
-                        label.footer=c(),
-                        label.header=c(),
+                        #label.overlay=c(),    # not implemented
+                        #label.footer=c(),
+                        #label.header=c(),
                         label.font="arial",
                         label.size=10,
                         label.weight="normal",
@@ -64,7 +66,7 @@ PictoChart <- function( x,    # should be able to be a vector, a dataframe or a 
                         label.right.size=label.size,
                         label.right.weight=label.weight,
                         label.right.color=label.color,
-                        label.right.width=0,  # defaults to length of user string if width=0
+                        label.right.width=0,
                         label.bottom.font=label.font,
                         label.bottom.size=label.size,
                         label.bottom.weight=label.weight,
@@ -77,26 +79,24 @@ PictoChart <- function( x,    # should be able to be a vector, a dataframe or a 
                         label.left.width=0,
                         label.left.halign="right",
                         label.right.halign="left",
-                        label.top.halign="center",
-                        label.bottom.halign="center",
-                        label.left.valign="center",   # valign can also be top or bottom
+                        label.top.halign="left",
+                        label.bottom.halign="left",
+                        label.left.valign="center",
                         label.right.valign="center",
-                        label.top.valign="center",
+                        label.top.valign="left",
                         label.bottom.valign="center",
+                        legend.font=label.font,
+                        legend.size=0.8*label.size,
+                        legend.weight=label.weight,
+                        legend.color=label.color,
                         row.height=25*max(icon.nrow),
                         column.width=max(20*max(icon.ncol), 0.5*label.top.size*nchar(label.top)),
-                        margin.left=20,  # these four don't work
-                        margin.right=20,
-                        margin.top=20,
-                        margin.bottom=20,
-                        pad.row = 10,   # table-wide property
+                        line.color="#A8A8A8",
+                        line.width=0.5,
+                        pad.row = 10,
                         pad.col = 10,
-                        pad.left=0,     # cell property
-                        pad.right=0,
-                        pad.top=0,
-                        pad.bottom=0,
-                        pad.icon.row=0.05,
-                        pad.icon.col=0.05)
+                        pad.icon.row=0.0,
+                        pad.icon.col=0.0)
 {
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
@@ -215,6 +215,10 @@ PictoChart <- function( x,    # should be able to be a vector, a dataframe or a 
                          label.left, label.left.font, label.left.size, label.left.weight,
                          label.left.color, label.left.halign, lab.left.tpad)
 
+    pad.left=0
+    pad.right=0
+    pad.top=0
+    pad.bottom=0
     if (icon.fixedsize)
     {
         icon.width <- min(column.width/icon.ncol)
@@ -263,25 +267,38 @@ PictoChart <- function( x,    # should be able to be a vector, a dataframe or a 
     if (any(nchar(label.bottom) > 0))
         row.height <- c(row.height, label.bottom.height)
 
+    # Adding legend
+    leg.rpad <- 0
+    if (show.legend)
+    {
+        row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
+        leg.row <- floor(nrow(row.str)/2)
+        leg.col <- ncol(row.str)
+        leg.tpad <- (row.height[leg.row]-legend.size)/2
+        row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
+                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
+                                                \"horizontal-align\":\"left\", \"padding-top\":%f}}",
+                                                legend.text, legend.font, legend.size, legend.weight, legend.color, leg.tpad)
+        row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
+                         \"variableImage\":\"%s:%s\"}}", direction, variable.image)
+        column.width <- c(column.width, 10, 20, label.size*nchar(legend.text))
+        leg.rpad <- sum(tail(column.width, 2))
+    }
+
     # Adding lines to make table
     lines.str <- ""
-    if (show.table && any(nchar(label.top) > 0))
-    lines.str <- paste("\"lines\":{\"horizontal\":[0,1,", nrow(row.str)+1, "],
-                       \"padding-left\":", 0.05*column.width[1],", \"padding-right\":", 0.05*column.width[m], ",",
-                       "\"style\": \"stroke:black;stroke-width:0.5\"}, ", sep="")
+    if (show.table)
+    lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>1), collapse=","), "],
+                       \"padding-left\":", 0.1*column.width[1],", \"padding-right\":", 0.1*column.width[m]+3*pad.col+leg.rpad, ",",
+                       "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep="")
 
-    if (show.table && all(nchar(label.top) <= 0) && any(nchar(label.left) > 0))
-    lines.str <- paste("\"lines\":{\"horizontal\":[0,", nrow(row.str),"], \"vertical\":[0.1,1,", ncol(row.str), "],",
-                       "\"padding-left\":", 0.1*column.width[1],", \"padding-right\":", 0.17*column.width[m+1], ",",
-                       "\"padding-bottom\":", 0.4*row.height[n], ",",
-                        "\"style\": \"stroke:black;stroke-width:0.5\"}, ", sep="")
 
     # Putting it all together
     row.str <- apply(row.str, 1, paste, collapse=",")
     json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
             "\"table\":{\"rowHeights\":[", paste(row.height, collapse=","), "],",
-            "\"padding-top\":", margin.top, ",\"padding-right\":", margin.right,
-            ",\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
+            #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right,
+            #",\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
             "\"rowGutterLength\":", pad.row, ",\"columnGutterLength\":", pad.col, ",",
             "\"colWidths\":[", paste(column.width, collapse=","), "],", sep="")
     json.str <- paste(json.str, lines.str, "\"rows\":[[", sep="")
