@@ -23,6 +23,11 @@ fish <- "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png"
 # Simple vector (movie ratings)
 x1 <- c(First=1, Second=2, Third=3)
 p1 <- PictoChart(x1, variable.image=star.filled, base.image=star.empty) #, column.width=100)
+p1b <- PictoStdChart(x1, image="star.filled", base.image="star.empty", show.legend=T)
+p1c <- PictoStdChart(x1, image="star.filled", base.image="star.empty",
+                     show.legend=T, transpose=T, show.lines=T)
+p1c <- PictoStdChart(x1, image="star.filled", base.image="star.empty",
+                     show.legend=T, transpose=T, show.lines=T, hide.label.top = T)
 
 
 # Simple dataframe (drink size popularity) and autosize
@@ -123,3 +128,4 @@ p10e <- PictoStdChart(x=x6/10, image="cow", base.image="none", show.legend=T, sh
 x11 <- data.frame(A=1:10, B=1:5)
 p11 <- PictoStdChart(x11, image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)
 p11a <- PictoStdChart(x11[,1], image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T)
+p11b <- PictoStdChart(x11[,1], image="ppl.red", base.image="ppl.grey", show.legend=T, show.lines=T, hide.label.left=T)

@@ -247,11 +247,33 @@ PictoChart <- function( x,
                         prop, K, direction, variable.image, base.image.str, icon.nrow,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
+    empty.str <- "{\"type\":\"label\", \"value\":{\"text\":\"\"}}"
+
+    # Adding legend
+    leg.rpad <- 0
+    if (nchar(legend.text) ==  0)
+        legend.text = " "
+    if (show.legend)
+    {
+        row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
+        leg.row <- max(1, ceiling(nrow(row.str)/2))
+        leg.col <- ncol(row.str)
+        leg.tpad <- (row.height[leg.row]-legend.size)/2
+        row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
+                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
+                                                \"horizontal-align\":\"left\", \"padding-top\":%f}}",
+                                                legend.text, legend.font, legend.size, legend.weight, legend.color, leg.tpad)
+        row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
+                         \"variableImage\":\"%s:%s\"}}", direction, variable.image)
+        column.width <- c(column.width, 10, 20, legend.size*nchar(legend.text))
+        leg.rpad <- sum(tail(column.width, 2))
+    }
+
     corner.tl <- NULL
     corner.tr <- NULL
     corner.bl <- NULL
     corner.br <- NULL
-    empty.str <- "{\"type\":\"label\", \"value\":{\"text\":\"\"}}"
+
     if (any(nchar(label.left) > 0))
     {
         row.str <- cbind(label.left.str, row.str)
@@ -275,23 +297,7 @@ PictoChart <- function( x,
     if (any(nchar(label.bottom) > 0))
         row.height <- c(row.height, label.bottom.height)
 
-    # Adding legend
-    leg.rpad <- 0
-    if (show.legend)
-    {
-        row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
-        leg.row <- floor(nrow(row.str)/2)
-        leg.col <- ncol(row.str)
-        leg.tpad <- (row.height[leg.row]-legend.size)/2
-        row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
-                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
-                                                \"horizontal-align\":\"left\", \"padding-top\":%f}}",
-                                                legend.text, legend.font, legend.size, legend.weight, legend.color, leg.tpad)
-        row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
-                         \"variableImage\":\"%s:%s\"}}", direction, variable.image)
-        column.width <- c(column.width, 10, 20, label.size*nchar(legend.text))
-        leg.rpad <- sum(tail(column.width, 2))
-    }
+
 
     # Adding lines to make table
     lines.str <- ""
