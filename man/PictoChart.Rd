@@ -5,31 +5,33 @@
 \title{PictoChart}
 \usage{
 PictoChart(x, variable.image, base.image = "", K = max(ceiling(x)),
-  direction = "horizontal", show.table = FALSE, show.legend = FALSE,
+  direction = "horizontal", show.lines = FALSE, show.legend = FALSE,
   legend.text = "", icon.nrow = 1, icon.ncol = unlist(K)/icon.nrow,
-  icon.fixedsize = FALSE, icon.halign = "left", label.left = c(),
-  label.right = c(), label.top = c(), label.bottom = c(),
-  label.overlay = c(), label.footer = c(), label.header = c(),
-  label.font = "arial", label.size = 10, label.weight = "normal",
-  label.color = "#2C2C2C", label.top.font = label.font,
-  label.top.size = label.size, label.top.weight = label.weight,
-  label.top.color = label.color, label.top.height = 1.2 * label.top.size,
-  label.right.font = label.font, label.right.size = label.size,
-  label.right.weight = label.weight, label.right.color = label.color,
-  label.right.width = 0, label.bottom.font = label.font,
-  label.bottom.size = label.size, label.bottom.weight = label.weight,
-  label.bottom.color = label.color, label.bottom.height = 1.2 *
-  label.bottom.size, label.left.font = label.font,
-  label.left.size = label.size, label.left.weight = label.weight,
-  label.left.color = label.color, label.left.width = 0,
-  label.left.halign = "right", label.right.halign = "left",
-  label.top.halign = "center", label.bottom.halign = "left",
-  label.left.valign = "center", label.right.valign = "center",
-  label.top.valign = "left", label.bottom.valign = "center",
-  row.height = 25 * max(icon.nrow), column.width = max(20 * max(icon.ncol),
-  0.5 * label.top.size * nchar(label.top)), margin.left = 20,
-  margin.right = 20, margin.top = 20, margin.bottom = 20, pad.row = 10,
-  pad.col = 10, pad.icon.row = 0, pad.icon.col = 0)
+  icon.fixedsize = FALSE, icon.halign = "left", icon.valign = "center",
+  label.left = c(), label.right = c(), label.top = c(),
+  label.bottom = c(), label.font = "arial", label.size = 10,
+  label.weight = "normal", label.color = "#2C2C2C",
+  label.top.font = label.font, label.top.size = label.size,
+  label.top.weight = "400", label.top.color = label.color,
+  label.top.height = 1.2 * label.top.size, label.right.font = label.font,
+  label.right.size = label.size, label.right.weight = label.weight,
+  label.right.color = label.color, label.right.width = 0,
+  label.bottom.font = label.font, label.bottom.size = label.size,
+  label.bottom.weight = label.weight, label.bottom.color = label.color,
+  label.bottom.height = 1.2 * label.bottom.size,
+  label.left.font = label.font, label.left.size = label.size,
+  label.left.weight = label.weight, label.left.color = label.color,
+  label.left.width = 0, label.left.halign = "right",
+  label.right.halign = "left", label.top.halign = "center",
+  label.bottom.halign = "left", label.left.valign = "center",
+  label.right.valign = "center", label.top.valign = "center",
+  label.bottom.valign = "center", legend.font = label.font,
+  legend.size = 0.8 * label.size, legend.weight = label.weight,
+  legend.color = label.color, row.height = 1.5 * label.size *
+  max(icon.nrow), column.width = max(15 * max(icon.ncol), 0.5 * label.top.size
+  * nchar(label.top), 0.5 * label.bottom.size * nchar(label.bottom)),
+  bg.color = "transparent", line.color = "#A8A8A8", line.width = 0.5,
+  pad.row = 5, pad.col = 5, pad.icon.row = 0, pad.icon.col = 0)
 }
 \arguments{
 \item{x}{Data for charting}
@@ -48,7 +50,7 @@ PictoChart(x, variable.image, base.image = "", K = max(ceiling(x)),
 
 \item{label.top}{By default, labels are read from column names of \code{x}.}
 
-\item{label.font}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font}.}
+\item{label.font}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.}
 
 \item{row.height}{Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.}
 

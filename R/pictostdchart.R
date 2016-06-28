@@ -1,47 +1,83 @@
 #' Wrapper function to create Pictographs
 #'
 #' \code{PictoStdChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.
-#' @seealso \code{PictoChart()} provides finer control over plot parameters
 #'
 #' @param x Data to plot. Can be vector, matrix or data.frame.
-#' @param variable.image URL of icon image.
-#' @param base.image URL of base image (optional).
-#' @param K Maximum number of icons in each table cell. This variable is ignored if \code{read.KfromX} is \code{true}.
-#' @param read.KfromX. If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.
 #' @param groupBy Optional vector for aggregating \code{x}.
+#' @param image Name of icon, e.g. \code{"star", "people",...}.
+#' @param hide.base.image Turns off background image (on by default). In most cases it is appropriate to turn off the base image if K varies between entries.
+#' @param K Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.
+#' @param read.KfromX If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.
+#' @param scale Value of one icon. If \code{scale = 0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
+#' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text = " "})
 #' @param aggregate.period
-#' @param icon.autosize Rescale icons to fill up table cell
-#' @param icon.halign Alignment of icons when \code{icon.autosize} is \code{false}. Should be one of left, center or right.
-#' @param direction Direction in which icons are filled (\code{horizontal} or \code{vertical}).
-#' @param transpose Transpose \code{x}.
-#' @param show.labels Use default labels based on row/column names.
-#' @param show.table Put table lines around row/column labels.
+#' @param icon.autosize Rescale icons to fill up table cell. If K varies between cells, this can result in icons of varying sizes.
+#' @param direction Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.
+#' @param transpose Swap rows and columns in data matrix \code{x}.
+#' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
+#' @param hide.label.top Suppress labels above graphics.
+#' @param show.as.column Pictograph is shown as column chart. Specifically, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically.
+#' @param ... Arguments passed to \code{PictoChart()}.
 #' @importFrom flipChartBasics AsChartMatrix
 #' @export
 #'
 PictoStdChart <- function(x,
                           groupBy=NULL,
-                          image="star.filled",
-                          base.image="none",
+                          image="star",
+                          hide.base.image=FALSE,
                           K=0,
                           read.KfromX=FALSE,
-                          units=1,
-                          legend.text=sprintf("= %d", units),
+                          scale=0,
+                          legend.text="",
                           aggregate.period="month",
                           direction="horizontal",
                           icon.autosize=FALSE,
                           icon.halign="left",
+                          icon.valign="center",
                           transpose=FALSE,
                           hide.label.left=FALSE,
-                          hide.label.top=FALSE, ...)
+                          hide.label.top=FALSE,
+                          show.as.column=FALSE,
+                          label.left=c(),
+                          label.top=c(),
+                          label.bottom=c(),
+                          label.bottom.halign="center",
+                          wh.ratio=0,
+                          ...)
 {
-    x <- x/units
+    if (scale==0)
+        scale = max(1, floor(max(x)/10))
+    if (nchar(legend.text)==0)
+        legend.text = sprintf("= %d", scale)
+    x <- x/scale
+
     if (read.KfromX && is.null(groupBy))
     {
         K <- ceiling(x[,ncol(x)])
         x <- x[,-ncol(x)]
     }
     x <- AsChartMatrix(y=x, x=groupBy, transpose=(!transpose), aggregate.period=aggregate.period)
+
+    if (show.as.column)
+    {
+        if (is.null(dim(x)))
+        {
+            x <- matrix(x, nrow=1)
+            colnames(x) <- names(x)
+        }
+        if (ncol(x) == 1)
+        {
+            tmpnames <- rownames(x)
+            x <- matrix(x, nrow=1)
+            colnames(x) <- tmpnames
+        }
+        label.bottom <- colnames(x)
+        direction <- "vertical"
+        hide.label.top <- TRUE
+        icon.valign <- "bottom"
+        icon.autosize <- FALSE
+        K <- ceiling(x)
+    }
 
     if (K == 0 && !read.KfromX)
         K <- ifelse(icon.autosize, ceiling(x), ceiling(max(x)))
@@ -50,8 +86,6 @@ PictoStdChart <- function(x,
     if (direction=="vertical")
         icon.ncol <- 1
 
-    label.left <- c()
-    label.top <- c()
     if (hide.label.left)
     {
         n <- if (is.null(nrow(x))) length(x)
@@ -64,25 +98,16 @@ PictoStdChart <- function(x,
              else ncol(x)
         label.top <- rep("", m)
     }
-    URL <- c(none = "",
-                star.filled = "http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg",
-                star.empty = "http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg",
-                ppl.filled = "http://wiki.q-researchsoftware.com/images/9/98/Stick_man_black.svg",
-                ppl.red = "http://wiki.q-researchsoftware.com/images/0/00/Stick_man_dark_red.svg",
-                ppl.grey = "http://wiki.q-researchsoftware.com/images/8/89/Stick_man_light_grey.svg",
-                wine.filled = "http://www.iconsdb.com/icons/preview/black/bar-2-xxl.png",
-                drink.filled = "http://wiki.q-researchsoftware.com/images/3/3a/Cocktail.svg",
-                drink.grey = "http://wiki.q-researchsoftware.com/images/a/a5/Cocktail_light_grey.svg",
-                drop.pic = "http://wiki.q-researchsoftware.com/images/7/70/Water-drop.jpg",
-                sheep = "http://wiki.q-researchsoftware.com/images/6/6a/Sheep-black.jpeg",
-                pig = "http://wiki.q-researchsoftware.com/images/d/d4/Pig-black.png",
-                cow = "http://wiki.q-researchsoftware.com/images/3/32/Cow-black.png",
-                chicken = "http://wiki.q-researchsoftware.com/images/7/7d/Chicken-black.png",
-                fish = "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png")
 
-    return(PictoChart(x, variable.image=URL[image], base.image=URL[base.image],
-                      K, icon.ncol=icon.ncol, icon.fixedsize=1-icon.autosize, icon.halign = icon.halign,
+    base.image <- ""
+    if (!hide.base.image)
+        base.image <- imageURL[image,"bg"]
+    return(PictoChart(x, variable.image=imageURL[image,"fg"],
+                      base.image=base.image, wh.ratio=imageWHRatio[image],
+                      K=K, icon.ncol=icon.ncol, icon.fixedsize=1-icon.autosize,
+                      icon.halign=icon.halign, icon.valign=icon.valign,
                       label.left=label.left, label.top=label.top,
+                      label.bottom=label.bottom, label.bottom.halign=label.bottom.halign,
                       direction=direction, legend.text=legend.text, ...))
 }
 

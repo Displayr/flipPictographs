@@ -4,42 +4,46 @@
 \alias{PictoStdChart}
 \title{Wrapper function to create Pictographs}
 \usage{
-PictoStdChart(x, groupBy = NULL, image = "star.filled",
-  base.image = "star.empty", K = 0, read.KfromX = FALSE, units = 1,
-  show.legend = FALSE, legend.text = sprintf("= \%d", units),
+PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
+  K = 0, read.KfromX = FALSE, scale = 0, legend.text = "",
   aggregate.period = "month", direction = "horizontal",
-  icon.autosize = FALSE, icon.halign = "left", transpose = FALSE,
-  hide.labels = FALSE, show.table = FALSE)
+  icon.autosize = FALSE, icon.halign = "left", icon.valign = "center",
+  transpose = FALSE, hide.label.left = FALSE, hide.label.top = FALSE,
+  show.as.column = FALSE, label.left = c(), label.top = c(),
+  label.bottom = c(), label.bottom.halign = "center", ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
 
 \item{groupBy}{Optional vector for aggregating \code{x}.}
 
-\item{base.image}{URL of base image (optional).}
+\item{image}{Name of icon, e.g. \code{"star", "people",...}.}
 
-\item{K}{Maximum number of icons in each table cell. This variable is ignored if \code{read.KfromX} is \code{true}.}
+\item{hide.base.image}{Turns off background image (on by default). In most cases it is appropriate to turn off the base image if K varies between entries.}
 
-\item{direction}{Direction in which icons are filled (\code{horizontal} or \code{vertical}).}
+\item{K}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
 
-\item{icon.autosize}{Rescale icons to fill up table cell}
+\item{read.KfromX}{If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.}
 
-\item{icon.halign}{Alignment of icons when \code{icon.autosize} is \code{false}. Should be one of left, center or right.}
+\item{scale}{Value of one icon. If \code{scale = 0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
-\item{transpose}{Transpose \code{x}.}
+\item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text = " "})}
 
-\item{show.table}{Put table lines around row/column labels.}
+\item{direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
 
-\item{variable.image}{URL of icon image.}
+\item{icon.autosize}{Rescale icons to fill up table cell. If K varies between cells, this can result in icons of varying sizes.}
 
-\item{read.KfromX.}{If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.}
+\item{transpose}{Swap rows and columns in data matrix \code{x}.}
 
-\item{show.labels}{Use default labels based on row/column names.}
+\item{hide.label.left}{Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.}
+
+\item{hide.label.top}{Suppress labels above graphics.}
+
+\item{show.as.column}{Pictograph is shown as column chart. Specifically, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically.}
+
+\item{...}{Arguments passed to \code{PictoChart()}.}
 }
 \description{
 \code{PictoStdChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.
-}
-\seealso{
-\code{PictoChart()} provides finer control over plot parameters
 }
 

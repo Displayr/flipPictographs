@@ -3,11 +3,18 @@
 #' Function to create a chart of Pictographs
 #'
 #' @param x Data for charting
-#' @param variable.image
-#' @param base.image Option URL of background image
+#' @param variable.image URL of icon
+#' @param base.image Optional URL of background image
 #' @param K Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.
 #' @param direction Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{K} is important).
-#' @param show.table
+#' @param show.lines
+#' @param line.width
+#' @param line.color
+#' @param show.legend
+#' @param legend.text
+#' @param legend.font
+#' @param legend.size
+#' @param bg.color
 #' @param icon.nrow
 #' @param icon.ncol
 #' @param icon.fixedsize When \code{true}, icons will not automatically resize to fill table cell.
@@ -16,7 +23,7 @@
 #' @param label.top By default, labels are read from column names of \code{x}.
 #' @param label.bottom
 #' @param label.right
-#' @param label.font Controls font-family of all labels. To modify only the font of one label use \code{label.left.font}.
+#' @param label.font Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.
 #' @param label.size
 #' @param label.weight
 #' @param label.color
@@ -26,6 +33,7 @@
 #' @param label.left.valign
 #' @param row.height Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.
 #' @param column.width Width of graphic cells.
+#' @param wh.ratio Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.
 #' @param pad.row Single numeric specifying spacing between graphic cells in the table.
 #' @param pad.col
 #' @param pad.icon.row Numeric specifying spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
@@ -46,13 +54,11 @@ PictoChart <- function( x,
                         icon.ncol=unlist(K)/icon.nrow,
                         icon.fixedsize=FALSE,
                         icon.halign="left",
+                        icon.valign="center",
                         label.left=c(),
                         label.right=c(),
                         label.top=c(),
                         label.bottom=c(),
-                        #label.overlay=c(),    # not implemented
-                        #label.footer=c(),
-                        #label.header=c(),
                         label.font="arial",
                         label.size=10,
                         label.weight="normal",
@@ -83,18 +89,20 @@ PictoChart <- function( x,
                         label.bottom.halign="left",
                         label.left.valign="center",
                         label.right.valign="center",
-                        label.top.valign="left",
+                        label.top.valign="center",
                         label.bottom.valign="center",
                         legend.font=label.font,
                         legend.size=0.8*label.size,
                         legend.weight=label.weight,
                         legend.color=label.color,
-                        row.height=25*max(icon.nrow),
-                        column.width=max(20*max(icon.ncol), 0.5*label.top.size*nchar(label.top)),
+                        row.height=1.5*label.size*max(icon.nrow),
+                        column.width=max(15*max(icon.ncol), 0.5*label.top.size*nchar(label.top), 0.5*label.bottom.size*nchar(label.bottom)),
+                        wh.ratio=0,
+                        bg.color="transparent",
                         line.color="#A8A8A8",
                         line.width=0.5,
-                        pad.row = 10,
-                        pad.col = 10,
+                        pad.row = 5,
+                        pad.col = 5,
                         pad.icon.row=0.0,
                         pad.icon.col=0.0)
 {
@@ -147,10 +155,12 @@ PictoChart <- function( x,
         stop("row.height must be of length 1 or ", n, "\n")
     if (length(column.width) != 1 && length(column.width) != m)
         stop ("column.width must be of length 1 or ", m, "\n")
+
     if (length(row.height) == 1)
         row.height <- rep(row.height, n)
     if (length(column.width) == 1)
         column.width <- rep(column.width, m)
+
 
     # checking for lengths of fonts,spacing etc...
     dir.opt <- c("horizontal", "vertical", "radial", "scale")
@@ -160,115 +170,94 @@ PictoChart <- function( x,
     base.image.str <- ""
     if (any(nchar(base.image) > 0))
         base.image.str <- paste("\"baseImage\":\"url:", base.image, "\",", sep="")
-    #base.image <- "url:blue:https://s3-ap-southeast-2.amazonaws.com/kyle-public-numbers-assets/htmlwidgets/CroppedImage/stickman.svg"
-    #variable.image <- "circle:red:horizontal"
-    #variable.image <- "http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg"
 
-
-    # Adding labels to the table
-    lab.left.tpad <- (row.height-label.left.size)/2
-    if (label.left.valign=="top")
-        lab.left.tpad <- 0
-    if (label.left.valign=="bottom")
-        lab.left.tpad <- row.height - label.left.size
-
-    lab.right.tpad <- (row.height-label.right.size)/2
-    if (label.right.valign=="top")
-        lab.right.tpad <- 0
-    if (label.right.valign=="bottom")
-        lab.right.tpad <- row.height - label.right.size
-
-    lab.top.tpad <- (label.top.height-label.top.size)/2
-    if (label.top.valign=="top")
-        lab.top.tpad <- 0
-    if (label.top.valign=="bottom")
-        lab.top.tpad <- label.top.height - label.top.size
-
-    lab.bottom.tpad <- (label.bottom.height-label.bottom.size)/2
-    if (label.bottom.valign=="top")
-        lab.bottom.tpad <- 0
-    if (label.bottom.valign=="bottom")
-        lab.bottom.tpad <- label.bottom.height - label.bottom.size
-
-    if (length(label.top) > 0)
-        label.top.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
-                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"padding-top\":%f}}",
-                         label.top, label.top.font, label.top.size, label.top.weight,
-                         label.top.color, label.top.halign, lab.top.tpad)
-    if (length(label.bottom) > 0)
-        label.bottom.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
-                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                         \"font-color\":\"%s\",\"horizontal-align\":\"%s\", \"padding-top\":%f}}",
-                         label.bottom, label.bottom.font, label.bottom.size, label.bottom.weight,
-                         label.bottom.color, label.bottom.halign, lab.bottom.tpad)
-    if (length(label.right) > 0)
-        label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
-                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"padding-top\":%f}}",
-                         label.right, label.right.font, label.right.size, label.right.weight,
-                         label.right.color, label.right.halign, lab.right.tpad)
-    if (length(label.left) > 0)
-        label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
-                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"padding-top\":%f}}",
-                         label.left, label.left.font, label.left.size, label.left.weight,
-                         label.left.color, label.left.halign, lab.left.tpad)
-
+    # Calculating padding/alignment
     pad.left=matrix(0, n, m)
     pad.right=matrix(0, n, m)
     pad.top=matrix(0, n, m)
     pad.bottom=matrix(0, n, m)
+    icon.width <- min(column.width/icon.ncol)
+    icon.height <- min(row.height/icon.nrow)
+
+    if (wh.ratio != 0)
+    {
+        icon.width <- min(icon.width, wh.ratio * icon.height)
+        icon.height <- icon.width/wh.ratio
+        column.width <- rep(max(icon.ncol) * icon.width, m)
+        row.height <- rep(max(icon.nrow) * icon.height, n)
+    }
+
     if (icon.fixedsize)
     {
-        icon.width <- min(column.width/icon.ncol)
-        icon.height <- min(row.height/icon.nrow)
         icon.halign <- matrix(icon.halign, n, m, byrow=T)
         l.coef <- c(left=0, center=0.5, right=1)
         r.coef <- c(left=1, center=0.5, right=0)
 
         pad.left  <- l.coef[icon.halign] * (column.width - (icon.width)*icon.ncol)
         pad.right <- r.coef[icon.halign] * (column.width - (icon.width)*icon.ncol)
-        pad.top <- 0.5 * (row.height - icon.height*icon.nrow)
-        pad.bottom <- pad.top
+        pad.tmp <- (row.height - icon.height*icon.nrow)
+        pad.top <- switch(icon.valign, top=matrix(0,n,m), bottom=pad.tmp, 0.5*pad.tmp)
+        pad.bottom <- switch(icon.valign, top=pad.tmp, bottom=matrix(0,n,m), 0.5*pad.tmp)
     }
-    row.height[n] <- pad.row/2 + row.height[n]
-    pad.bottom[n,] <- pad.bottom[n,] + pad.row/2
 
-    if (!(any(nchar(label.top) > 0)))
+    # Compensating for rowGutters/pad.row
+    lab.tpad <- rep(0, n)
+    lab.bpad <- rep(0, n)
+    if (length(label.top) == 0 || all(nchar(label.top)==0))
     {
         pad.top[1,] <- pad.top[1,] + pad.row/2
         row.height[1] <- row.height[1] + pad.row/2
+        lab.tpad[1] <- pad.row/2
+    }
+    if (length(label.bottom) == 0 || all(nchar(label.bottom)==0))
+    {
+        pad.bottom[n,] <- pad.bottom[n,] + pad.row/2
+        row.height[n] <- row.height[n] + pad.row/2
+        lab.bpad[n] <- pad.row/2
     }
 
+    # Preparing labels
+    if (length(label.top) > 0)
+        label.top.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
+                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
+                         label.top, label.top.font, label.top.size, label.top.weight,
+                         label.top.color, label.top.halign, label.top.valign)
+    if (length(label.bottom) > 0)
+        label.bottom.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
+                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                         \"font-color\":\"%s\",\"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
+                         label.bottom, label.bottom.font, label.bottom.size, label.bottom.weight,
+                         label.bottom.color, label.bottom.halign, label.bottom.valign)
+    if (length(label.right) > 0)
+        label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
+                         \"padding-top\":%f, \"padding-bottom\":%f,
+                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
+                         label.right, lab.tpad, lab.bpad,
+                         label.right.font, label.right.size, label.right.weight,
+                         label.right.color, label.right.halign, label.right.valign)
+    if (length(label.left) > 0)
+        label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
+                         \"padding-top\":%f, \"padding-bottom\":%f,
+                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
+                         label.left, lab.tpad, lab.bpad,
+                         label.left.font, label.left.size, label.left.weight,
+                         label.left.color, label.left.halign, label.left.valign)
+
+
+
+    #recolor.str <- "\"css\":{\".variable-img path\":{\"fill\": \"#ff0000\"}},"
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
-                         \"variableImage\":\"%s:%s\", %s \"numRows\":%d,
-                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
+                         \"variableImage\":\"url:%s:%s\", %s \"numRows\":%d,
+                        \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
                         prop, K, direction, variable.image, base.image.str, icon.nrow,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
+
+    # Adding left/right labels
     empty.str <- "{\"type\":\"label\", \"value\":{\"text\":\"\"}}"
-
-    # Adding legend
-    leg.rpad <- 0
-    if (nchar(legend.text) ==  0)
-        legend.text = " "
-    if (show.legend)
-    {
-        row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
-        leg.row <- max(1, ceiling(nrow(row.str)/2))
-        leg.col <- ncol(row.str)
-        leg.tpad <- (row.height[leg.row]-legend.size)/2
-        row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
-                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
-                                                \"horizontal-align\":\"left\", \"padding-top\":%f}}",
-                                                legend.text, legend.font, legend.size, legend.weight, legend.color, leg.tpad)
-        row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
-                         \"variableImage\":\"%s:%s\"}}", direction, variable.image)
-        column.width <- c(column.width, 10, 20, legend.size*nchar(legend.text))
-        leg.rpad <- sum(tail(column.width, 2))
-    }
-
     corner.tl <- NULL
     corner.tr <- NULL
     corner.bl <- NULL
@@ -292,12 +281,28 @@ PictoChart <- function( x,
             label.right.width <- label.right.size * max(nchar(label.right))
         column.width <- c(column.width, label.right.width)
     }
-    if (any(nchar(label.top) > 0))
-        row.height <- c(label.top.height, row.height)
-    if (any(nchar(label.bottom) > 0))
-        row.height <- c(row.height, label.bottom.height)
 
 
+    # Adding legend
+    leg.rpad <- 0
+    if (nchar(legend.text) ==  0)
+        legend.text = " "
+    if (show.legend)
+    {
+        row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
+        leg.row <- max(1, ceiling(nrow(row.str)/2))
+        leg.col <- ncol(row.str)
+        leg.tpad <- (row.height[leg.row]-legend.size)/2
+        row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
+                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
+                                                \"horizontal-align\":\"left\", \"padding-top\":%f}}",
+                                                legend.text, legend.font, legend.size, legend.weight, legend.color, leg.tpad)
+        row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
+                         \"variableImage\":\"%s:%s\", \"padding\":\"%f %f %f %f\"}}",
+                                               direction, variable.image, leg.tpad, 0, 0, 0)
+        column.width <- c(column.width, 0.1*column.width[1], icon.width, legend.size*nchar(legend.text))
+        leg.rpad <- sum(tail(column.width, 3))
+    }
 
     # Adding lines to make table
     lines.str <- ""
@@ -307,10 +312,15 @@ PictoChart <- function( x,
                        "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep="")
 
 
-    # Putting it all together
+    # Adding top/bottom labels
+    if (any(nchar(label.top) > 0))
+        row.height <- c(label.top.height, row.height)
+    if (any(nchar(label.bottom) > 0))
+        row.height <- c(row.height, label.bottom.height)
     row.str <- apply(row.str, 1, paste, collapse=",")
     json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
-            "\"table\":{\"rowHeights\":[", paste(row.height, collapse=","), "],",
+             "\"background-color\":\"", bg.color, "\",",
+             "\"table\":{\"rowHeights\":[", paste(row.height, collapse=","), "],",
             #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right,
             #",\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
             "\"rowGutterLength\":", pad.row, ",\"columnGutterLength\":", pad.col, ",",
@@ -322,5 +332,6 @@ PictoChart <- function( x,
     if (any(nchar(label.bottom) > 0))
         json.str <- paste(json.str, "],[", paste(c(corner.bl, label.bottom.str, corner.br), collapse=","), sep="")
     json.str <- paste(json.str, "]]}}", sep="")
+    #cat(json.str, "\n")
     graphic(json.str)
 }
