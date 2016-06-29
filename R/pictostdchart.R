@@ -10,7 +10,7 @@
 #' @param read.KfromX If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.
 #' @param scale Value of one icon. If \code{scale = 0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text = " "})
-#' @param aggregate.period
+#' @param aggregate.period Time period in groupBy (e.g. "month", "year").
 #' @param icon.autosize Rescale icons to fill up table cell. If K varies between cells, this can result in icons of varying sizes.
 #' @param direction Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.
 #' @param transpose Swap rows and columns in data matrix \code{x}.
@@ -76,7 +76,7 @@ PictoStdChart <- function(x,
         hide.label.top <- TRUE
         icon.valign <- "bottom"
         icon.autosize <- FALSE
-        K <- ceiling(x)
+        #K <- ceiling(x)
     }
 
     if (K == 0 && !read.KfromX)

@@ -10,7 +10,7 @@ PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
   icon.autosize = FALSE, icon.halign = "left", icon.valign = "center",
   transpose = FALSE, hide.label.left = FALSE, hide.label.top = FALSE,
   show.as.column = FALSE, label.left = c(), label.top = c(),
-  label.bottom = c(), label.bottom.halign = "center", ...)
+  label.bottom = c(), label.bottom.halign = "center", wh.ratio = 0, ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
@@ -28,6 +28,8 @@ PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
 \item{scale}{Value of one icon. If \code{scale = 0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
 \item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text = " "})}
+
+\item{aggregate.period}{Time period in groupBy (e.g. "month", "year").}
 
 \item{direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
 

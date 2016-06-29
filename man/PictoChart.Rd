@@ -30,17 +30,30 @@ PictoChart(x, variable.image, base.image = "", K = max(ceiling(x)),
   legend.color = label.color, row.height = 1.5 * label.size *
   max(icon.nrow), column.width = max(15 * max(icon.ncol), 0.5 * label.top.size
   * nchar(label.top), 0.5 * label.bottom.size * nchar(label.bottom)),
-  bg.color = "transparent", line.color = "#A8A8A8", line.width = 0.5,
-  pad.row = 5, pad.col = 5, pad.icon.row = 0, pad.icon.col = 0)
+  wh.ratio = 0, bg.color = "transparent", line.color = "#A8A8A8",
+  line.width = 0.5, pad.row = 5, pad.col = 5, pad.icon.row = 0,
+  pad.icon.col = 0)
 }
 \arguments{
 \item{x}{Data for charting}
 
-\item{base.image}{Option URL of background image}
+\item{variable.image}{URL of icon}
+
+\item{base.image}{Optional URL of background image}
 
 \item{K}{Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.}
 
 \item{direction}{Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{K} is important).}
+
+\item{show.lines}{Add horizontal lines between each row}
+
+\item{show.legend}{Show legend (true or false).}
+
+\item{legend.text}{Text to show beside legend icon.}
+
+\item{icon.nrow}{Configuration of icons in each table cell.}
+
+\item{icon.ncol}{Configuration of icons in each table cell.}
 
 \item{icon.fixedsize}{When \code{true}, icons will not automatically resize to fill table cell.}
 
@@ -48,19 +61,51 @@ PictoChart(x, variable.image, base.image = "", K = max(ceiling(x)),
 
 \item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left = rep("", length(x))}.}
 
+\item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
+
 \item{label.top}{By default, labels are read from column names of \code{x}.}
 
+\item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
+
 \item{label.font}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.}
+
+\item{label.size}{Size of label text.}
+
+\item{label.weight}{Weight of label text, e.g. "normal", "bold", "900"}
+
+\item{label.color}{Colour of labels.}
+
+\item{label.top.height}{Height of top label row in pixels.}
+
+\item{label.left.width}{Width of left label column in pixels.}
+
+\item{label.left.halign}{Horizontal alignment.}
+
+\item{label.left.valign}{Vertical alignment.}
+
+\item{legend.font}{Font of legend.}
+
+\item{legend.size}{Text size of legend text.}
 
 \item{row.height}{Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.}
 
 \item{column.width}{Width of graphic cells.}
 
-\item{pad.row}{Single numeric specifying spacing between graphic cells in the table.}
+\item{wh.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.}
 
-\item{pad.icon.row}{Numeric specifying spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
+\item{bg.color}{Background colour of pictograph}
 
-\item{pad.icon.ncol}{}
+\item{line.color}{Line colour}
+
+\item{line.width}{Width of lines}
+
+\item{pad.row}{Single numeric specifying vertical spacing between graphic cells in the table.}
+
+\item{pad.col}{Vertical spacing between cells in table.}
+
+\item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
+
+\item{pad.icon.ncol}{Spacing between horizontal spacing between icons inside each table cell.}
 }
 \description{
 Function to create a chart of Pictographs

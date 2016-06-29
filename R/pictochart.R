@@ -7,37 +7,37 @@
 #' @param base.image Optional URL of background image
 #' @param K Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.
 #' @param direction Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{K} is important).
-#' @param show.lines
-#' @param line.width
-#' @param line.color
-#' @param show.legend
-#' @param legend.text
-#' @param legend.font
-#' @param legend.size
-#' @param bg.color
-#' @param icon.nrow
-#' @param icon.ncol
+#' @param show.lines Add horizontal lines between each row
+#' @param line.width Width of lines
+#' @param line.color Line colour
+#' @param show.legend Show legend (true or false).
+#' @param legend.text Text to show beside legend icon.
+#' @param legend.font Font of legend.
+#' @param legend.size Text size of legend text.
+#' @param bg.color Background colour of pictograph
+#' @param icon.nrow Configuration of icons in each table cell.
+#' @param icon.ncol Configuration of icons in each table cell.
 #' @param icon.fixedsize When \code{true}, icons will not automatically resize to fill table cell.
 #' @param icon.halign Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.
 #' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left = rep("", length(x))}.
 #' @param label.top By default, labels are read from column names of \code{x}.
-#' @param label.bottom
-#' @param label.right
+#' @param label.bottom Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.
+#' @param label.right Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.
 #' @param label.font Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.
-#' @param label.size
-#' @param label.weight
-#' @param label.color
-#' @param label.top.height
-#' @param label.left.width
-#' @param label.left.halign
-#' @param label.left.valign
+#' @param label.size Size of label text.
+#' @param label.weight Weight of label text, e.g. "normal", "bold", "900"
+#' @param label.color Colour of labels.
+#' @param label.top.height Height of top label row in pixels.
+#' @param label.left.width Width of left label column in pixels.
+#' @param label.left.halign Horizontal alignment.
+#' @param label.left.valign Vertical alignment.
 #' @param row.height Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.
 #' @param column.width Width of graphic cells.
 #' @param wh.ratio Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.
-#' @param pad.row Single numeric specifying spacing between graphic cells in the table.
-#' @param pad.col
-#' @param pad.icon.row Numeric specifying spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
-#' @param pad.icon.ncol
+#' @param pad.row Single numeric specifying vertical spacing between graphic cells in the table.
+#' @param pad.col Vertical spacing between cells in table.
+#' @param pad.icon.row Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
+#' @param pad.icon.ncol Spacing between horizontal spacing between icons inside each table cell.
 #'
 #' @importFrom  rhtmlPictographs graphic
 #' @export
@@ -181,7 +181,7 @@ PictoChart <- function( x,
 
     if (wh.ratio != 0)
     {
-        icon.width <- min(icon.width, wh.ratio * icon.height)
+        icon.width <- max(icon.width, wh.ratio * icon.height)
         icon.height <- icon.width/wh.ratio
         column.width <- rep(max(icon.ncol) * icon.width, m)
         row.height <- rep(max(icon.nrow) * icon.height, n)
@@ -290,17 +290,19 @@ PictoChart <- function( x,
     if (show.legend)
     {
         row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
-        leg.row <- max(1, ceiling(nrow(row.str)/2))
+        leg.row <- max(1, floor(nrow(row.str)/2))
         leg.col <- ncol(row.str)
-        leg.tpad <- (row.height[leg.row]-legend.size)/2
+        leg.ipad <- 0
+        if (max(icon.nrow[leg.row,]) > 1)
+            leg.ipad <- (row.height[leg.row]-icon.height)/2
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
                                                 \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
-                                                \"horizontal-align\":\"left\", \"padding-top\":%f}}",
-                                                legend.text, legend.font, legend.size, legend.weight, legend.color, leg.tpad)
+                                                \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
+                                                legend.text, legend.font, legend.size, legend.weight, legend.color)
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
                          \"variableImage\":\"%s:%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               direction, variable.image, leg.tpad, 0, 0, 0)
-        column.width <- c(column.width, 0.1*column.width[1], icon.width, legend.size*nchar(legend.text))
+                                               direction[1], variable.image[1], leg.ipad, 0, leg.ipad, 0)
+        column.width <- c(column.width, 0.5*column.width[1], icon.width, legend.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
 
@@ -317,6 +319,8 @@ PictoChart <- function( x,
         row.height <- c(label.top.height, row.height)
     if (any(nchar(label.bottom) > 0))
         row.height <- c(row.height, label.bottom.height)
+    row.height <- pmax(1, row.height)
+    column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse=",")
     json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
              "\"background-color\":\"", bg.color, "\",",

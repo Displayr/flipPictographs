@@ -4,9 +4,9 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, number.rows, number.columns, image = "star.filled",
-  base.image = "star.empty", direction = "horizontal", auto.size = FALSE,
-  width = 25)
+SinglePicto(x, number.rows, number.columns, image = "star",
+  hide.base.image = FALSE, direction = "horizontal", auto.size = FALSE,
+  width = 50, bg.color = "transparent")
 }
 \arguments{
 \item{x}{Number of filled icons (out of \code{K = number.rows * number.columns})}
@@ -17,13 +17,15 @@ SinglePicto(x, number.rows, number.columns, image = "star.filled",
 
 \item{image}{name of icon}
 
-\item{base.image}{name of background icon. Set to "none" for no background.}
-
 \item{direction}{Direction in which pictograph is filled (horizontal, vertical or radial).}
 
 \item{auto.size}{Automatically sizes the plot based on the size of the window/slot.}
 
-\item{width}{Width of a single star in pixels when \code{auto.size} is FALSE.}
+\item{width}{Width of a single icon in pixels when \code{auto.size} is FALSE.}
+
+\item{bg.color}{Background color of graphic.}
+
+\item{base.image}{name of background icon. Set to "none" for no background.}
 }
 \description{
 Creates a single pictograph. Allows customization of the number of icons

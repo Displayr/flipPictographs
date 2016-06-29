@@ -11,7 +11,7 @@
 #' @param base.image name of background icon. Set to "none" for no background.
 #' @param direction Direction in which pictograph is filled (horizontal, vertical or radial).
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
-#' @param width Width of a single star in pixels when \code{auto.size} is FALSE.
+#' @param width Width of a single icon in pixels when \code{auto.size} is FALSE.
 #' @param bg.color Background color of graphic.
 #'
 #' @importFrom  rhtmlPictographs graphic
