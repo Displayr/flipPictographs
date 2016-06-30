@@ -133,7 +133,7 @@ PictoChart <- function( x,
     icon.ncol <- matrix(icon.ncol, nrow=n, ncol=m, byrow=(length(icon.ncol)==m && !is.data.frame(icon.ncol)))
     prop <- unlist(x)/unlist(K)
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
-        stop("x must be a number between 0 and K\n")
+        stop("x must be a number between 0 and K (prop:", prop, ")\n")
 
     if (length(label.left) > 0 && length(label.left) != n)
         stop("label.left must be of length ", n, "\n")
@@ -163,9 +163,9 @@ PictoChart <- function( x,
 
 
     # checking for lengths of fonts,spacing etc...
-    dir.opt <- c("horizontal", "vertical", "radial", "scale")
-    if (any(!direction %in% dir.opt))
-        stop("direction must be one of ", paste(dir.opt, collapse=", "), "\n")
+    #dir.opt <- c("horizontal", "vertical", "radial", "scale")
+    #if (any(!direction %in% dir.opt))
+    #    stop("direction must be one of ", paste(dir.opt, collapse=", "), "\n")
 
     base.image.str <- ""
     if (any(nchar(base.image) > 0))

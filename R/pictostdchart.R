@@ -31,11 +31,15 @@ PictoStdChart <- function(x,
                           legend.text="",
                           aggregate.period="month",
                           direction="horizontal",
+                          icon.nrow=1,
+                          icon.ncol=0,
                           icon.autosize=FALSE,
                           icon.halign="left",
                           icon.valign="center",
                           transpose=FALSE,
                           hide.label.left=FALSE,
+                          hide.label.right=FALSE,
+                          hide.label.bottom=FALSE,
                           hide.label.top=FALSE,
                           show.as.column=FALSE,
                           label.left=c(),
@@ -72,7 +76,7 @@ PictoStdChart <- function(x,
             colnames(x) <- tmpnames
         }
         label.bottom <- colnames(x)
-        direction <- "vertical"
+        direction <- "frombottom"
         hide.label.top <- TRUE
         icon.valign <- "bottom"
         icon.autosize <- FALSE
@@ -81,9 +85,11 @@ PictoStdChart <- function(x,
 
     if (K == 0 && !read.KfromX)
         K <- ifelse(icon.autosize, ceiling(x), ceiling(max(x)))
-    icon.ncol <- unlist(K)
+    if (icon.ncol == 0)
+        icon.ncol <- unlist(K)/icon.nrow
 
-    if (direction=="vertical")
+    # icon.nrow will be adjusted in pictochart
+    if (direction %in% c("vertical", "fromtop", "frombottom"))
         icon.ncol <- 1
 
     if (hide.label.left)
@@ -98,13 +104,24 @@ PictoStdChart <- function(x,
              else ncol(x)
         label.top <- rep("", m)
     }
-
+    if (hide.label.bottom)
+    {
+        m <- if (is.null(ncol(x))) 1
+             else ncol(x)
+        label.bottom <- rep("", m)
+    }
+    if (hide.label.right)
+    {
+        n <- if (is.null(nrow(x))) length(x)
+             else nrow(x)
+        label.right <- rep("", n)
+    }
     base.image <- ""
     if (!hide.base.image)
         base.image <- imageURL[image,"bg"]
     return(PictoChart(x, variable.image=imageURL[image,"fg"],
                       base.image=base.image, wh.ratio=imageWHRatio[image],
-                      K=K, icon.ncol=icon.ncol, icon.fixedsize=1-icon.autosize,
+                      K=K, icon.nrow=icon.nrow, icon.ncol=icon.ncol, icon.fixedsize=1-icon.autosize,
                       icon.halign=icon.halign, icon.valign=icon.valign,
                       label.left=label.left, label.top=label.top,
                       label.bottom=label.bottom, label.bottom.halign=label.bottom.halign,

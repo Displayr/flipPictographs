@@ -23,9 +23,8 @@ p1 <- PictoChart(x1, variable.image=star.filled, base.image=star.empty) #, colum
 # Simple dataframe (drink size popularity) and autosize
 x2 <- data.frame(Large=1:4, Medium=5:8, Small=9:12)
 rownames(x2) <- 1:4
-p2 <- PictoChart(x2-0.5, drink.filled, K=c(4,8,12))
-                 #icon.nrow=c(1,2,3))  #, column.width=200,
-                #label.left.size=8)#, label.left.width=50)
+p2 <- PictoChart(x2-0.5, drink.filled, K=c(4,8,12),
+                 icon.nrow=c(1,2,3))  #, column.width=200,
 
 #  Cell padding (migration)
 x3 <- data.frame(In=c(676,595,8645,17149,6759,3330,2256,1203),
@@ -86,7 +85,7 @@ p6 <- PictoChart(x6/10, rep(c(cow,pig,chicken,sheep), each=nrow(x6)), show.lines
 # Columns
 x7 <- sample(1:10, 12, replace=T)
 names(x7) <- format(seq(from=as.Date("2016-1-1"), length=12, by="month"), "%b")
-p7 <- PictoChart(t(x7)+0.5, fish, direction="vertical",
+p7 <- PictoChart(t(x7)+0.5, fish, direction="fromtop",
                  icon.ncol = 1, column.width=10, #label.top.size=2, label.top.height=2,
                  pad.row=0, wh.ratio=1, show.legend=T, legend.text="text here")
 

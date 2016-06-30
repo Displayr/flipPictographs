@@ -6,11 +6,13 @@
 \usage{
 PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
   K = 0, read.KfromX = FALSE, scale = 0, legend.text = "",
-  aggregate.period = "month", direction = "horizontal",
-  icon.autosize = FALSE, icon.halign = "left", icon.valign = "center",
-  transpose = FALSE, hide.label.left = FALSE, hide.label.top = FALSE,
-  show.as.column = FALSE, label.left = c(), label.top = c(),
-  label.bottom = c(), label.bottom.halign = "center", wh.ratio = 0, ...)
+  aggregate.period = "month", direction = "horizontal", icon.nrow = 1,
+  icon.ncol = 0, icon.autosize = FALSE, icon.halign = "left",
+  icon.valign = "center", transpose = FALSE, hide.label.left = FALSE,
+  hide.label.right = FALSE, hide.label.bottom = FALSE,
+  hide.label.top = FALSE, show.as.column = FALSE, label.left = c(),
+  label.top = c(), label.bottom = c(), label.bottom.halign = "center",
+  wh.ratio = 0, ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}

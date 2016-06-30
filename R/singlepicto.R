@@ -8,7 +8,7 @@
 #' @param number.rows The number of rows of icons.
 #' @param number.columns The number of columns of stars.
 #' @param image name of icon
-#' @param base.image name of background icon. Set to "none" for no background.
+#' @param hide.base.image Set to \code{TRUE} to use blank background instead of background image.
 #' @param direction Direction in which pictograph is filled (horizontal, vertical or radial).
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
 #' @param width Width of a single icon in pixels when \code{auto.size} is FALSE.
@@ -52,5 +52,6 @@ SinglePicto <- function (x,
 
     json.string <- if(auto.size) paste(json.string, ", \"preserveAspectRatio\":\"xMidYMid\"}", sep="")
             else paste(json.string, ",\"resizable\":\"false\"}", sep="")
+    #cat(json.string)
     graphic(json.string)
 }

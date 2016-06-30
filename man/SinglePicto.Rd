@@ -17,6 +17,8 @@ SinglePicto(x, number.rows, number.columns, image = "star",
 
 \item{image}{name of icon}
 
+\item{hide.base.image}{Set to \code{TRUE} to use blank background instead of background image.}
+
 \item{direction}{Direction in which pictograph is filled (horizontal, vertical or radial).}
 
 \item{auto.size}{Automatically sizes the plot based on the size of the window/slot.}
@@ -24,8 +26,6 @@ SinglePicto(x, number.rows, number.columns, image = "star",
 \item{width}{Width of a single icon in pixels when \code{auto.size} is FALSE.}
 
 \item{bg.color}{Background color of graphic.}
-
-\item{base.image}{name of background icon. Set to "none" for no background.}
 }
 \description{
 Creates a single pictograph. Allows customization of the number of icons
