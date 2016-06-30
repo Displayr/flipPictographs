@@ -58,8 +58,9 @@ PictoStdChart <- function(x,
     if (read.KfromX && is.null(groupBy))
     {
         #x <- as.data.frame(x)    # fixes incompatibilities with QTables
-        K <- ceiling(x[,ncol(x)])
-        x <- x[,-ncol(x)]
+        x2 <- x
+        K <- ceiling(x2[,ncol(x2)])
+        x <- x2[,-ncol(x2)]
     }
     x <- AsChartMatrix(y=x, x=groupBy, transpose=(!transpose), aggregate.period=aggregate.period)
 
