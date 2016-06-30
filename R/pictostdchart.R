@@ -57,7 +57,7 @@ PictoStdChart <- function(x,
 
     if (read.KfromX && is.null(groupBy))
     {
-        x <- as.data.frame(x)    # fixes incompatibilities with QTables
+        #x <- as.data.frame(x)    # fixes incompatibilities with QTables
         K <- ceiling(x[,ncol(x)])
         x <- x[,-ncol(x)]
     }

@@ -133,7 +133,7 @@ PictoChart <- function( x,
     icon.ncol <- matrix(icon.ncol, nrow=n, ncol=m, byrow=(length(icon.ncol)==m && !is.data.frame(icon.ncol)))
     prop <- unlist(x)/unlist(K)
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
-        stop("x must be a number between 0 and K (prop:", prop, ")\n")
+        stop("x must be a number between 0 and K (K:", unlist(K), "\nprop:", prop, ")\n")
 
     if (length(label.left) > 0 && length(label.left) != n)
         stop("label.left must be of length ", n, "\n")
