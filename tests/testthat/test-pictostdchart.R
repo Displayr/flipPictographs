@@ -32,3 +32,13 @@ test_that("Parameter groupBy works", {
 test_that("Parameter groupBy work with columns", {
     expect_error( PictoStdChart(x9.y, groupBy=x9.x, image="drink", transpose=T), NA)
 })
+
+
+test_that("Parameter groupBy works with transpose", {
+    expect_error( PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), transpose=T), NA)
+})
+
+test_that("Parameters groupBy, transpose and show.as.columns run without error", {
+    expect_error( PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), show.as.column=T, transpose=T), NA)
+})
+

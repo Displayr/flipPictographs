@@ -144,7 +144,7 @@ PictoChart <- function( x,
     if (length(label.bottom) > 0 && length(label.bottom) != m)
         stop("label.bottom must be of length ", m, "\n")
 
-    if (m==1 && !is.null(names(x)) && length(label.left)==0)
+    if (m==1 && is.null(row.names(x)) && !is.null(names(x)) && length(label.left)==0)
         label.left <- names(x)
     if (length(label.left)==0 & !is.null(rownames(x)))
         label.left <- rownames(x)

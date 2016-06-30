@@ -25,3 +25,8 @@ x9.y <- data.frame(A=1:n, B=(1:n)+0.5)
 x9.x <- sample(1:4, n, replace=T)
 q9 <- PictoStdChart(x9.y, groupBy=x9.x, image="drink", transpose=F)
 q9b <- PictoStdChart(x9.y, groupBy=x9.x, image="drink", transpose=T, bg.color="green", pad.icon.col=0.5)
+
+# Names and aggregating
+q10 <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), transpose=F)
+q10b <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), transpose=T)
+q11 <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), show.as.column=T, transpose=T)

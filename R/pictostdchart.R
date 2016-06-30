@@ -72,7 +72,7 @@ PictoStdChart <- function(x,
         if (ncol(x) == 1)
         {
             tmpnames <- rownames(x)
-            x <- matrix(x, nrow=1)
+            x <- matrix(unlist(x), nrow=1)
             colnames(x) <- tmpnames
         }
         label.bottom <- colnames(x)
