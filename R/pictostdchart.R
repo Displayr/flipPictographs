@@ -61,6 +61,10 @@ PictoStdChart <- function(x,
         x2 <- x
         K <- ceiling(x2[,ncol(x2)])
         x <- x2[,-ncol(x2)]
+
+        cat("K read from X:", K, "\n")
+        cat("X:", x, "\n")
+        print(str(x))
     }
     x <- AsChartMatrix(y=x, x=groupBy, transpose=(!transpose), aggregate.period=aggregate.period)
 
@@ -82,11 +86,11 @@ PictoStdChart <- function(x,
         hide.label.top <- TRUE
         icon.valign <- "bottom"
         icon.autosize <- FALSE
-        #K <- ceiling(x)
     }
 
     if (K == 0 && !read.KfromX)
-        K <- ifelse(icon.autosize, ceiling(x), ceiling(max(x)))
+        K <- if (icon.autosize) ceiling(x)
+             else ceiling(max(x))
     if (icon.ncol == 0)
         icon.ncol <- unlist(K)/icon.nrow
 
@@ -118,6 +122,9 @@ PictoStdChart <- function(x,
              else nrow(x)
         label.right <- rep("", n)
     }
+
+    cat("Passing icon.ncol to PictoChart:", icon.ncol, "\n")
+    cat("Passing K to PictoChart:", K, "\n")
     base.image <- ""
     if (!hide.base.image)
         base.image <- imageURL[image,"bg"]
