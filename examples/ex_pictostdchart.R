@@ -9,8 +9,8 @@ q1d <- PictoStdChart(x1, show.as.column = T, show.lines=T, show.legend=T, icon.n
 q1e <- PictoStdChart(x1, show.as.column = F, show.lines=T, show.legend=T)
 
 # Pyramids
-x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
-colnames(x8) <- c("Women", "Total")
+x8 <- rbind(Top=c(1,0.5,5), Upper=c(3,5,11), Mid=c(15,17,20), Bottom=c(25,12,30))
+colnames(x8) <- c("Women", "Old", "Total")
 q8 <- PictoStdChart(x8, image="people.red", read.KfromX = T,
                     icon.halign="center", show.legend=T)
 q8b <- PictoStdChart(x8, image="people.red", read.KfromX = T, transpose=T,
@@ -19,6 +19,11 @@ q8c <- PictoStdChart(x8, image="people.red", read.KfromX = T, direction="fromrig
                     icon.halign="center", show.legend=T)
 q8d <- PictoStdChart(x8, image="people.red", read.KfromX = T, direction="frombottom",
                     icon.halign="center", show.legend=T)
+q8e <- PictoStdChart(x8, image="people.red", read.KfromX = T, direction="frombottom",
+                    icon.halign="center", show.legend=T, transpose=T)
+q8f <- PictoStdChart(x8, image="people.red", read.KfromX = T, direction="frombottom",
+                    icon.halign="center", show.legend=T, show.as.column = T, transpose=T)
+
 # Aggregating
 n <- 50
 x9.y <- data.frame(A=1:n, B=(1:n)+0.5)

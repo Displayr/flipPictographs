@@ -128,7 +128,7 @@ PictoChart <- function( x,
         length(icon.ncol) != n && length(icon.ncol) != m)
         stop("icon.ncol does not match dimensions of x\n")
 
-    # Try column-first order first (i.e. entry of K to one row)
+    # Try column-first order first (i.e. each entry of K to one row)
     byrow = (length(K)!=n && length(K) != length(x) && !is.data.frame(K))
     K <- matrix(unlist(K), nrow=n, ncol=m, byrow=byrow)
 
@@ -195,8 +195,6 @@ PictoChart <- function( x,
 
     if (icon.fixedsize)
     {
-        cat("Fixed size: icon.ncol\n")
-        print(icon.ncol)
         icon.halign <- matrix(icon.halign, n, m, byrow=T)
         l.coef <- c(left=0, center=0.5, right=1)
         r.coef <- c(left=1, center=0.5, right=0)

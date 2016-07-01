@@ -55,16 +55,12 @@ PictoStdChart <- function(x,
         legend.text = sprintf("= %d", scale)
     x <- x/scale
 
-    if (read.KfromX && (is.na(groupBy) || is.null(groupBy)))
+    if (read.KfromX && (is.null(groupBy) || is.na(groupBy)))
     {
         #x <- as.data.frame(x)    # fixes incompatibilities with QTables
         x2 <- x
         K <- ceiling(x2[,ncol(x2)])
         x <- x2[,-ncol(x2)]
-
-        cat("K read from X:", K, "\n")
-        cat("X:", x, "\n")
-        print(str(x))
     }
     x <- AsChartMatrix(y=x, x=groupBy, transpose=(!transpose), aggregate.period=aggregate.period)
 
@@ -89,7 +85,7 @@ PictoStdChart <- function(x,
     }
 
     # If read.KfromX fails, K tries default values
-    if (K == 0)
+    if (all(K == 0))
         K <- if (icon.autosize) ceiling(x)
              else ceiling(max(x))
     if (icon.ncol == 0)
@@ -124,8 +120,6 @@ PictoStdChart <- function(x,
         label.right <- rep("", n)
     }
 
-    cat("Passing icon.ncol to PictoChart:", icon.ncol, "\n")
-    cat("Passing K to PictoChart:", K, "\n")
     base.image <- ""
     if (!hide.base.image)
         base.image <- imageURL[image,"bg"]
