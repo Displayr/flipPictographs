@@ -55,7 +55,7 @@ PictoStdChart <- function(x,
         legend.text = sprintf("= %d", scale)
     x <- x/scale
 
-    if (read.KfromX && is.null(groupBy))
+    if (read.KfromX && (is.na(groupBy) || is.null(groupBy)))
     {
         #x <- as.data.frame(x)    # fixes incompatibilities with QTables
         x2 <- x
@@ -88,7 +88,8 @@ PictoStdChart <- function(x,
         icon.autosize <- FALSE
     }
 
-    if (K == 0 && !read.KfromX)
+    # If read.KfromX fails, K tries default values
+    if (K == 0)
         K <- if (icon.autosize) ceiling(x)
              else ceiling(max(x))
     if (icon.ncol == 0)
