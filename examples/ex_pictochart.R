@@ -19,6 +19,7 @@ fish <- "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png"
 # Simple vector (movie ratings)
 x1 <- c(First=1, Second=2, Third=3)
 p1 <- PictoChart(x1, variable.image=star.filled, base.image=star.empty) #, column.width=100)
+p1b <- PictoChart(x1, variable.image=star.filled, base.image=star.empty, text.type = "percentage")
 
 # Simple dataframe (drink size popularity) and autosize
 x2 <- data.frame(Large=1:4, Medium=5:8, Small=9:12)

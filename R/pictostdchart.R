@@ -26,6 +26,7 @@ PictoStdChart <- function(x,
                           image="star",
                           hide.base.image=FALSE,
                           K=0,
+                          K.varying=hide.base.image,
                           read.KfromX=FALSE,
                           scale=0,
                           legend.text="",
@@ -47,6 +48,9 @@ PictoStdChart <- function(x,
                           label.bottom=c(),
                           label.bottom.halign="center",
                           wh.ratio=0,
+                          text.type="none",
+                          text.text=NULL,
+                          text.position="footer",
                           ...)
 {
     # Get maximum before any aggregating
@@ -65,6 +69,13 @@ PictoStdChart <- function(x,
     if (K == 0 && K.default == 0)
         K.default <- ceiling(max(x))
 
+    # Need to get counts before scaling
+    if (text.type == "count")
+    {
+        text.type <- "raw"
+        text.text <- as.character(unlist(x))
+    }
+
     if (scale==0 && max(x) > 1)
         scale <- max(1, floor(max(x)/10))
     if (scale==0 && max(x) <= 1)
@@ -80,8 +91,9 @@ PictoStdChart <- function(x,
     {
         if (is.null(dim(x)))
         {
+            tmpnames <- names(x)
             x <- matrix(x, nrow=1)
-            colnames(x) <- names(x)
+            colnames(x) <- tmpnames
         }
         if (ncol(x) == 1)
         {
@@ -94,10 +106,13 @@ PictoStdChart <- function(x,
         hide.label.top <- TRUE
         icon.valign <- "bottom"
         icon.autosize <- FALSE
+        K.varying <- TRUE
+        text.position <- "header"
+
     }
     if (mode=="bar")
     {
-        if (nrow(x) == 1)
+        if (!is.null(dim(x)) && nrow(x) == 1)
         {
             tmpnames <- colnames(x)
             x <- matrix(unlist(x), ncol=1)
@@ -105,11 +120,12 @@ PictoStdChart <- function(x,
         }
         direction <- "fromleft"
         icon.autosize <- FALSE
+        K.varying <- TRUE
     }
 
     # If read.KfromX fails, K tries default values
     if (all(K == 0))
-        K <- if (icon.autosize) ceiling(x)
+        K <- if (K.varying) ceiling(x)
              else ceiling(K.default/scale)
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
@@ -152,7 +168,8 @@ PictoStdChart <- function(x,
                       icon.halign=icon.halign, icon.valign=icon.valign,
                       label.left=label.left, label.top=label.top,
                       label.bottom=label.bottom, label.bottom.halign=label.bottom.halign,
-                      direction=direction, legend.text=legend.text, ...))
+                      direction=direction, legend.text=legend.text,
+                      text.position=text.position, text.type=text.type, text.text=text.text, ...))
 }
 
 

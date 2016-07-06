@@ -104,7 +104,13 @@ PictoChart <- function( x,
                         pad.row = 5,
                         pad.col = 5,
                         pad.icon.row=0.0,
-                        pad.icon.col=0.0)
+                        pad.icon.col=0.0,
+                        text.type="none",
+                        text.text=NULL,
+                        text.position="footer",
+                        text.size=0.6*label.size,
+                        text.weight=400,
+                        text.halign="center")
 {
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
@@ -255,13 +261,27 @@ PictoChart <- function( x,
                          label.left, lab.tpad, lab.bpad,
                          label.left.font, label.left.size, label.left.weight,
                          label.left.color, label.left.halign, label.left.valign)
+    # Preparing text
+    text.str <- ""
+    if (text.type != "none")
+    {
+        if (text.type == "count")
+            text.text <- as.character(unlist(x))
+        if (text.type %in% c("proportion", "percentage"))
+            text.text <- text.type
 
+        text.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%d\",
+                             \"horizontal-align\":\"%s\"},",
+                            text.position, text.text, text.size, text.weight, text.halign)
+        row.height <- row.height + text.size
+    }
 
+    footer.text <- "\"text-footer\":{\"text\":\"percentage\", \"font-size\":\"8px\", \"font-weight\":\"400\"},"
     #recolor.str <- "\"css\":{\".variable-img path\":{\"fill\": \"#ff0000\"}},"
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%f,
-                         \"variableImage\":\"url:%s:%s\", %s \"numRows\":%d,
+                         \"variableImage\":\"url:%s:%s\", %s \"numRows\":%d, %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
-                        prop, K, direction, variable.image, base.image.str, icon.nrow,
+                        prop, K, direction, variable.image, base.image.str, icon.nrow, text.str,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
 

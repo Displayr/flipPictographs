@@ -7,6 +7,8 @@ q1b <- PictoStdChart(x1*100, show.legend=T)
 q1c <- PictoStdChart(x1, mode="column", bg.color="red")
 q1d <- PictoStdChart(x1, mode="column", show.lines=T, show.legend=T, icon.nrow=5)
 q1e <- PictoStdChart(x1, mode="none", show.lines=T, show.legend=T)
+q1f <- PictoStdChart(x1, mode="column", show.lines=T, show.legend=T, text.type="percentage")
+q1g <- PictoStdChart(x1, mode="bar", show.lines=T, show.legend=T, text.type="percentage")
 
 # Pyramids
 x8 <- rbind(Top=c(1,0.5,5), Upper=c(3,5,11), Mid=c(15,17,20), Bottom=c(25,12,30))
@@ -35,3 +37,5 @@ q9b <- PictoStdChart(x9.y, groupBy=x9.x, image="drink", transpose=T, bg.color="g
 q10 <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), transpose=F)
 q10b <- PictoStdChart(x=cbind(Test=1:30), groupBy=rep(1:3, each=10), mode="bar")
 q11 <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), mode="column", transpose=T)
+q11b <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), mode="column", transpose=F, text.type="count")
+q11c <- PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), mode="column", text.type="percentage")
