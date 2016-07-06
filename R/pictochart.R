@@ -129,15 +129,19 @@ PictoChart <- function( x,
         stop("icon.ncol does not match dimensions of x\n")
 
     # Try column-first order first (i.e. each entry of K to one row)
-    byrow = (length(K)!=n && length(K) != length(x) && !is.data.frame(K))
+    byrow = (length(K)!=n && length(unlist(K)) != length(unlist(x)) && !is.data.frame(K))
     K <- matrix(unlist(K), nrow=n, ncol=m, byrow=byrow)
 
 
     icon.nrow <- matrix(icon.nrow, nrow=n, ncol=m,
-                        byrow=(length(icon.nrow)!=n && length(icon.nrow) != length(x) && !is.data.frame(icon.nrow)))
+                        byrow=(length(icon.nrow)!=n && length(unlist(icon.nrow)) != length(unlist(x)) && !is.data.frame(icon.nrow)))
     icon.ncol <- matrix(icon.ncol, nrow=n, ncol=m,
-                        byrow=(length(icon.ncol)!=n && length(icon.ncol) != length(x) && !is.data.frame(icon.ncol)))
+                        byrow=(length(icon.ncol)!=n && length(unlist(icon.ncol)) != length(unlist(x)) && !is.data.frame(icon.ncol)))
     prop <- unlist(x)/unlist(K)
+
+    if (all(K == 0))
+        stop("No non-zero entries for K\n")
+    prop[K==0] <- 0
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
         stop("x must be a number between 0 and K (K:", unlist(K), "\nprop:", prop, ")\n")
 
@@ -254,7 +258,7 @@ PictoChart <- function( x,
 
 
     #recolor.str <- "\"css\":{\".variable-img path\":{\"fill\": \"#ff0000\"}},"
-    row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
+    row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%f,
                          \"variableImage\":\"url:%s:%s\", %s \"numRows\":%d,
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
                         prop, K, direction, variable.image, base.image.str, icon.nrow,

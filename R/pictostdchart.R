@@ -16,7 +16,7 @@
 #' @param transpose Swap rows and columns in data matrix \code{x}.
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
-#' @param show.as.column Pictograph is shown as column chart. Specifically, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically.
+#' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode = "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode = "table"} is the most general and does not impose constraints.
 #' @param ... Arguments passed to \code{PictoChart()}.
 #' @importFrom flipChartBasics AsChartMatrix
 #' @export
@@ -30,7 +30,8 @@ PictoStdChart <- function(x,
                           scale=0,
                           legend.text="",
                           aggregate.period="month",
-                          direction="horizontal",
+                          mode="table",
+                          direction="fromleft",
                           icon.nrow=1,
                           icon.ncol=0,
                           icon.autosize=FALSE,
@@ -41,7 +42,6 @@ PictoStdChart <- function(x,
                           hide.label.right=FALSE,
                           hide.label.bottom=FALSE,
                           hide.label.top=FALSE,
-                          show.as.column=FALSE,
                           label.left=c(),
                           label.top=c(),
                           label.bottom=c(),
@@ -49,22 +49,34 @@ PictoStdChart <- function(x,
                           wh.ratio=0,
                           ...)
 {
-    if (scale==0)
-        scale = max(1, floor(max(x)/10))
-    if (nchar(legend.text)==0)
-        legend.text = sprintf("= %d", scale)
-    x <- x/scale
+    # Get maximum before any aggregating
+    K.default <- 0
+    if (K == 0 && is.numeric(x))
+        K.default <- ceiling(max(x))
 
+    # Get data into the right format
     if (read.KfromX && (is.null(groupBy) || is.na(groupBy)))
     {
-        #x <- as.data.frame(x)    # fixes incompatibilities with QTables
         x2 <- x
         K <- ceiling(x2[,ncol(x2)])
         x <- x2[,-ncol(x2)]
     }
-    x <- AsChartMatrix(y=x, x=groupBy, transpose=(!transpose), aggregate.period=aggregate.period)
+    x <- AsChartMatrix(y=x, x=groupBy, transpose=(transpose), aggregate.period=aggregate.period)
+    if (K == 0 && K.default == 0)
+        K.default <- ceiling(max(x))
 
-    if (show.as.column)
+    if (scale==0 && max(x) > 1)
+        scale <- max(1, floor(max(x)/10))
+    if (scale==0 && max(x) <= 1)
+        scale <- 10^{log10(median(x))}
+
+    if (nchar(legend.text)==0 && scale > 0)
+        legend.text = sprintf(paste("= %.", 0-min(0,floor(log10(scale))), "f", sep=""), scale)
+    x <- x/scale
+    if (read.KfromX)
+        K <- K/scale
+
+    if (mode=="column")
     {
         if (is.null(dim(x)))
         {
@@ -83,15 +95,26 @@ PictoStdChart <- function(x,
         icon.valign <- "bottom"
         icon.autosize <- FALSE
     }
+    if (mode=="bar")
+    {
+        if (nrow(x) == 1)
+        {
+            tmpnames <- colnames(x)
+            x <- matrix(unlist(x), ncol=1)
+            rownames(x) <- tmpnames
+        }
+        direction <- "fromleft"
+        icon.autosize <- FALSE
+    }
 
     # If read.KfromX fails, K tries default values
     if (all(K == 0))
         K <- if (icon.autosize) ceiling(x)
-             else ceiling(max(x))
+             else ceiling(K.default/scale)
+
+    # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (icon.ncol == 0)
         icon.ncol <- unlist(K)/icon.nrow
-
-    # icon.nrow will be adjusted in pictochart
     if (direction %in% c("vertical", "fromtop", "frombottom"))
         icon.ncol <- 1
 

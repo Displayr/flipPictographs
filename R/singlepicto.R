@@ -13,6 +13,7 @@
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
 #' @param width Width of a single icon in pixels when \code{auto.size} is FALSE.
 #' @param bg.color Background color of graphic.
+#' @param text.type One of \code{"none", "count", "proportion", "percentage"}
 #'
 #' @importFrom  rhtmlPictographs graphic
 #' @export
@@ -24,9 +25,13 @@ SinglePicto <- function (x,
                          direction="horizontal",
                          auto.size = FALSE,
                          width=50,
-                         bg.color="transparent")
+                         bg.color="transparent",
+                         text.type="none",
+                         text.size=8,
+                         text.weight=700,
+                         text.halign="center")
 {
-    image.height <- width/imageWHRatio[image] * number.rows
+    image.height <- width/imageWHRatio[image] * number.rows + (2*text.size*(text.type!="none"))
     number.images <- number.columns * number.rows
     prop <- x/number.images
     if (prop < 0 | prop > 1)
@@ -41,12 +46,22 @@ SinglePicto <- function (x,
         base.image.str <- paste(",\"baseImage\":\"url:", imageURL[image, "bg"], "\"", sep="")
     variable.image <- paste(direction, ":", imageURL[image, "fg"], sep="")
 
+    text.str <- ""
+    if (text.type != "none")
+    {
+        if (text.type == "count")
+            text.type <- as.character(x)
+        text.str <- sprintf(",\"text-footer\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%d\", \"horizontal-align\":\"%s\"}",
+                            text.type, text.size, text.weight, text.halign)
+    }
+
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", number.images,
           ",\"numRows\":", number.rows,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str,
           ",\"width\":", number.columns*width,
           ",\"height\":", image.height,
+          text.str,
           ",\"background-color\":\"", bg.color, "\"",
           sep="")
 
