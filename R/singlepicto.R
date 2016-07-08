@@ -44,7 +44,7 @@ SinglePicto <- function (x,
     base.image.str <- ""
     if (!hide.base.image)
         base.image.str <- paste(",\"baseImage\":\"url:", imageURL[image, "bg"], "\"", sep="")
-    variable.image <- paste(direction, ":", imageURL[image, "fg"], sep="")
+    variable.image <- paste("url:", direction, ":", imageURL[image, "fg"], sep="")
 
     text.str <- ""
     if (text.type != "none")

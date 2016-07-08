@@ -85,7 +85,7 @@ PictoStdChart <- function(x,
         legend.text = sprintf(paste("= %.", 0-min(0,floor(log10(scale))), "f", sep=""), scale)
     x <- x/scale
     if (read.KfromX)
-        K <- K/scale
+        K <- ceiling(K/scale)
 
     if (mode=="column")
     {
