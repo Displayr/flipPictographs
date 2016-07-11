@@ -2,6 +2,7 @@
 
 export(PictoChart)
 export(PictoStdChart)
+export(ShapesStdChart)
 export(SinglePicto)
 importFrom(flipChartBasics,AsChartMatrix)
 importFrom(rhtmlPictographs,graphic)

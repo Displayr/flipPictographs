@@ -45,6 +45,7 @@
 PictoChart <- function( x,
                         variable.image,
                         base.image="",
+                        image.type="url",
                         K=max(ceiling(x)),
                         direction="horizontal",
                         show.lines=FALSE,
@@ -185,7 +186,7 @@ PictoChart <- function( x,
 
     base.image.str <- ""
     if (any(nchar(base.image) > 0))
-        base.image.str <- paste("\"baseImage\":\"url:", base.image, "\",", sep="")
+        base.image.str <- paste("\"baseImage\":\"", image.type, ":", base.image, "\",", sep="")
 
     # Calculating padding/alignment
     pad.left=matrix(0, n, m)
@@ -279,9 +280,9 @@ PictoChart <- function( x,
     footer.text <- "\"text-footer\":{\"text\":\"percentage\", \"font-size\":\"8px\", \"font-weight\":\"400\"},"
     #recolor.str <- "\"css\":{\".variable-img path\":{\"fill\": \"#ff0000\"}},"
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%f,
-                         \"variableImage\":\"url:%s:%s\", %s \"numRows\":%d, %s
+                         \"variableImage\":\"%s:%s:%s\", %s \"numRows\":%d, %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
-                        prop, K, direction, variable.image, base.image.str, icon.nrow, text.str,
+                        prop, K, image.type, direction, variable.image, base.image.str, icon.nrow, text.str,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
 

@@ -5,14 +5,15 @@
 \title{Wrapper function to create Pictographs}
 \usage{
 PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
-  K = 0, read.KfromX = FALSE, scale = 0, legend.text = "",
-  aggregate.period = "month", direction = "horizontal", icon.nrow = 1,
-  icon.ncol = 0, icon.autosize = FALSE, icon.halign = "left",
-  icon.valign = "center", transpose = FALSE, hide.label.left = FALSE,
-  hide.label.right = FALSE, hide.label.bottom = FALSE,
-  hide.label.top = FALSE, show.as.column = FALSE, label.left = c(),
+  K = 0, K.varying = hide.base.image, read.KfromX = FALSE, scale = 0,
+  legend.text = "", aggregate.period = "month", mode = "table",
+  direction = "fromleft", icon.nrow = 1, icon.ncol = 0,
+  icon.autosize = FALSE, icon.halign = "left", icon.valign = "center",
+  transpose = FALSE, hide.label.left = FALSE, hide.label.right = FALSE,
+  hide.label.bottom = FALSE, hide.label.top = FALSE, label.left = c(),
   label.top = c(), label.bottom = c(), label.bottom.halign = "center",
-  wh.ratio = 0, ...)
+  wh.ratio = 0, text.type = "none", text.text = NULL,
+  text.position = "footer", ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
@@ -33,6 +34,8 @@ PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
 
 \item{aggregate.period}{Time period in groupBy (e.g. "month", "year").}
 
+\item{mode}{Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode = "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode = "table"} is the most general and does not impose constraints.}
+
 \item{direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
 
 \item{icon.autosize}{Rescale icons to fill up table cell. If K varies between cells, this can result in icons of varying sizes.}
@@ -42,8 +45,6 @@ PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
 \item{hide.label.left}{Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.}
 
 \item{hide.label.top}{Suppress labels above graphics.}
-
-\item{show.as.column}{Pictograph is shown as column chart. Specifically, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically.}
 
 \item{...}{Arguments passed to \code{PictoChart()}.}
 }

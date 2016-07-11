@@ -6,7 +6,8 @@
 \usage{
 SinglePicto(x, number.rows, number.columns, image = "star",
   hide.base.image = FALSE, direction = "horizontal", auto.size = FALSE,
-  width = 50, bg.color = "transparent")
+  width = 50, bg.color = "transparent", text.type = "none",
+  text.size = 8, text.weight = 700, text.halign = "center")
 }
 \arguments{
 \item{x}{Number of filled icons (out of \code{K = number.rows * number.columns})}
@@ -26,6 +27,8 @@ SinglePicto(x, number.rows, number.columns, image = "star",
 \item{width}{Width of a single icon in pixels when \code{auto.size} is FALSE.}
 
 \item{bg.color}{Background color of graphic.}
+
+\item{text.type}{One of \code{"none", "count", "proportion", "percentage"}}
 }
 \description{
 Creates a single pictograph. Allows customization of the number of icons
