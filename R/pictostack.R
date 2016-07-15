@@ -1,4 +1,4 @@
-pictoStack <- function(x, mode, ...)
+pictoStack <- function(x, mode, col1, col2)
 {
     # Assume scaling and conversions performed already using PictoStdChart
 
@@ -12,7 +12,7 @@ pictoStack <- function(x, mode, ...)
          else ncol(x)
 
     # Set up colorscale
-    c.rgb <- colorRamp(c("red", "blue"))(seq(0,1,length=m))
+    c.rgb <- colorRamp(c(col1, col2))(seq(0,1,length=m))
     c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], max=255)
     c.hex <- c(c.hex, "")
 
@@ -33,7 +33,7 @@ pictoStack <- function(x, mode, ...)
                 next
             c.fg[i,j] <- c.hex[k]
             x2[i,j] <- max(0, min(1, i.cum[k] - j + 1), 0)
-            while (k <= m && i.cum[k] <= j)
+            while (k <= m && i.cum[k] < j)
                 k <- k +1
             c.bg[i,j] <- c.hex[k]
         }

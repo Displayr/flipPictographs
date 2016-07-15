@@ -33,6 +33,8 @@ PictoStdChart <- function(x,
                           aggregate.period="month",
                           mode="table",
                           stack=FALSE,
+                          gradient.col1="blue",
+                          gradient.col2="orange",
                           direction="fromleft",
                           icon.nrow=1,
                           icon.ncol=0,
@@ -162,7 +164,7 @@ PictoStdChart <- function(x,
 
     if (stack)
     {
-        return(pictoStack(x, mode=mode,
+        return(pictoStack(x, mode=mode, col1=gradient.col1, col2=gradient.col2,
                           label.left=label.left, label.top=label.top,
                           label.bottom=label.bottom, label.bottom.halign=label.bottom.halign,
                           direction=direction, legend.text=legend.text, ...))

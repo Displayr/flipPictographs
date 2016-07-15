@@ -11,4 +11,7 @@ x4 <- cbind(A=1:3, B=2:4, C=c(0,0,1))
 t4 <- PictoStdChart(x4, stack=T, mode="column")
 
 x5 <- cbind(A=4:1, B=1:4, C=c(1,0,0,1))
-t5 <- PictoStdChart(x5, stack=T, mode="column")
+t5 <- PictoStdChart(x5, stack=T, mode="column", show.legend=T)
+
+x6 <- rbind(A=1:3, B=c(3, 2.5, 0.5))
+t6 <- PictoStdChart(x6, stack=T, show.legend=T)
