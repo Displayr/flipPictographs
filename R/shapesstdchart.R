@@ -67,7 +67,7 @@ ShapesStdChart <- function(x,
         n.c <- n
         if (gradient.dir == "column")
             n.c <- m
-        c.rgb <- colorRamp(c(gradient.col1, gradient.col2))((1:n.c)/n.c)
+        c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length=n.c))
         c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], max=255)
         variable.image <- matrix(c.hex, n, m, byrow=(gradient.dir=="column"))
     }

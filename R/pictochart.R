@@ -184,9 +184,9 @@ PictoChart <- function( x,
     #if (any(!direction %in% dir.opt))
     #    stop("direction must be one of ", paste(dir.opt, collapse=", "), "\n")
 
-    base.image.str <- ""
-    if (any(nchar(base.image) > 0))
-        base.image.str <- paste("\"baseImage\":\"", image.type, ":", base.image, "\",", sep="")
+    base.image.str <- ifelse(nchar(base.image) > 0,
+                             paste("\"baseImage\":\"", image.type, ":", base.image, "\",", sep=""),
+                             "")
 
     # Calculating padding/alignment
     pad.left=matrix(0, n, m)

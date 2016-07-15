@@ -32,6 +32,7 @@ PictoStdChart <- function(x,
                           legend.text="",
                           aggregate.period="month",
                           mode="table",
+                          stack=FALSE,
                           direction="fromleft",
                           icon.nrow=1,
                           icon.ncol=0,
@@ -157,6 +158,14 @@ PictoStdChart <- function(x,
         n <- if (is.null(nrow(x))) length(x)
              else nrow(x)
         label.right <- rep("", n)
+    }
+
+    if (stack)
+    {
+        return(pictoStack(x, mode=mode,
+                          label.left=label.left, label.top=label.top,
+                          label.bottom=label.bottom, label.bottom.halign=label.bottom.halign,
+                          direction=direction, legend.text=legend.text, ...))
     }
 
     base.image <- ""
