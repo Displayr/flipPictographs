@@ -33,7 +33,7 @@ pictoStack <- function(x, mode, ...)
                 next
             c.fg[i,j] <- c.hex[k]
             x2[i,j] <- max(0, min(1, i.cum[k] - j + 1), 0)
-            while (k <= m && i.cum[k] <= j)
+            while (k <= m && i.cum[k] < j)
                 k <- k +1
             c.bg[i,j] <- c.hex[k]
         }

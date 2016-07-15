@@ -330,8 +330,8 @@ PictoChart <- function( x,
                                                 \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
                                                 legend.text, legend.font, legend.size, legend.weight, legend.color)
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
-                         \"variableImage\":\"%s:%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               direction[1], variable.image[1], leg.ipad, 0, leg.ipad, 0)
+                         \"variableImage\":\"%s:%s:%s\", \"padding\":\"%f %f %f %f\"}}",
+                                               image.type, direction[1], variable.image[1], leg.ipad, 0, leg.ipad, 0)
         column.width <- c(column.width, 0.5*column.width[1], icon.width, legend.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
