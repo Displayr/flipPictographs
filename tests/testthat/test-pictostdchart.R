@@ -8,7 +8,7 @@ test_that("Scaling works", {
     expect_error( PictoStdChart(x1*100, show.legend=T), NA)
 })
 test_that("Simple column chart", {
-    expect_error( PictoStdChart(x1, show.as.column = T), NA)
+    expect_error( PictoStdChart(x1, mode="column"), NA)
 })
 
 x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
@@ -19,7 +19,7 @@ test_that("Parameter read.KfromX accepted", {
 })
 test_that("Parameter read.KfromX works with columns", {
     expect_error( PictoStdChart(x8, image="people.red", read.KfromX = T, transpose=T,
-                    show.as.column = T, show.legend=T), NA)
+                    mode="column", show.legend=T), NA)
 })
 
 n <- 50
@@ -39,6 +39,6 @@ test_that("Parameter groupBy works with transpose", {
 })
 
 test_that("Parameters groupBy, transpose and show.as.columns run without error", {
-    expect_error( PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), show.as.column=T, transpose=T), NA)
+    expect_error( PictoStdChart(x=1:30, groupBy=rep(1:3, each=10), mode="column", transpose=T), NA)
 })
 

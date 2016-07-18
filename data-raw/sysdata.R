@@ -25,5 +25,6 @@ imageURL <- rbind(star = c("http://wiki.q-researchsoftware.com/images/9/91/Star_
                                "http://wiki.q-researchsoftware.com/images/8/82/Citygate_grey.svg"))
 
 colnames(imageURL) <- c("fg", "bg")
-imageWHRatio <- c(star=1, people=0.5, people.red=0.5, drink=0.75)
+imageWHRatio <- c(star=1, people=0.5, people.red=0.5, drink=0.75,
+                  graduation=1, city=1, building=1, house=1, barn=1, citygate=1)
 save(imageURL, imageWHRatio, file = "R/sysdata.rda")

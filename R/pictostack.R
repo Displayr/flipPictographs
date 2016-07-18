@@ -1,4 +1,4 @@
-pictoStack <- function(x, mode, col1, col2)
+pictoStack <- function(x, mode, col1, col2, ...)
 {
     # Assume scaling and conversions performed already using PictoStdChart
 

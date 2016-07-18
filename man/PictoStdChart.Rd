@@ -7,6 +7,7 @@
 PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
   K = 0, K.varying = hide.base.image, read.KfromX = FALSE, scale = 0,
   legend.text = "", aggregate.period = "month", mode = "table",
+  stack = FALSE, gradient.col1 = "blue", gradient.col2 = "orange",
   direction = "fromleft", icon.nrow = 1, icon.ncol = 0,
   icon.autosize = FALSE, icon.halign = "left", icon.valign = "center",
   transpose = FALSE, hide.label.left = FALSE, hide.label.right = FALSE,

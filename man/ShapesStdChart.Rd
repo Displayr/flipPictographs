@@ -5,14 +5,14 @@
 \title{Wrapper function to create Pictographs}
 \usage{
 ShapesStdChart(x, groupBy = NULL, variable.image = "red",
-  gradient.type = "color", gradient.direction = "column",
-  base.image = "grey80", image.type = "circle", direction = "radial",
-  text.type = "percentage", text.position = "overlay", text.text = NULL,
-  aggregate.period = "month", transpose = FALSE, hide.label.left = FALSE,
-  hide.label.right = FALSE, hide.label.bottom = FALSE,
-  hide.label.top = FALSE, label.left = c(), label.top = c(),
-  label.bottom = c(), label.bottom.halign = "center", column.width = 20,
-  row.height = 20, ...)
+  gradient.type = "color", gradient.col1 = "red", gradient.col2 = "blue",
+  gradient.dir = "column", gradient.dsize = 5, base.image = "grey",
+  image.type = "circle", direction = "radial", text.type = "percentage",
+  text.position = "overlay", text.text = NULL, aggregate.period = "month",
+  transpose = FALSE, hide.label.left = FALSE, hide.label.right = FALSE,
+  hide.label.bottom = FALSE, hide.label.top = FALSE, label.left = c(),
+  label.top = c(), label.bottom = c(), label.bottom.halign = "center",
+  column.width = 20, row.height = 20, ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
