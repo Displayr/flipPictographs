@@ -111,11 +111,11 @@ PictoChart <- function( x,
                         text.position="footer",
                         text.size=0.6*label.size,
                         text.weight=400,
-                        text.halign="center")
+                        text.halign="right")
 {
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
-    m <- if (is.null(ncol(x))) 1
+    m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
 
     if (any(icon.nrow * icon.ncol != K))
@@ -144,7 +144,7 @@ PictoChart <- function( x,
                         byrow=(length(icon.nrow)!=n && length(unlist(icon.nrow)) != length(unlist(x)) && !is.data.frame(icon.nrow)))
     icon.ncol <- matrix(icon.ncol, nrow=n, ncol=m,
                         byrow=(length(icon.ncol)!=n && length(unlist(icon.ncol)) != length(unlist(x)) && !is.data.frame(icon.ncol)))
-    prop <- unlist(x)/unlist(K)
+    prop <- as.vector(unlist(x))/unlist(K)
 
     if (all(K == 0))
         stop("No non-zero entries for K\n")

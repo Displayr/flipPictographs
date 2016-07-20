@@ -26,8 +26,8 @@ PictoStdChart <- function(x,
                           image="star",
                           hide.base.image=FALSE,
                           K=0,
-                          K.varying=hide.base.image,
                           read.KfromX=FALSE,
+                          K.varying=read.KfromX,
                           scale=0,
                           legend.text="",
                           aggregate.period="month",
@@ -60,6 +60,8 @@ PictoStdChart <- function(x,
     K.default <- 0
     if (K == 0 && is.numeric(x))
         K.default <- ceiling(max(x))
+    if (is.factor(x))
+        K.default <- sum(!is.na(x))
 
     # Get data into the right format
     if (read.KfromX && (is.null(groupBy) || is.na(groupBy)))
@@ -69,6 +71,8 @@ PictoStdChart <- function(x,
         x <- x2[,-ncol(x2)]
     }
     x <- AsChartMatrix(y=x, x=groupBy, transpose=(transpose), aggregate.period=aggregate.period)
+    if (length(dim(x)) == 1)
+        x <- matrix(x, ncol=1, dimnames=list(names(x)))
     if (K == 0 && K.default == 0)
         K.default <- ceiling(max(x))
 
@@ -79,10 +83,11 @@ PictoStdChart <- function(x,
         text.text <- as.character(unlist(x))
     }
 
+    # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (scale==0 && max(x) > 1)
-        scale <- max(1, floor(max(x)/10))
+        scale <- max(1, round(floor(K.default/10)/5)*5)
     if (scale==0 && max(x) <= 1)
-        scale <- 10^{log10(median(x))}
+        scale <- 10^{round(log10(median(x)))}
 
     if (nchar(legend.text)==0 && scale > 0)
         legend.text = sprintf(paste("= %.", 0-min(0,floor(log10(scale))), "f", sep=""), scale)
@@ -108,9 +113,9 @@ PictoStdChart <- function(x,
         direction <- "frombottom"
         hide.label.top <- TRUE
         icon.valign <- "bottom"
-        icon.autosize <- FALSE
-        K.varying <- TRUE
-        text.position <- "header"
+        #icon.autosize <- FALSE
+        #K.varying <- TRUE
+        #text.position <- "header"
 
     }
     if (mode=="bar")
