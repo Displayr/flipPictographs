@@ -15,9 +15,13 @@ s4d <- SinglePicto(4.5, 2, 3, direction="fromtop")
 s4e <- SinglePicto(4.5, 2, 3, direction="frombottom")
 
 # Dimensions change depending on aspect ratio of image
-s5 <- SinglePicto(4.5, 2, 3, image="people.red")
+s5 <- SinglePicto(4.5, 2, 3, image="stickwoman")
 
-s6 <- SinglePicto(2.5, 5, 1, image="people", bg.color="red")
+s6 <- SinglePicto(2.5, 5, 1, image="stickman", bg.color="red")
 
 # Autosize
-s7 <- SinglePicto(2.5, 4, 1, image="people", bg.color="red", auto.size = T)
+s7 <- SinglePicto(2.5, 4, 1, image="stickman", bg.color="red", auto.size = T)
+
+# Text sizes
+s8 <- SinglePicto(2.5, 1, 5, text.type="percentage")
+s8b <- SinglePicto(2.5, 1, 5, text.type="count", auto.size = T)

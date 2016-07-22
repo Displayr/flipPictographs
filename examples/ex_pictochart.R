@@ -1,5 +1,9 @@
 require(flipPictographs)
 
+# The examples in this file use the PictoChart function
+# which is slightly more flexible in that it will take any url
+
+
 # Images
 star.filled <-  "http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg"
 star.empty <- "http://wiki.q-researchsoftware.com/images/f/f2/Star_unfilled.svg"
@@ -16,10 +20,16 @@ cow <- "http://wiki.q-researchsoftware.com/images/3/32/Cow-black.png"
 chicken <- "http://wiki.q-researchsoftware.com/images/7/7d/Chicken-black.png"
 fish <- "http://wiki.q-researchsoftware.com/images/d/d7/Fish-blue.png"
 
+star2 <- "https://dl.dropboxusercontent.com/u/539177224/star_filled.svg"
+star2b <- "red:https://dl.dropboxusercontent.com/u/539177224/star_filled.svg"
+star3 <- "https://dl.dropboxusercontent.com/u/539177224/star_unfilled.svg"
+
 # Simple vector (movie ratings)
 x1 <- c(First=1, Second=2, Third=3)
 p1 <- PictoChart(x1, variable.image=star.filled, base.image=star.empty) #, column.width=100)
 p1b <- PictoChart(x1, variable.image=star.filled, base.image=star.empty, text.type = "percentage")
+
+p1x <- PictoChart(x1, variable.image=star2, base.image=star3, text.type = "percentage", col.vImage=c("red", "green", "blue"))
 
 # Simple dataframe (drink size popularity) and autosize
 x2 <- data.frame(Large=1:4, Medium=5:8, Small=9:12)

@@ -1,6 +1,8 @@
 pictoStack <- function(x, mode, col1, col2, ...)
 {
     # Assume scaling and conversions performed already using PictoStdChart
+    if (nchar(col1)==0 || nchar(col2)==0)
+        stop("Colors not specified\n")
 
     # By default, tables are stacked in bars
     if (mode=="column")
