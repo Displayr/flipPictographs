@@ -22,13 +22,15 @@ SinglePicto <- function (x,
                          number.columns,
                          image="star",
                          hide.base.image=FALSE,
-                         direction="horizontal",
+                         direction="fromleft",
                          auto.size = FALSE,
                          width=50,
+                         fg.color="black",
                          bg.color="transparent",
                          text.type="none",
-                         text.size=8,
-                         text.weight=700,
+                         text.position="footer",
+                         text.size=10,
+                         text.weight="bold",
                          text.halign="center")
 {
     image.height <- width/imageWHRatio[image] * number.rows + (2*text.size*(text.type!="none"))
@@ -43,16 +45,16 @@ SinglePicto <- function (x,
 
     base.image.str <- ""
     if (!hide.base.image)
-        base.image.str <- paste(",\"baseImage\":\"url:", imageURL[image, "bg"], "\"", sep="")
-    variable.image <- paste("url:", direction, ":", imageURL[image, "fg"], sep="")
+        base.image.str <- paste(",\"baseImage\":\"url:", imageURL[image], "\"", sep="")
+    variable.image <- paste("url:", direction, ":", fg.color, ":", imageURL[image], sep="")
 
     text.str <- ""
     if (text.type != "none")
     {
         if (text.type == "count")
             text.type <- as.character(x)
-        text.str <- sprintf(",\"text-footer\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%d\", \"horizontal-align\":\"%s\"}",
-                            text.type, text.size, text.weight, text.halign)
+        text.str <- sprintf(",\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%dpx\",\"font-weight\":\"%s\", \"horizontal-align\":\"%s\"}",
+                            text.position, text.type, text.size, text.weight, text.halign)
     }
 
     json.string <- paste("{\"proportion\":", prop,

@@ -35,6 +35,7 @@ PictoStdChart <- function(x,
                           stack=FALSE,
                           gradient.col1="deepskyblue",
                           gradient.col2="orange",
+                          gradient.dir="",
                           direction="fromleft",
                           icon.nrow=1,
                           icon.ncol=0,
@@ -142,43 +143,44 @@ PictoStdChart <- function(x,
     if (direction %in% c("vertical", "fromtop", "frombottom"))
         icon.ncol <- 1
 
+    n <- if (is.null(nrow(x))) length(x)
+         else nrow(x)
+    m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
+         else ncol(x)
     if (hide.label.left)
-    {
-        n <- if (is.null(nrow(x))) length(x)
-             else nrow(x)
         label.left <- rep("", n)
-    }
     if (hide.label.top)
-    {
-        m <- if (is.null(ncol(x))) 1
-             else ncol(x)
         label.top <- rep("", m)
-    }
     if (hide.label.bottom)
-    {
-        m <- if (is.null(ncol(x))) 1
-             else ncol(x)
         label.bottom <- rep("", m)
-    }
     if (hide.label.right)
-    {
-        n <- if (is.null(nrow(x))) length(x)
-             else nrow(x)
         label.right <- rep("", n)
-    }
 
     if (stack)
     {
-        return(pictoStack(x, mode=mode, col1=gradient.col1, col2=gradient.col2,
+        return(pictoStack(x, image=image, mode=mode, col1=gradient.col1, col2=gradient.col2,
                           label.left=label.left, label.top=label.top,
                           label.bottom=label.bottom, label.bottom.halign=label.bottom.halign,
                           direction=direction, legend.text=legend.text, ...))
     }
 
+    c.hex <- ""
+    if (nchar(gradient.col1) > 0)
+    {
+        c.length <- m
+        if (m == 1)
+            c.length <- n
+
+        c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length=c.length))
+        c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], max=255)
+        c.hex <- matrix(c.hex, n, m)
+    }
+
+
     base.image <- ""
     if (!hide.base.image)
-        base.image <- imageURL[image,"bg"]
-    return(PictoChart(x, variable.image=imageURL[image,"fg"],
+        base.image <- imageURL[image]
+    return(PictoChart(x, variable.image=imageURL[image], col.vImage=c.hex,
                       base.image=base.image, wh.ratio=imageWHRatio[image],
                       K=K, icon.nrow=icon.nrow, icon.ncol=icon.ncol, icon.fixedsize=1-icon.autosize,
                       icon.halign=icon.halign, icon.valign=icon.valign,

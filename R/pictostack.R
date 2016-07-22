@@ -1,6 +1,8 @@
-pictoStack <- function(x, mode, col1, col2, ...)
+pictoStack <- function(x, image, mode, col1, col2, ...)
 {
     # Assume scaling and conversions performed already using PictoStdChart
+    if (nchar(col1)==0 || nchar(col2)==0)
+        stop("Colors not specified\n")
 
     # By default, tables are stacked in bars
     if (mode=="column")
@@ -49,8 +51,10 @@ pictoStack <- function(x, mode, col1, col2, ...)
         c.fg <- t(c.fg[,m2:1])
         c.bg <- t(c.bg[,m2:1])
     }
+    c.fg <- paste(c.fg, ":", imageURL[image], sep="")
+    c.bg <- ifelse(nchar(c.bg) > 0, paste(c.bg, ":", imageURL[image], sep=""), "")
 
-    return(PictoChart(x2, image.type="circle",
+    return(PictoChart(x2, image.type="url",
                       variable.image=c.fg, base.image=c.bg, pad.col=pad.col, pad.row=pad.row,
                       K=1, icon.nrow=1, icon.ncol=1, wh.ratio=0, ...))
 }

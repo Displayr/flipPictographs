@@ -47,7 +47,9 @@ PictoChart <- function( x,
                         base.image="",
                         image.type="url",
                         K=max(ceiling(x)),
-                        direction="horizontal",
+                        col.vImage="",
+                        col.bImage="",
+                        direction="fromleft",
                         show.lines=FALSE,
                         show.legend=FALSE,
                         legend.text="",
@@ -107,10 +109,11 @@ PictoChart <- function( x,
                         pad.icon.row=0.0,
                         pad.icon.col=0.0,
                         text.type="none",
+                        text.font=label.font,
                         text.text=NULL,
                         text.position="footer",
-                        text.size=0.6*label.size,
-                        text.weight=400,
+                        text.size=0.8*label.size,
+                        text.weight="normal",
                         text.halign="right")
 {
     n <- if (is.null(nrow(x))) length(x)
@@ -184,9 +187,12 @@ PictoChart <- function( x,
     #if (any(!direction %in% dir.opt))
     #    stop("direction must be one of ", paste(dir.opt, collapse=", "), "\n")
 
+    col.vImage.str <- ifelse(nchar(col.vImage) > 0, paste(col.vImage, ":", sep=""), "")
+    col.bImage.str <- ifelse(nchar(col.bImage) > 0, paste(col.bImage, ":", sep=""), "")
     base.image.str <- ifelse(nchar(base.image) > 0,
-                             paste("\"baseImage\":\"", image.type, ":", base.image, "\",", sep=""),
+                             paste("\"baseImage\":\"", image.type, ":", col.bImage.str, base.image, "\",", sep=""),
                              "")
+
 
     # Calculating padding/alignment
     pad.left=matrix(0, n, m)
@@ -271,18 +277,18 @@ PictoChart <- function( x,
         if (text.type %in% c("proportion", "percentage"))
             text.text <- text.type
 
-        text.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%d\",
-                             \"horizontal-align\":\"%s\"},",
-                            text.position, text.text, text.size, text.weight, text.halign)
+        text.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                             \"font-family\":\"%s\", \"horizontal-align\":\"%s\"},",
+                            text.position, text.text, text.size, text.weight, text.font, text.halign)
         row.height <- row.height + text.size
     }
 
     footer.text <- "\"text-footer\":{\"text\":\"percentage\", \"font-size\":\"8px\", \"font-weight\":\"400\"},"
     #recolor.str <- "\"css\":{\".variable-img path\":{\"fill\": \"#ff0000\"}},"
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%f,
-                         \"variableImage\":\"%s:%s:%s\", %s \"numRows\":%d, %s
+                         \"variableImage\":\"%s:%s%s:%s\", %s \"numRows\":%d, %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
-                        prop, K, image.type, direction, variable.image, base.image.str, icon.nrow, text.str,
+                        prop, K, image.type, col.vImage.str, direction, variable.image, base.image.str, icon.nrow, text.str,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
 
