@@ -35,7 +35,7 @@ PictoStdChart <- function(x,
                           stack=FALSE,
                           gradient.col1="deepskyblue",
                           gradient.col2="orange",
-                          gradient.dir="",
+                          gradient.dir="column",
                           direction="fromleft",
                           icon.nrow=1,
                           icon.ncol=0,
@@ -168,12 +168,12 @@ PictoStdChart <- function(x,
     if (nchar(gradient.col1) > 0)
     {
         c.length <- m
-        if (m == 1)
+        if (m == 1 || gradient.dir=="row")
             c.length <- n
 
         c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length=c.length))
         c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], max=255)
-        c.hex <- matrix(c.hex, n, m)
+        c.hex <- matrix(c.hex, n, m, byrow=(gradient.dir!="row"))
     }
 
 

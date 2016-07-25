@@ -15,6 +15,8 @@ x8 <- rbind(Top=c(1,0.5,5), Upper=c(3,5,11), Mid=c(15,17,20), Bottom=c(25,12,30)
 colnames(x8) <- c("Women", "Old", "Total")
 q8 <- PictoStdChart(x8, image="stickman", read.KfromX = T,
                     icon.halign="center", show.legend=T)
+q8a <- PictoStdChart(x8, image="stickman", read.KfromX = T, gradient.dir="row",
+                    icon.halign="center", show.legend=T)
 q8b <- PictoStdChart(x8, image="stickman", read.KfromX = T, transpose=T,
                     mode="column", show.legend=T)
 q8c <- PictoStdChart(x8, image="stickman", read.KfromX = T, direction="fromright",
