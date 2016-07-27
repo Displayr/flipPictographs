@@ -15,7 +15,7 @@ pictoStack <- function(x, image, mode, col1, col2, ...)
 
     # Set up colorscale
     c.rgb <- colorRamp(c(col1, col2))(seq(0,1,length=m))
-    c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], max=255)
+    c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], maxColorValue=255)
     c.hex <- c(c.hex, "")
 
     # Compute transformed matrices, as for a barchart

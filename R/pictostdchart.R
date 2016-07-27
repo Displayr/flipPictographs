@@ -172,7 +172,7 @@ PictoStdChart <- function(x,
             c.length <- n
 
         c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length=c.length))
-        c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], max=255)
+        c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], maxColorValue=255)
         c.hex <- matrix(c.hex, n, m, byrow=(gradient.dir!="row"))
     }
 

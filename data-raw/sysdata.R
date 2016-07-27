@@ -3,31 +3,17 @@
 # Data is stored as a data.frame available only internally
 # Note that PictoChart takes URLs, and does not use imageURL
 
-image.names <- c("baby","barn","book","building",
-                 "church","citygate", "cow","dna",
-                 "fuel","globe","government","gradation",
-                 "gun","house","idea","law","medicine",
-                 "police","renewenergy","road","rocket",
-                 "soldier","star","stickman","stickwoman",
-                 "testtube","tools","trafficlight",
-                 "train","tree","tv","waterdrop")
+imageWHRatio <- c(baby=0.8,barn=1.2,book=1,building=1,
+                 church=0.8,citygate=1, cow=1.2,dna=0.5,
+                 fuel=1,globe=1,government=0.8,graduation=1.3,
+                 gun=1.2,house=1,idea=1,law=1,medicine=1,
+                 police=0.9,renewenergy=1,road=0.8,rocket=1,
+                 soldier=0.5,star=1,stickman=0.5,stickwoman=0.5,
+                 testtube=1,tools=1,trafficlight=0.6,
+                 train=0.9,tree=1,tv=1,waterdrop=0.7)
 
+image.names <- names(imageWHRatio)
 imageURL <- sprintf("https://dl.dropboxusercontent.com/u/539177224/%s_grey.svg", image.names)
-imageWHRatio <- rep(1, length(image.names))
-
 names(imageURL) <- image.names
-names(imageWHRatio) <- image.names
-
-
-#imageURL <- c(star="https://dl.dropboxusercontent.com/u/539177224/star_grey.svg",
-#              stickman="https://dl.dropboxusercontent.com/u/539177224/stickman_grey.svg",
-#              stickwoman="https://dl.dropboxusercontent.com/u/539177224/stickwoman_grey.svg",
-#              cow="https://dl.dropboxusercontent.com/u/539177224/cow_grey.svg",
-#              graduation="https://dl.dropboxusercontent.com/u/539177224/graduation_grey.svg",
-#              house="https://dl.dropboxusercontent.com/u/539177224/house%20_grey.svg",
-#              train="https://dl.dropboxusercontent.com/u/539177224/train_grey.svg")
-
-#imageWHRatio <- c(star=1, stickman=0.5, stickwoman=0.5, cow=0.75,
-#                  graduation=1, house=1, train=1)
 
 save(imageURL, imageWHRatio, file = "R/sysdata.rda")

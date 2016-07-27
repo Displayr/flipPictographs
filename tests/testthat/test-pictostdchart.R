@@ -14,11 +14,11 @@ test_that("Simple column chart", {
 x8 <- rbind(Top=c(1,5), Upper=c(3,11), Mid=c(15,20), Bottom=c(25,30))
 colnames(x8) <- c("Women", "Total")
 test_that("Parameter read.KfromX accepted", {
-    expect_error( PictoStdChart(x8, image="people.red", read.KfromX = T,
+    expect_error( PictoStdChart(x8, image="stickman", read.KfromX = T,
                     icon.halign="center", show.legend=T), NA)
 })
 test_that("Parameter read.KfromX works with columns", {
-    expect_error( PictoStdChart(x8, image="people.red", read.KfromX = T, transpose=T,
+    expect_error( PictoStdChart(x8, image="stickman", read.KfromX = T, transpose=T,
                     mode="column", show.legend=T), NA)
 })
 
@@ -26,11 +26,11 @@ n <- 50
 x9.y <- data.frame(A=1:n, B=(1:n)+0.5)
 x9.x <- sample(1:4, n, replace=T)
 test_that("Parameter groupBy works", {
-    expect_error( PictoStdChart(x9.y, groupBy=x9.x, image="drink", transpose=F), NA)
+    expect_error( PictoStdChart(x9.y, groupBy=x9.x, image="train", transpose=F), NA)
 })
 
 test_that("Parameter groupBy work with columns", {
-    expect_error( PictoStdChart(x9.y, groupBy=x9.x, image="drink", transpose=T), NA)
+    expect_error( PictoStdChart(x9.y, groupBy=x9.x, image="cow", transpose=T), NA)
 })
 
 

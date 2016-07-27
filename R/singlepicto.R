@@ -5,65 +5,49 @@
 #' @seealso PictoStdChart to create a chart or table of pictographs
 #'
 #' @param x Number of filled icons (out of \code{K = number.rows * number.columns})
-#' @param number.rows The number of rows of icons.
-#' @param number.columns The number of columns of stars.
+#' @param number.icons Total number of icons.
+#' @param number.rows Number of rows icons should be arranged into.
 #' @param image name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of background image.
-#' @param direction Direction in which pictograph is filled (horizontal, vertical or radial).
+#' @param direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
-#' @param width Width of a single icon in pixels when \code{auto.size} is FALSE.
+#' @param width Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.
+#' @param icon.color Color of icon
 #' @param bg.color Background color of graphic.
-#' @param text.type One of \code{"none", "count", "proportion", "percentage"}
 #'
 #' @importFrom  rhtmlPictographs graphic
 #' @export
 SinglePicto <- function (x,
-                         number.rows,
-                         number.columns,
+                         number.icons,
+                         number.rows=1,
                          image="star",
                          hide.base.image=FALSE,
                          direction="fromleft",
                          auto.size = FALSE,
                          width=50,
-                         fg.color="black",
-                         bg.color="transparent",
-                         text.type="none",
-                         text.position="footer",
-                         text.size=10,
-                         text.weight="bold",
-                         text.halign="center")
+                         icon.color="black",
+                         bg.color="transparent")
 {
-    image.height <- width/imageWHRatio[image] * number.rows + (2*text.size*(text.type!="none"))
-    number.images <- number.columns * number.rows
-    prop <- x/number.images
+    image.height <- width/imageWHRatio[image] * number.rows
+    prop <- x/number.icons
     if (prop < 0 | prop > 1)
-        stop("x must be between 0 and ", number.images, "\n")
+        stop("x must be between 0 and ", number.icons, "\n")
     if (number.rows == 0 || round(number.rows) != number.rows)
         stop("number.rows must be an integer greater than 0\n")
-    if (number.columns == 0 || round(number.columns) != number.columns)
-        stop("number.columns must be an integer greater than 0\n")
+    if (number.icons == 0 || round(number.icons) != number.icons)
+        stop("number.icons must be an integer greater than 0\n")
 
     base.image.str <- ""
     if (!hide.base.image)
         base.image.str <- paste(",\"baseImage\":\"url:", imageURL[image], "\"", sep="")
-    variable.image <- paste("url:", direction, ":", fg.color, ":", imageURL[image], sep="")
-
-    text.str <- ""
-    if (text.type != "none")
-    {
-        if (text.type == "count")
-            text.type <- as.character(x)
-        text.str <- sprintf(",\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%dpx\",\"font-weight\":\"%s\", \"horizontal-align\":\"%s\"}",
-                            text.position, text.type, text.size, text.weight, text.halign)
-    }
+    variable.image <- paste("url:", direction, ":", icon.color, ":", imageURL[image], sep="")
 
     json.string <- paste("{\"proportion\":", prop,
-          ",\"numImages\":", number.images,
+          ",\"numImages\":", number.icons,
           ",\"numRows\":", number.rows,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str,
-          ",\"width\":", number.columns*width,
+          ",\"width\":", ceiling(number.icons/number.rows)*width,
           ",\"height\":", image.height,
-          text.str,
           ",\"background-color\":\"", bg.color, "\"",
           sep="")
 

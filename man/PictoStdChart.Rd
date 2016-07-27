@@ -5,16 +5,16 @@
 \title{Wrapper function to create Pictographs}
 \usage{
 PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
-  K = 0, K.varying = hide.base.image, read.KfromX = FALSE, scale = 0,
+  K = 0, read.KfromX = FALSE, K.varying = read.KfromX, scale = 0,
   legend.text = "", aggregate.period = "month", mode = "table",
-  stack = FALSE, gradient.col1 = "blue", gradient.col2 = "orange",
-  direction = "fromleft", icon.nrow = 1, icon.ncol = 0,
-  icon.autosize = FALSE, icon.halign = "left", icon.valign = "center",
-  transpose = FALSE, hide.label.left = FALSE, hide.label.right = FALSE,
-  hide.label.bottom = FALSE, hide.label.top = FALSE, label.left = c(),
-  label.top = c(), label.bottom = c(), label.bottom.halign = "center",
-  wh.ratio = 0, text.type = "none", text.text = NULL,
-  text.position = "footer", ...)
+  stack = FALSE, gradient.col1 = "deepskyblue", gradient.col2 = "orange",
+  gradient.dir = "column", direction = "fromleft", icon.nrow = 1,
+  icon.ncol = 0, icon.autosize = FALSE, icon.halign = "left",
+  icon.valign = "center", transpose = FALSE, hide.label.left = FALSE,
+  hide.label.right = FALSE, hide.label.bottom = FALSE,
+  hide.label.top = FALSE, label.left = c(), label.top = c(),
+  label.bottom = c(), label.bottom.halign = "center", wh.ratio = 0,
+  text.type = "none", text.text = NULL, text.position = "footer", ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}

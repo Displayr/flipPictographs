@@ -4,31 +4,30 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, number.rows, number.columns, image = "star",
-  hide.base.image = FALSE, direction = "horizontal", auto.size = FALSE,
-  width = 50, bg.color = "transparent", text.type = "none",
-  text.size = 8, text.weight = 700, text.halign = "center")
+SinglePicto(x, number.icons, number.rows = 1, image = "star",
+  hide.base.image = FALSE, direction = "fromleft", auto.size = FALSE,
+  width = 50, icon.color = "black", bg.color = "transparent")
 }
 \arguments{
 \item{x}{Number of filled icons (out of \code{K = number.rows * number.columns})}
 
-\item{number.rows}{The number of rows of icons.}
+\item{number.icons}{Total number of icons.}
 
-\item{number.columns}{The number of columns of stars.}
+\item{number.rows}{Number of rows icons should be arranged into.}
 
 \item{image}{name of icon}
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of background image.}
 
-\item{direction}{Direction in which pictograph is filled (horizontal, vertical or radial).}
+\item{direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).}
 
 \item{auto.size}{Automatically sizes the plot based on the size of the window/slot.}
 
-\item{width}{Width of a single icon in pixels when \code{auto.size} is FALSE.}
+\item{width}{Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.}
+
+\item{icon.color}{Color of icon}
 
 \item{bg.color}{Background color of graphic.}
-
-\item{text.type}{One of \code{"none", "count", "proportion", "percentage"}}
 }
 \description{
 Creates a single pictograph. Allows customization of the number of icons
