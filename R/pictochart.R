@@ -5,8 +5,8 @@
 #' @param x Data for charting
 #' @param fill.image URL of icon
 #' @param base.image Optional URL of background image
-#' @param num.max.icon Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.
-#' @param fill.direction Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{num.max.icon} is important).
+#' @param total.icons Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.
+#' @param fill.direction Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{total.icons} is important).
 #' @param show.lines Add horizontal lines between each row
 #' @param line.width Width of lines
 #' @param line.color Line colour
@@ -46,7 +46,7 @@ PictoChart <- function(x,
                        fill.image,
                        base.image = "",
                        image.type = "url",
-                       num.max.icon = max(ceiling(x)),
+                       total.icons = max(ceiling(x)),
                        fill.icon.color = "",
                        base.icon.color = "",
                        fill.direction = "fromleft",
@@ -54,7 +54,7 @@ PictoChart <- function(x,
                        show.legend = FALSE,
                        legend.text = "",
                        icon.nrow = 1,
-                       icon.ncol = unlist(num.max.icon)/icon.nrow,
+                       icon.ncol = unlist(total.icons)/icon.nrow,
                        icon.fixedsize = FALSE,
                        icon.align.horizontal = "left",
                        icon.align.vertical = "center",
@@ -68,7 +68,7 @@ PictoChart <- function(x,
                        label.font.color = "#2C2C2C",
                        label.top.font.family = label.font.family,
                        label.top.font.size = label.font.size,
-                       label.top.font.weight = "400",
+                       label.top.font.weight = "bold",
                        label.top.font.color = label.color,
                        label.top.height = 1.2*label.top.font.size,
                        label.right.font.family = label.font.family,
@@ -112,31 +112,38 @@ PictoChart <- function(x,
                        background.color = "transparent",
                        line.color = "#A8A8A8",
                        line.width = 0.5,
+                       pad.legend = 0.5*column.width[1],
                        pad.row = 5,
                        pad.col = 5,
                        pad.icon.row = 0.0,
-                       pad.icon.col = 0.0,
-                       margin.top = 0,
-                       margin.right = 0,
-                       margin.bottom = 0,
-                       margin.left = 0)
+                       pad.icon.col = 0.0)
+                       #margin.top = 0,
+                       #margin.right = 0,
+                       #margin.bottom = 0,
+                       #margin.left = 0)
 {
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
 
-    if (any(icon.nrow * icon.ncol != num.max.icon))
+    if (any(total.icons != ceiling(total.icons)))
     {
-        if (any(icon.nrow != 1))
-            num.max.icon  =  ceiling(icon.nrow * icon.ncol)
-        else
-            icon.nrow  =  ceiling(num.max.icon/icon.ncol)
+        warning("Non-integers in total.icons will be rounded up\n")
+        total.icons <- ceiling(total.icons)
     }
 
-    if (length(num.max.icon) != 1 && length(unlist(num.max.icon)) != length(unlist(x)) &&
-        length(num.max.icon) != n && length(num.max.icon) != m)
-        stop("num.max.icon does not match dimensions of x\n")
+    if (any(icon.nrow * icon.ncol != total.icons))
+    {
+        if (any(icon.nrow != 1))
+            total.icons  =  ceiling(icon.nrow * icon.ncol)
+        else
+            icon.nrow  =  ceiling(total.icons/icon.ncol)
+    }
+
+    if (length(total.icons) != 1 && length(unlist(total.icons)) != length(unlist(x)) &&
+        length(total.icons) != n && length(total.icons) != m)
+        stop("total.icons does not match dimensions of x\n")
     if (length(icon.nrow) != 1 && length(unlist(icon.nrow)) !=  length(unlist(x)) &&
         length(icon.nrow) != n && length(icon.nrow) !=  m)
         stop("icon.nrow does not match dimensions of x\n")
@@ -144,22 +151,22 @@ PictoChart <- function(x,
         length(icon.ncol) != n && length(icon.ncol) !=  m)
         stop("icon.ncol does not match dimensions of x\n")
 
-    # Try column-first order first (i.e. each entry of num.max.icon to one row)
-    byrow  =  (length(num.max.icon)!= n && length(unlist(num.max.icon)) !=  length(unlist(x)) && !is.data.frame(num.max.icon))
-    num.max.icon <- matrix(unlist(num.max.icon), nrow = n, ncol = m, byrow = byrow)
+    # Try column-first order first (i.e. each entry of total.icons to one row)
+    byrow  =  (length(total.icons)!= n && length(unlist(total.icons)) !=  length(unlist(x)) && !is.data.frame(total.icons))
+    total.icons <- matrix(unlist(total.icons), nrow = n, ncol = m, byrow = byrow)
     icon.nrow <- matrix(icon.nrow, nrow = n, ncol = m,
                         byrow = (length(icon.nrow) != n && length(unlist(icon.nrow)) != length(unlist(x)) &&
                                  !is.data.frame(icon.nrow)))
     icon.ncol <- matrix(icon.ncol, nrow = n, ncol = m,
                         byrow = (length(icon.ncol) != n && length(unlist(icon.ncol)) != length(unlist(x)) &&
                                  !is.data.frame(icon.ncol)))
-    prop <- as.vector(unlist(x))/unlist(num.max.icon)
+    prop <- as.vector(unlist(x))/unlist(total.icons)
 
-    if (all(num.max.icon == 0))
-        stop("No non-zero entries for num.max.icon\n")
-    prop[num.max.icon == 0] <- 0
+    if (all(total.icons == 0))
+        stop("No non-zero entries for total.icons\n")
+    prop[total.icons == 0] <- 0
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
-        stop("x must be a number between 0 and num.max.icon\n")
+        stop("x must be a number between 0 and total.icons\n")
 
     if (length(label.left) > 0 && length(label.left) != n)
         stop("label.left must be of length ", n, "\n")
@@ -179,7 +186,7 @@ PictoChart <- function(x,
 
     if (length(row.height) !=  1 && length(row.height) !=  n)
         stop("row.height must be of length 1 or ", n, "\n")
-    if (length(column.width) !=  1 && length(column.width) !=  m)
+    if (length(column.width) !=  1 && length(column.width) != m)
         stop ("column.width must be of length 1 or ", m, "\n")
 
     if (length(row.height) == 1)
@@ -187,11 +194,8 @@ PictoChart <- function(x,
     if (length(column.width) == 1)
         column.width <- rep(column.width, m)
 
-
-    # checking for lengths of fonts,spacing etc...
-    #dir.opt <- c("horizontal", "vertical", "radial", "scale")
-    #if (any(!fill.direction %in% dir.opt))
-    #    stop("fill.direction must be one of ", paste(dir.opt, collapse = ", "), "\n")
+    # To check: fill.direction, images, alignments,
+    # label.data.type, label.data.position, image.type
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
     base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
@@ -294,7 +298,7 @@ PictoChart <- function(x,
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%f,
                          \"variableImage\":\"%s:%s%s:%s\", %s \"numRows\":%d, %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
-                        prop, num.max.icon, image.type, fill.icon.color.str, fill.direction,
+                        prop, total.icons, image.type, fill.icon.color.str, fill.direction,
                         fill.image, base.image.str, icon.nrow, label.data.str,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
@@ -336,16 +340,19 @@ PictoChart <- function(x,
         leg.row <- max(1, floor(nrow(row.str)/2))
         leg.col <- ncol(row.str)
         leg.ipad <- 0
+        legend.col.str <- ""
+        if (nchar(legend.icon.color) > 0)
+            legend.col.str <- paste(legend.icon.color[1], ":", sep="")
         if (max(icon.nrow[leg.row,]) > 1)
             leg.ipad <- (row.height[leg.row]-icon.height)/2
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
                                                 \"font-font.size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
                                                 \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
-                                                legend.text, legend.font.family, legend.font.size, legend.weight, legend.color)
+                                                legend.text, legend.font.family, legend.font.size, legend.font.weight, legend.font.color)
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
-                         \"variableImage\":\"%s:%s:%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               image.type, fill.direction[1], fill.image[1], leg.ipad, 0, leg.ipad, 0)
-        column.width <- c(column.width, 0.5*column.width[1], icon.width, legend.font.size*nchar(legend.text))
+                         \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
+                                               image.type, fill.direction[1], legend.col.str, fill.image[1], leg.ipad, 0, leg.ipad, 0)
+        column.width <- c(column.width, pad.legend, icon.width, legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
 
@@ -366,11 +373,13 @@ PictoChart <- function(x,
     row.height <- pmax(1, row.height)
     column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
+    #cat("row.str:", row.str)
     json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
-             "\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",
-             "\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
+             #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",
+             #"\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
+             #"\"padding\":\"", paste(margin.top, margin.right, margin.bottom, margin.left, sep = " "), "\",",
              "\"rowGutterLength\":", pad.row, ",\"columnGutterLength\":", pad.col, ",",
              "\"colWidths\":[", paste(column.width, collapse = ","), "],", sep = "")
     json.str <- paste(json.str, lines.str, "\"rows\":[[", sep = "")
