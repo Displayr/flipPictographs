@@ -4,49 +4,64 @@
 \alias{PictoChart}
 \title{PictoChart}
 \usage{
-PictoChart(x, variable.image, base.image = "", image.type = "url",
-  K = max(ceiling(x)), col.vImage = "", col.bImage = "",
-  direction = "fromleft", show.lines = FALSE, show.legend = FALSE,
-  legend.text = "", icon.nrow = 1, icon.ncol = unlist(K)/icon.nrow,
-  icon.fixedsize = FALSE, icon.halign = "left", icon.valign = "center",
+PictoChart(x, fill.image, base.image = "", image.type = "url",
+  num.max.icon = max(ceiling(x)), fill.icon.color = "",
+  base.icon.color = "", fill.direction = "fromleft", show.lines = FALSE,
+  show.legend = FALSE, legend.text = "", icon.nrow = 1,
+  icon.ncol = unlist(num.max.icon)/icon.nrow, icon.fixedsize = FALSE,
+  icon.align.horizontal = "left", icon.align.vertical = "center",
   label.left = c(), label.right = c(), label.top = c(),
-  label.bottom = c(), label.font = "arial", label.size = 12,
-  label.weight = "normal", label.color = "#2C2C2C",
-  label.top.font = label.font, label.top.size = label.size,
-  label.top.weight = "400", label.top.color = label.color,
-  label.top.height = 1.2 * label.top.size, label.right.font = label.font,
-  label.right.size = label.size, label.right.weight = label.weight,
-  label.right.color = label.color, label.right.width = 0,
-  label.bottom.font = label.font, label.bottom.size = label.size,
-  label.bottom.weight = label.weight, label.bottom.color = label.color,
-  label.bottom.height = 1.2 * label.bottom.size,
-  label.left.font = label.font, label.left.size = label.size,
-  label.left.weight = label.weight, label.left.color = label.color,
-  label.left.width = 0, label.left.halign = "right",
-  label.right.halign = "left", label.top.halign = "center",
-  label.bottom.halign = "left", label.left.valign = "center",
-  label.right.valign = "center", label.top.valign = "center",
-  label.bottom.valign = "center", legend.font = label.font,
-  legend.size = 0.8 * label.size, legend.weight = label.weight,
-  legend.color = label.color, row.height = 1.5 * label.size *
-  max(icon.nrow), column.width = max(15 * max(icon.ncol), 0.5 * label.top.size
-  * nchar(label.top), 0.5 * label.bottom.size * nchar(label.bottom)),
-  wh.ratio = 0, bg.color = "transparent", line.color = "#A8A8A8",
+  label.bottom = c(), label.font.family = "arial", label.font.size = 12,
+  label.font.weight = "normal", label.font.color = "#2C2C2C",
+  label.top.font.family = label.font.family,
+  label.top.font.size = label.font.size, label.top.font.weight = "400",
+  label.top.font.color = label.color, label.top.height = 1.2 *
+  label.top.font.size, label.right.font.family = label.font.family,
+  label.right.font.size = label.font.size,
+  label.right.font.weight = label.font.weight,
+  label.right.font.color = label.font.color, label.right.width = 0,
+  label.bottom.font = label.font.family,
+  label.bottom.font.size = label.font.size,
+  label.bottom.font.weight = label.font.weight,
+  label.bottom.font.color = label.font.color, label.bottom.height = 1.2 *
+  label.bottom.font.size, label.left.font.family = label.font.family,
+  label.left.font.size = label.font.size,
+  label.left.font.weight = label.font.weight,
+  label.left.font.color = label.font.color, label.left.width = 0,
+  label.left.align.horizontal = "right",
+  label.right.align.horizontal = "left",
+  label.top.align.horizontal = "center",
+  label.bottom.align.horizontal = "left",
+  label.left.align.vertical = "center",
+  label.right.align.vertical = "center",
+  label.top.align.vertical = "center",
+  label.bottom.align.vertical = "center",
+  legend.font.family = label.font.family, legend.font.size = 0.8 *
+  label.font.size, legend.font.weight = label.font.weight,
+  legend.font.color = label.font.color,
+  legend.icon.color = fill.icon.color[1], label.data.type = "none",
+  label.data.text = NULL, label.data.position = "footer",
+  label.data.font.family = label.font.family, label.data.font.size = 0.8 *
+  label.font.size, label.data.font.weight = "normal",
+  label.data.align.horizontal = "right", row.height = 1.5 * label.font.size
+  * max(icon.nrow), column.width = max(15 * max(icon.ncol), 0.5 *
+  label.top.font.size * nchar(label.top), 0.5 * label.bottom.font.size *
+  nchar(label.bottom)), width.height.ratio = 0,
+  background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.row = 5, pad.col = 5, pad.icon.row = 0,
-  pad.icon.col = 0, text.type = "none", text.font = label.font,
-  text.text = NULL, text.position = "footer", text.size = 0.8 *
-  label.size, text.weight = "normal", text.halign = "right")
+  pad.icon.col = 0, margin.top = 0, margin.right = 0, margin.bottom = 0,
+  margin.left = 0)
 }
 \arguments{
 \item{x}{Data for charting}
 
-\item{variable.image}{URL of icon}
+\item{fill.image}{URL of icon}
 
 \item{base.image}{Optional URL of background image}
 
-\item{K}{Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.}
+\item{num.max.icon}{Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.}
 
-\item{direction}{Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{K} is important).}
+\item{fill.direction}{Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{num.max.icon} is important).}
 
 \item{show.lines}{Add horizontal lines between each row}
 
@@ -60,9 +75,9 @@ PictoChart(x, variable.image, base.image = "", image.type = "url",
 
 \item{icon.fixedsize}{When \code{true}, icons will not automatically resize to fill table cell.}
 
-\item{icon.halign}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
+\item{icon.align.horizontal}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
 
-\item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left = rep("", length(x))}.}
+\item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  rep("", length(x))}.}
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
 
@@ -70,33 +85,27 @@ PictoChart(x, variable.image, base.image = "", image.type = "url",
 
 \item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
 
-\item{label.font}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.}
+\item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.}
 
-\item{label.size}{Size of label text.}
-
-\item{label.weight}{Weight of label text, e.g. "normal", "bold", "900"}
-
-\item{label.color}{Colour of labels.}
+\item{label.font.size}{Size of label text.}
 
 \item{label.top.height}{Height of top label row in pixels.}
 
 \item{label.left.width}{Width of left label column in pixels.}
 
-\item{label.left.halign}{Horizontal alignment.}
+\item{label.left.align.horizontal}{Horizontal alignment.}
 
-\item{label.left.valign}{Vertical alignment.}
+\item{label.left.align.vertical}{Vertical alignment.}
 
-\item{legend.font}{Font of legend.}
-
-\item{legend.size}{Text size of legend text.}
+\item{legend.font.size}{Text size of legend text.}
 
 \item{row.height}{Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.}
 
 \item{column.width}{Width of graphic cells.}
 
-\item{wh.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.}
+\item{width.height.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.}
 
-\item{bg.color}{Background colour of pictograph}
+\item{background.color}{Background colour of pictograph}
 
 \item{line.color}{Line colour}
 
@@ -107,6 +116,12 @@ PictoChart(x, variable.image, base.image = "", image.type = "url",
 \item{pad.col}{Vertical spacing between cells in table.}
 
 \item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
+
+\item{legend.font.family.family}{Font of legend.}
+
+\item{label.weight}{Weight of label text, e.g. "normal", "bold", "900"}
+
+\item{label.color}{Colour of labels.}
 
 \item{pad.icon.ncol}{Spacing between horizontal spacing between icons inside each table cell.}
 }

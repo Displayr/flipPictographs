@@ -4,30 +4,43 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, number.icons, number.rows = 1, image = "star",
-  hide.base.image = FALSE, direction = "fromleft", auto.size = FALSE,
-  width = 50, icon.color = "black", bg.color = "transparent")
+SinglePicto(x, total.icons, number.rows = 1, number.cols = 0,
+  image = "star", hide.base.image = FALSE, fill.direction = "fromleft",
+  fill.icon.color = "black", base.icon.color = "",
+  background.color = "transparent", auto.size = FALSE, icon.width = 50,
+  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
+  margin.right = margin, margin.bottom = margin, margin.left = margin)
 }
 \arguments{
-\item{x}{Number of filled icons (out of \code{K = number.rows * number.columns})}
+\item{x}{Number of filled icons (0 <= x < total.icons)}
 
-\item{number.icons}{Total number of icons.}
+\item{total.icons}{Total number of icons.}
 
-\item{number.rows}{Number of rows icons should be arranged into.}
+\item{number.rows}{Control layout of icons. Note that number.rows is ignored when number.cols is non-zero.}
+
+\item{number.cols}{Maximum number of icons in each column.}
 
 \item{image}{name of icon}
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of background image.}
 
-\item{direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).}
+\item{fill.direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).}
+
+\item{fill.icon.color}{Color of the filled icons}
+
+\item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Default is grey (#CCCCCC).}
+
+\item{background.color}{Color of the graphic background}
 
 \item{auto.size}{Automatically sizes the plot based on the size of the window/slot.}
 
-\item{width}{Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.}
+\item{icon.width}{Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.}
 
-\item{icon.color}{Color of icon}
+\item{pad.row}{Vertical space between icons. This should be a number between 0 (no space) and 1.0 (all space).}
 
-\item{bg.color}{Background color of graphic.}
+\item{pad.col}{Horizontal space between icons.}
+
+\item{margin}{Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.}
 }
 \description{
 Creates a single pictograph. Allows customization of the number of icons

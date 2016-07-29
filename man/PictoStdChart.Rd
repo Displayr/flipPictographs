@@ -4,42 +4,45 @@
 \alias{PictoStdChart}
 \title{Wrapper function to create Pictographs}
 \usage{
-PictoStdChart(x, groupBy = NULL, image = "star", hide.base.image = FALSE,
-  K = 0, read.KfromX = FALSE, K.varying = read.KfromX, scale = 0,
-  legend.text = "", aggregate.period = "month", mode = "table",
-  stack = FALSE, gradient.col1 = "deepskyblue", gradient.col2 = "orange",
-  gradient.dir = "column", direction = "fromleft", icon.nrow = 1,
-  icon.ncol = 0, icon.autosize = FALSE, icon.halign = "left",
-  icon.valign = "center", transpose = FALSE, hide.label.left = FALSE,
-  hide.label.right = FALSE, hide.label.bottom = FALSE,
-  hide.label.top = FALSE, label.left = c(), label.top = c(),
-  label.bottom = c(), label.bottom.halign = "center", wh.ratio = 0,
-  text.type = "none", text.text = NULL, text.position = "footer", ...)
+PictoStdChart(x, by = NULL, image = "star", hide.base.image = FALSE,
+  num.max.icon = 0, read.KfromX = FALSE, K.varying = read.KfromX,
+  scale = 0, legend.text = "", legend.icon.color = "",
+  aggregate.period = "month", mode = "table", stack = FALSE,
+  gradient.col1 = "deepskyblue", gradient.col2 = "orange",
+  gradient.dir = "column", fill.direction = "fromleft", icon.nrow = 1,
+  icon.ncol = 0, icon.autosize = FALSE, icon.align.horizontal = "left",
+  icon.align.vertical = "center", transpose = FALSE,
+  hide.label.left = FALSE, hide.label.right = FALSE,
+  hide.label.bottom = FALSE, hide.label.top = FALSE, label.left = c(),
+  label.top = c(), label.bottom = c(),
+  label.bottom.align.horizontal = "center", width.height.ratio = 0,
+  label.data.type = "none", label.data.text = NULL,
+  label.data.position = "footer", ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
 
-\item{groupBy}{Optional vector for aggregating \code{x}.}
+\item{by}{Optional vector for aggregating \code{x}.}
 
-\item{image}{Name of icon, e.g. \code{"star", "people",...}.}
+\item{image}{Name of icon, e.g. \code{"star", "stickman",...}.}
 
-\item{hide.base.image}{Turns off background image (on by default). In most cases it is appropriate to turn off the base image if K varies between entries.}
+\item{hide.base.image}{Turns off background image (on by default). In most cases it is appropriate to turn off the base image if num.max.icon varies between entries.}
 
-\item{K}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
+\item{num.max.icon}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
 
-\item{read.KfromX}{If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{groupBy}.}
+\item{read.KfromX}{If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{by}.}
 
-\item{scale}{Value of one icon. If \code{scale = 0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
+\item{scale}{Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
-\item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text = " "})}
+\item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
 
-\item{aggregate.period}{Time period in groupBy (e.g. "month", "year").}
+\item{aggregate.period}{Time period in by (e.g. "month", "year").}
 
-\item{mode}{Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode = "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode = "table"} is the most general and does not impose constraints.}
+\item{mode}{Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.}
 
-\item{direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
+\item{fill.direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
 
-\item{icon.autosize}{Rescale icons to fill up table cell. If K varies between cells, this can result in icons of varying sizes.}
+\item{icon.autosize}{Rescale icons to fill up table cell. If num.max.icon varies between cells, this can result in icons of varying sizes.}
 
 \item{transpose}{Swap rows and columns in data matrix \code{x}.}
 
