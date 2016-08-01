@@ -33,5 +33,6 @@ s8e <- SinglePicto(2.5, 5, image="stickman", background.color="red", auto.size =
 # Check ratios of built in images
 i.list <- names(flipPictographs:::imageURL)
 s9 <- list()
-for (i in 1:length(i.list))
+n <- length(i.list)
+for (i in 1:n)
     s9[[i]] <- SinglePicto(9, 9, 3, image=i.list[i])
