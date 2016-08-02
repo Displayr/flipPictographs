@@ -7,7 +7,7 @@
 #' @param x Data which determines the number of icons (\code{= x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. If set to zero (default), then \code{total.icons=ceiling(x/scale)}.
 #' @param scale Scaling factor for \code{x}.
-#' @param number.rows Controls layout of icons. Note that number.rows is ignored when number.cols is non-zero.
+#' @param number.rows Controls layout of icons. If nethier \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column.
 #' @param image name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of background image.
@@ -20,6 +20,7 @@
 #' @param pad.row Vertical space between icons. This should be a number between 0 (no space) and 1.0 (all space).
 #' @param pad.col Horizontal space between icons.
 #' @param margin Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.
+#' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
 #'
 #' @importFrom  rhtmlPictographs graphic
 #' @export
@@ -27,7 +28,7 @@ SinglePicto <- function (x,
                          total.icons = 0,
                          image = "star",
                          scale = 1,
-                         number.rows = 1,
+                         number.rows = 0,
                          number.cols = 0,
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
@@ -42,7 +43,8 @@ SinglePicto <- function (x,
                          margin.top = margin,
                          margin.right = margin,
                          margin.bottom = margin,
-                         margin.left = margin)
+                         margin.left = margin,
+                         print.config = FALSE)
 {
     if (!(length(x) == 1 && x >= 0))
         stop("x must be a single numeric value\n")
@@ -62,12 +64,18 @@ SinglePicto <- function (x,
     if (round(total.icons) != total.icons)
         stop("total.icons must be an integer\n")
 
-    layout.str <- paste(",\"numRows\":", number.rows, sep="")
+    layout.str <- ""
+    if (number.rows > 0 && number.cols == 0)
+    {
+        layout.str <- paste(",\"numRows\":", number.rows, sep="")
+    }
     if (number.cols > 0)
     {
         layout.str <- paste(",\"numCols\":", number.cols, sep="")
         number.rows <- ceiling(total.icons/number.cols)
     }
+    if (number.rows == 0)
+        number.rows <- floor(sqrt(total.icons))
 
     base.image.str <- ""
     if (nchar(base.icon.color) > 0)
@@ -92,6 +100,7 @@ SinglePicto <- function (x,
 
     json.string <- if(auto.size) paste(json.string, ", \"preserveAspectRatio\":\"xMidYMid\"}", sep="")
             else paste(json.string, ",\"resizable\":\"false\"}", sep="")
-    #cat(json.string)
+    if (print.config)
+        cat(json.string)
     graphic(json.string)
 }
