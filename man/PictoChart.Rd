@@ -5,16 +5,16 @@
 \title{PictoChart}
 \usage{
 PictoChart(x, fill.image, base.image = "", image.type = "url",
-  num.max.icon = max(ceiling(x)), fill.icon.color = "",
+  total.icons = max(ceiling(x)), fill.icon.color = "",
   base.icon.color = "", fill.direction = "fromleft", show.lines = FALSE,
   show.legend = FALSE, legend.text = "", icon.nrow = 1,
-  icon.ncol = unlist(num.max.icon)/icon.nrow, icon.fixedsize = FALSE,
+  icon.ncol = unlist(total.icons)/icon.nrow, icon.fixedsize = FALSE,
   icon.align.horizontal = "left", icon.align.vertical = "center",
   label.left = c(), label.right = c(), label.top = c(),
   label.bottom = c(), label.font.family = "arial", label.font.size = 12,
   label.font.weight = "normal", label.font.color = "#2C2C2C",
   label.top.font.family = label.font.family,
-  label.top.font.size = label.font.size, label.top.font.weight = "400",
+  label.top.font.size = label.font.size, label.top.font.weight = "bold",
   label.top.font.color = label.color, label.top.height = 1.2 *
   label.top.font.size, label.right.font.family = label.font.family,
   label.right.font.size = label.font.size,
@@ -48,9 +48,8 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
   label.top.font.size * nchar(label.top), 0.5 * label.bottom.font.size *
   nchar(label.bottom)), width.height.ratio = 0,
   background.color = "transparent", line.color = "#A8A8A8",
-  line.width = 0.5, pad.row = 5, pad.col = 5, pad.icon.row = 0,
-  pad.icon.col = 0, margin.top = 0, margin.right = 0, margin.bottom = 0,
-  margin.left = 0)
+  line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 5,
+  pad.col = 5, pad.icon.row = 0, pad.icon.col = 0)
 }
 \arguments{
 \item{x}{Data for charting}
@@ -59,9 +58,9 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
 
 \item{base.image}{Optional URL of background image}
 
-\item{num.max.icon}{Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.}
+\item{total.icons}{Maximum icons in each table cell. Ignored if both \code{icon.nrow} and \code{icon.ncol} supplied.}
 
-\item{fill.direction}{Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{num.max.icon} is important).}
+\item{fill.direction}{Accepts \code{horizontal}, \code{vertical}, \code{radial}, \code{scale}. (But \code{scale} may not be appropriate, especially if \code{total.icons} is important).}
 
 \item{show.lines}{Add horizontal lines between each row}
 

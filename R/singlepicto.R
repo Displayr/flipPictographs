@@ -4,9 +4,10 @@
 #' and dimensions.
 #' @seealso PictoStdChart to create a chart or table of pictographs
 #'
-#' @param x Number of filled icons (0 <= x < total.icons)
-#' @param total.icons Total number of icons.
-#' @param number.rows Control layout of icons. Note that number.rows is ignored when number.cols is non-zero.
+#' @param x Data which determines the number of icons (\code{= x/scale}) filled in the pictograph.
+#' @param total.icons Total number of icons. If set to zero (default), then \code{total.icons=ceiling(x/scale)}.
+#' @param scale Scaling factor for \code{x}.
+#' @param number.rows Controls layout of icons. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column.
 #' @param image name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of background image.
@@ -16,7 +17,6 @@
 #' @param background.color Color of the graphic background
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
 #' @param icon.width Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.
-
 #' @param pad.row Vertical space between icons. This should be a number between 0 (no space) and 1.0 (all space).
 #' @param pad.col Horizontal space between icons.
 #' @param margin Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.
@@ -24,10 +24,11 @@
 #' @importFrom  rhtmlPictographs graphic
 #' @export
 SinglePicto <- function (x,
-                         total.icons,
+                         total.icons = 0,
+                         image = "star",
+                         scale = 1,
                          number.rows = 1,
                          number.cols = 0,
-                         image = "star",
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
                          fill.icon.color = "black",
@@ -43,12 +44,23 @@ SinglePicto <- function (x,
                          margin.bottom = margin,
                          margin.left = margin)
 {
+    if (!(length(x) == 1 && x >= 0))
+        stop("x must be a single numeric value\n")
+    if (scale <= 0)
+        stop("scale must be greater than zero\n")
+
+    x <- x/scale
+    if (total.icons == 0)
+        total.icons <- ceiling(x)
+
+    if (length(total.icons) != 1 && total.icons > 0)
+        stop("total.icons must be a single numeric value and greater than zero\n")
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
-        stop("x must be between 0 and ", total.icons, "\n")
-    if (total.icons == 0 || round(total.icons) != total.icons)
-        stop("total.icons must be an integer greater than 0\n")
+        stop("x/scale must be between 0 and total.icons\n")
+    if (round(total.icons) != total.icons)
+        stop("total.icons must be an integer\n")
 
     layout.str <- paste(",\"numRows\":", number.rows, sep="")
     if (number.cols > 0)

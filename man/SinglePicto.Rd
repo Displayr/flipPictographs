@@ -4,23 +4,26 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, total.icons, number.rows = 1, number.cols = 0,
-  image = "star", hide.base.image = FALSE, fill.direction = "fromleft",
-  fill.icon.color = "black", base.icon.color = "",
-  background.color = "transparent", auto.size = FALSE, icon.width = 50,
-  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
-  margin.right = margin, margin.bottom = margin, margin.left = margin)
+SinglePicto(x, total.icons = 0, image = "star", scale = 1,
+  number.rows = 1, number.cols = 0, hide.base.image = FALSE,
+  fill.direction = "fromleft", fill.icon.color = "black",
+  base.icon.color = "", background.color = "transparent",
+  auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
+  margin = 0, margin.top = margin, margin.right = margin,
+  margin.bottom = margin, margin.left = margin)
 }
 \arguments{
-\item{x}{Number of filled icons (0 <= x < total.icons)}
+\item{x}{Data which determines the number of icons (\code{= x/scale}) filled in the pictograph.}
 
-\item{total.icons}{Total number of icons.}
+\item{total.icons}{Total number of icons. If set to zero (default), then \code{total.icons=ceiling(x/scale)}.}
+
+\item{image}{name of icon}
+
+\item{scale}{Scaling factor for \code{x}.}
 
 \item{number.rows}{Control layout of icons. Note that number.rows is ignored when number.cols is non-zero.}
 
 \item{number.cols}{Maximum number of icons in each column.}
-
-\item{image}{name of icon}
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of background image.}
 
