@@ -64,12 +64,13 @@ SinglePicto <- function (x,
         base.image.str <- paste(",\"baseImage\":\"url:", base.icon.color, imageURL[image], "\"", sep="")
     variable.image <- paste("url:", fill.direction, ":", fill.icon.color, ":", imageURL[image], sep="")
 
-    image.height <- icon.width/imageWHRatio[image] * number.rows
+    image.height <- (icon.width/imageWHRatio[image] * number.rows) + margin.top + margin.bottom
+    image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str,
-          ",\"width\":", ceiling(total.icons/number.rows)*icon.width,
+          ",\"width\":", image.width,
           ",\"height\":", image.height,
           ",\"background-color\":\"", background.color, "\"",
           ",\"columnGutter\":", pad.col,
