@@ -7,7 +7,6 @@
 #' @param image Name of icon, e.g. \code{"star", "stickman",...}.
 #' @param hide.base.image Turns off background image (on by default). In most cases it is appropriate to turn off the base image if num.max.icon varies between entries.
 #' @param num.max.icon Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.
-#' @param read.KfromX If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{by}.
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})
 #' @param aggregate.period Time period in by (e.g. "month", "year").
@@ -25,9 +24,8 @@ PictoStdChart <- function(x,
                           by = NULL,
                           image = "star",
                           hide.base.image = FALSE,
-                          num.max.icon = 0,
-                          read.KfromX = FALSE,
-                          K.varying = read.KfromX,
+                          total.icons = 0,
+                          #K.varying = read.KfromX,
                           scale = 0,
                           legend.text = "",
                           legend.icon.color = "",
@@ -59,24 +57,23 @@ PictoStdChart <- function(x,
                           ...)
 {
     # Get maximum before any aggregating
-    num.max.icon.default <- 0
-    if (num.max.icon == 0 && is.numeric(x))
-        num.max.icon.default <- ceiling(max(x))
-    if (is.factor(x))
-        num.max.icon.default <- sum(!is.na(x))
+    if (total.icons == 0 && is.numeric(x))
+        total.icons <- ceiling(max(x))
+    if (total.icons == 0 && is.factor(x))
+        total.icons <- sum(!is.na(x))
 
     # Get data into the right format
-    if (read.KfromX && (is.null(by) || is.na(by)))
-    {
-        x2 <- x
-        num.max.icon <- ceiling(x2[,ncol(x2)])
-        x <- x2[,-ncol(x2)]
-    }
+    #if (TRUE && (is.null(by) || is.na(by)))
+    #{
+    #    x2 <- x
+    #    num.max.icon <- ceiling(x2[,ncol(x2)])
+    #    x <- x2[,-ncol(x2)]
+    #}
     x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
     if (length(dim(x)) == 1)
         x <- matrix(x, ncol = 1, dimnames = list(names(x)))
-    if (num.max.icon == 0 && num.max.icon.default == 0)
-        num.max.icon.default <- ceiling(max(x))
+    if (total.icons == 0)
+        total.icons <- ceiling(max(x))
 
     # Need to get counts before scaling
     if (label.data.type == "count")
@@ -87,15 +84,15 @@ PictoStdChart <- function(x,
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (scale == 0 && max(x) > 1)
-        scale <- max(1, round(floor(num.max.icon.default/10)/5)*5)
+        scale <- max(1, round(floor(total.icons/10)/5)*5)
     if (scale == 0 && max(x) <=  1)
         scale <- 10^{round(log10(median(x)))}
 
     if (nchar(legend.text) == 0 && scale > 0)
         legend.text  =  sprintf(paste(" =  %.", 0-min(0,floor(log10(scale))), "f", sep = ""), scale)
     x <- x/scale
-    if (read.KfromX)
-        num.max.icon <- ceiling(num.max.icon/scale)
+    #if (read.KfromX)
+    #    num.max.icon <- ceiling(num.max.icon/scale)
 
     if (mode == "column")
     {
@@ -130,17 +127,17 @@ PictoStdChart <- function(x,
         }
         fill.direction <- "fromleft"
         icon.autosize <- FALSE
-        num.max.icon.varying <- TRUE
+        #K.varying <- TRUE
     }
 
     # If read.num.max.iconfromX fails, K tries default values
-    if (all(num.max.icon == 0))
-        num.max.icon <- if (num.max.icon.varying) ceiling(x)
-             else ceiling(num.max.icon.default/scale)
+    #if (all(num.max.icon == 0))
+    #    num.max.icon <- if (num.mvarying) ceiling(x)
+    #         else ceiling(num.max.icon.default/scale)
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (icon.ncol == 0)
-        icon.ncol <- unlist(num.max.icon)/icon.nrow
+        icon.ncol <- unlist(total.icons)/icon.nrow
     if (fill.direction %in% c("vertical", "fromtop", "frombottom"))
         icon.ncol <- 1
 
@@ -181,16 +178,16 @@ PictoStdChart <- function(x,
     base.image <- ""
     if (!hide.base.image)
         base.image <- imageURL[image]
-    return(PictoChart(x, variable.image = imageURL[image], col.vImage = c.hex,
+    return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex,
                       base.image = base.image, width.height.ratio = imageWHRatio[image],
-                      num.max.icon = num.max.icon,
+                      total.icons = total.icons,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, icon.fixedsize = 1-icon.autosize,
                       icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
                       fill.direction = fill.direction, legend.text = legend.text,
                       label.data.position = label.data.position, label.data.type = label.data.type,
-                      label.data.label.text = label.data.text, ...))
+                      label.data.text = label.data.text, ...))
 }
 
 
