@@ -27,7 +27,7 @@ pictoStack <- function(x, image, mode, col1, col2, ...)
 
     for (i in 1:n)
     {
-        i.cum <- cumsum(x[i,])
+        i.cum <- cumsum(unlist(x[i,]))
         k <- which.max(i.cum > 0)
         for (j in 1:m2)
         {
@@ -55,8 +55,8 @@ pictoStack <- function(x, image, mode, col1, col2, ...)
     c.bg <- ifelse(nchar(c.bg) > 0, paste(c.bg, ":", imageURL[image], sep=""), "")
 
     return(PictoChart(x2, image.type="url",
-                      variable.image=c.fg, base.image=c.bg, pad.col=pad.col, pad.row=pad.row,
-                      K=1, icon.nrow=1, icon.ncol=1, wh.ratio=0, ...))
+                      fill.image=c.fg, base.image=c.bg, pad.col=pad.col, pad.row=pad.row,
+                      total.icons=1, icon.nrow=1, icon.ncol=1, width.height.ratio=0, ...))
 }
 
 

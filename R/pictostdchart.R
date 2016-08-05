@@ -25,7 +25,6 @@ PictoStdChart <- function(x,
                           image = "star",
                           hide.base.image = FALSE,
                           total.icons = 0,
-                          #K.varying = read.KfromX,
                           scale = 0,
                           legend.text = "",
                           legend.icon.color = "",
@@ -57,42 +56,37 @@ PictoStdChart <- function(x,
                           ...)
 {
     # Get maximum before any aggregating
+    total.icons.tmp <- 0
     if (total.icons == 0 && is.numeric(x))
-        total.icons <- ceiling(max(x))
+        total.icons.tmp <- ceiling(max(x))
     if (total.icons == 0 && is.factor(x))
-        total.icons <- sum(!is.na(x))
+        total.icons.tmp <- sum(!is.na(x))
 
-    # Get data into the right format
-    #if (TRUE && (is.null(by) || is.na(by)))
-    #{
-    #    x2 <- x
-    #    num.max.icon <- ceiling(x2[,ncol(x2)])
-    #    x <- x2[,-ncol(x2)]
-    #}
     x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
     if (length(dim(x)) == 1)
         x <- matrix(x, ncol = 1, dimnames = list(names(x)))
-    if (total.icons == 0)
-        total.icons <- ceiling(max(x))
+    if (total.icons == 0 && total.icons.tmp == 0)
+        total.icons.tmp <- ceiling(max(x))
 
     # Need to get counts before scaling
     if (label.data.type == "count")
     {
         label.data.type <- "raw"
-        label.data.label.data <- as.character(unlist(x))
+        label.data.text <- as.character(unlist(x))
     }
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (scale == 0 && max(x) > 1)
-        scale <- max(1, round(floor(total.icons/10)/5)*5)
+        scale <- max(1, round(floor(total.icons.tmp/10)/5)*5)
     if (scale == 0 && max(x) <=  1)
         scale <- 10^{round(log10(median(x)))}
+
+    if (total.icons == 0)
+        total.icons <- ceiling(total.icons.tmp/scale)
 
     if (nchar(legend.text) == 0 && scale > 0)
         legend.text  =  sprintf(paste(" =  %.", 0-min(0,floor(log10(scale))), "f", sep = ""), scale)
     x <- x/scale
-    #if (read.KfromX)
-    #    num.max.icon <- ceiling(num.max.icon/scale)
 
     if (mode == "column")
     {
@@ -112,9 +106,6 @@ PictoStdChart <- function(x,
         fill.direction <- "frombottom"
         hide.label.top <- TRUE
         icon.align.vertical <- "bottom"
-        #icon.autosize <- FALSE
-        #K.varying <- TRUE
-        #text.position <- "header"
 
     }
     if (mode == "bar")
@@ -127,13 +118,8 @@ PictoStdChart <- function(x,
         }
         fill.direction <- "fromleft"
         icon.autosize <- FALSE
-        #K.varying <- TRUE
     }
 
-    # If read.num.max.iconfromX fails, K tries default values
-    #if (all(num.max.icon == 0))
-    #    num.max.icon <- if (num.mvarying) ceiling(x)
-    #         else ceiling(num.max.icon.default/scale)
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (icon.ncol == 0)
@@ -185,7 +171,7 @@ PictoStdChart <- function(x,
                       icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
-                      fill.direction = fill.direction, legend.text = legend.text,
+                      fill.direction = fill.direction, legend.text = legend.text, legend.icon.color = legend.icon.color,
                       label.data.position = label.data.position, label.data.type = label.data.type,
                       label.data.text = label.data.text, ...))
 }

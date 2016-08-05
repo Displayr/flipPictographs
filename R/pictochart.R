@@ -25,15 +25,15 @@
 #' @param label.right Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.
 #' @param label.font.family Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.
 #' @param label.font.size Size of label text.
-#' @param label.weight Weight of label text, e.g. "normal", "bold", "900"
-#' @param label.color Colour of labels.
+#' @param label.font.weight Weight of label text, e.g. "normal", "bold", "900"
+#' @param label.font.color Colour of labels.
 #' @param label.top.height Height of top label row in pixels.
 #' @param label.left.width Width of left label column in pixels.
 #' @param label.left.align.horizontal Horizontal alignment.
 #' @param label.left.align.vertical Vertical alignment.
 #' @param row.height Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.
 #' @param column.width Width of graphic cells.
-#' @param width.height.ratio Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.
+#' @param width.height.ratio Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.
 #' @param pad.row Single numeric specifying vertical spacing between graphic cells in the table.
 #' @param pad.col Vertical spacing between cells in table.
 #' @param pad.icon.row Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
@@ -69,14 +69,14 @@ PictoChart <- function(x,
                        label.top.font.family = label.font.family,
                        label.top.font.size = label.font.size,
                        label.top.font.weight = "bold",
-                       label.top.font.color = label.color,
+                       label.top.font.color = label.font.color,
                        label.top.height = 1.2*label.top.font.size,
                        label.right.font.family = label.font.family,
                        label.right.font.size = label.font.size,
                        label.right.font.weight = label.font.weight,
                        label.right.font.color = label.font.color,
                        label.right.width = 0,
-                       label.bottom.font = label.font.family,
+                       label.bottom.font.family = label.font.family,
                        label.bottom.font.size = label.font.size,
                        label.bottom.font.weight = label.font.weight,
                        label.bottom.font.color = label.font.color,
@@ -116,11 +116,12 @@ PictoChart <- function(x,
                        pad.row = 5,
                        pad.col = 5,
                        pad.icon.row = 0.0,
-                       pad.icon.col = 0.0)
+                       pad.icon.col = 0.0,
                        #margin.top = 0,
                        #margin.right = 0,
                        #margin.bottom = 0,
-                       #margin.left = 0)
+                       #margin.left = 0,
+                       print.config = FALSE)
 {
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
@@ -128,10 +129,7 @@ PictoChart <- function(x,
          else ncol(x)
 
     if (any(total.icons != ceiling(total.icons)))
-    {
-        warning("Non-integers in total.icons will be rounded up\n")
-        total.icons <- ceiling(total.icons)
-    }
+        stop("Parameter total.icons must be a whole number\n")
 
     if (any(icon.nrow * icon.ncol != total.icons))
     {
@@ -260,7 +258,7 @@ PictoChart <- function(x,
         label.bottom.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
                          \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                          \"font-color\":\"%s\",\"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
-                         label.bottom, label.bottom.font.family, label.bottom.font.size, label.bottom.family.weight,
+                         label.bottom, label.bottom.font.family, label.bottom.font.size, label.bottom.font.weight,
                          label.bottom.font.color, label.bottom.align.horizontal, label.bottom.align.vertical)
     if (length(label.right) > 0)
         label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
@@ -284,6 +282,7 @@ PictoChart <- function(x,
     {
         if (label.data.type == "count")
             label.data.text <- as.character(unlist(x))
+
         if (label.data.type %in% c("proportion", "percentage"))
             label.data.text <- label.data.type
 
@@ -295,7 +294,7 @@ PictoChart <- function(x,
         row.height <- row.height + label.data.font.size
     }
 
-    row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%f,
+    row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
                          \"variableImage\":\"%s:%s%s:%s\", %s \"numRows\":%d, %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
                         prop, total.icons, image.type, fill.icon.color.str, fill.direction,
@@ -316,7 +315,7 @@ PictoChart <- function(x,
         corner.tl <- empty.str
         corner.bl <- empty.str
         if (label.left.width == 0)
-            label.left.width <- 0.75 * label.left.font.size * max(nchar(label.left))
+            label.left.width <- 0.4 * label.left.font.size * max(nchar(label.left))
         column.width <- c(label.left.width, column.width)
     }
     if (any(nchar(label.right) > 0))
@@ -343,15 +342,16 @@ PictoChart <- function(x,
         legend.col.str <- ""
         if (nchar(legend.icon.color) > 0)
             legend.col.str <- paste(legend.icon.color[1], ":", sep="")
+
         if (max(icon.nrow[leg.row,]) > 1)
             leg.ipad <- (row.height[leg.row]-icon.height)/2
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
-                                                \"font-font.size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
+                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
                                                 \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
                                                 legend.text, legend.font.family, legend.font.size, legend.font.weight, legend.font.color)
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
                          \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               image.type, fill.direction[1], legend.col.str, fill.image[1], leg.ipad, 0, leg.ipad, 0)
+                                               image.type, legend.col.str, fill.direction[1], fill.image[1], leg.ipad, 0, leg.ipad, 0)
         column.width <- c(column.width, pad.legend, icon.width, legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
@@ -389,6 +389,11 @@ PictoChart <- function(x,
     if (any(nchar(label.bottom) > 0))
         json.str <- paste(json.str, "],[", paste(c(corner.bl, label.bottom.str, corner.br), collapse = ","), sep = "")
     json.str <- paste(json.str, "]]}}", sep = "")
-    #cat(json.str, "\n")
+
+    cat("pad.icon.row:", pad.icon.row, "\n")
+
+
+    if (print.config)
+        cat(json.str, "\n")
     graphic(json.str)
 }
