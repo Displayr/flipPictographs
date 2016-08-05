@@ -25,11 +25,11 @@
 #' @importFrom  rhtmlPictographs graphic
 #' @export
 SinglePicto <- function (x,
-                         total.icons = 0,
+                         total.icons = NA,
                          image = "star",
                          scale = 1,
-                         number.rows = 0,
-                         number.cols = 0,
+                         number.rows = NA,
+                         number.cols = NA,
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
                          fill.icon.color = "black",
@@ -52,11 +52,15 @@ SinglePicto <- function (x,
         stop("scale must be greater than zero\n")
 
     x <- x/scale
-    if (total.icons == 0)
+    if (is.na(total.icons))
         total.icons <- ceiling(x)
 
     if (length(total.icons) != 1 && total.icons > 0)
         stop("total.icons must be a single numeric value and greater than zero\n")
+    if (!is.na(number.rows) && (number.rows <= 0 || number.rows != ceiling(number.rows)))
+        stop("number.rows must be a positive integer\n")
+    if (!is.na(number.cols) && (number.cols <= 0 || number.cols != ceiling(number.cols)))
+        stop("number.cols must be a positive integer\n")
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
@@ -65,16 +69,16 @@ SinglePicto <- function (x,
         stop("total.icons must be an integer\n")
 
     layout.str <- ""
-    if (number.rows > 0 && number.cols == 0)
+    if (!is.na(number.rows)  && is.na(number.cols))
     {
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
     }
-    if (number.cols > 0)
+    if (!is.na(number.cols))
     {
         layout.str <- paste(",\"numCols\":", number.cols, sep="")
         number.rows <- ceiling(total.icons/number.cols)
     }
-    if (number.rows == 0)
+    if (is.na(number.rows) && is.na(number.cols))
         number.rows <- floor(sqrt(total.icons))
 
     base.image.str <- ""
