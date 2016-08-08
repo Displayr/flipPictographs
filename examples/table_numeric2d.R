@@ -4,4 +4,4 @@ rownames(xx) <- c("i", "ii", "iii")
 p1 <- PictoStdChart(xx)
 
 # Scaling
-p2 <- PictoStdChart(xx*10)
+p2 <- PictoStdChart(xx*10, show.legend=T)

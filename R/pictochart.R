@@ -390,7 +390,7 @@ PictoChart <- function(x,
         json.str <- paste(json.str, "],[", paste(c(corner.bl, label.bottom.str, corner.br), collapse = ","), sep = "")
     json.str <- paste(json.str, "]]}}", sep = "")
 
-    cat("pad.icon.row:", pad.icon.row, "\n")
+    #cat("pad.icon.row:", pad.icon.row, "\n")
 
 
     if (print.config)

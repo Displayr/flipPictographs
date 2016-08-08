@@ -5,15 +5,15 @@
 #' @seealso PictoStdChart to create a chart or table of pictographs
 #'
 #' @param x Data which determines the number of icons (\code{= x/scale}) filled in the pictograph.
-#' @param total.icons Total number of icons. If set to zero (default), then \code{total.icons=ceiling(x/scale)}.
-#' @param scale Scaling factor for \code{x}.
-#' @param number.rows Controls layout of icons. If nethier \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.
+#' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
+#' @param scale Scaling factor for \code{x}. Defaults to 1.
+#' @param number.rows Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column.
 #' @param image name of icon
-#' @param hide.base.image Set to \code{TRUE} to use blank background instead of background image.
+#' @param hide.base.image Set to \code{TRUE} to use blank background instead of base image.
 #' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
 #' @param fill.icon.color Color of the filled icons
-#' @param base.icon.color Color of the unfilled icons when \code{hide.base.image == FALSE}. Default is grey (#CCCCCC).
+#' @param base.icon.color Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC).
 #' @param background.color Color of the graphic background
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
 #' @param icon.width Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.
@@ -51,9 +51,17 @@ SinglePicto <- function (x,
     if (scale <= 0)
         stop("scale must be greater than zero\n")
 
+    sc10 <- log10(x/scale)
+    if (sc10 > 2)
+    {
+        scale <- scale * 10^{round(sc10)}
+        warning("x is too large to plot. scale has been set to", scale, "\n")
+    }
+
     x <- x/scale
     if (is.na(total.icons))
         total.icons <- ceiling(x)
+
 
     if (length(total.icons) != 1 && total.icons > 0)
         stop("total.icons must be a single numeric value and greater than zero\n")

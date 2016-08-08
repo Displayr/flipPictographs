@@ -15,8 +15,8 @@ p3a <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3
 p3b <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", pad.icon.col=0.5)
 
 # Data labels (error)
-#p4a <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", label.data.type="count")
-
+p4a <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", label.data.type="count")
+p4b <- PictoStdChart(x1, show.legend=T, mode="bar", label.data.type="percentage")
 
 # Need to see what happens with fonts after the image slot is resized!
 # Check other icons with WHratio != 1
