@@ -4,34 +4,35 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, total.icons = 0, image = "star", scale = 1,
-  number.rows = 1, number.cols = 0, hide.base.image = FALSE,
+SinglePicto(x, total.icons = NA, image = "star", scale = 1,
+  number.rows = NA, number.cols = NA, hide.base.image = FALSE,
   fill.direction = "fromleft", fill.icon.color = "black",
   base.icon.color = "", background.color = "transparent",
   auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
   margin = 0, margin.top = margin, margin.right = margin,
-  margin.bottom = margin, margin.left = margin)
+  margin.bottom = margin, margin.left = margin, print.config = FALSE,
+  x.limit = 1000)
 }
 \arguments{
-\item{x}{Data which determines the number of icons (\code{= x/scale}) filled in the pictograph.}
+\item{x}{Data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
 
-\item{total.icons}{Total number of icons. If set to zero (default), then \code{total.icons=ceiling(x/scale)}.}
+\item{total.icons}{Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.}
 
 \item{image}{name of icon}
 
-\item{scale}{Scaling factor for \code{x}.}
+\item{scale}{Scaling factor for \code{x}. Defaults to 1.}
 
-\item{number.rows}{Control layout of icons. Note that number.rows is ignored when number.cols is non-zero.}
+\item{number.rows}{Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.}
 
 \item{number.cols}{Maximum number of icons in each column.}
 
-\item{hide.base.image}{Set to \code{TRUE} to use blank background instead of background image.}
+\item{hide.base.image}{Set to \code{TRUE} to use blank background instead of base image.}
 
 \item{fill.direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).}
 
 \item{fill.icon.color}{Color of the filled icons}
 
-\item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Default is grey (#CCCCCC).}
+\item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC).}
 
 \item{background.color}{Color of the graphic background}
 
@@ -44,6 +45,10 @@ SinglePicto(x, total.icons = 0, image = "star", scale = 1,
 \item{pad.col}{Horizontal space between icons.}
 
 \item{margin}{Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.}
+
+\item{print.config}{If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.}
+
+\item{x.limit}{Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.}
 }
 \description{
 Creates a single pictograph. Allows customization of the number of icons

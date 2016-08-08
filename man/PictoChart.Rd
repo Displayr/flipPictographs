@@ -15,12 +15,12 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
   label.font.weight = "normal", label.font.color = "#2C2C2C",
   label.top.font.family = label.font.family,
   label.top.font.size = label.font.size, label.top.font.weight = "bold",
-  label.top.font.color = label.color, label.top.height = 1.2 *
+  label.top.font.color = label.font.color, label.top.height = 1.2 *
   label.top.font.size, label.right.font.family = label.font.family,
   label.right.font.size = label.font.size,
   label.right.font.weight = label.font.weight,
   label.right.font.color = label.font.color, label.right.width = 0,
-  label.bottom.font = label.font.family,
+  label.bottom.font.family = label.font.family,
   label.bottom.font.size = label.font.size,
   label.bottom.font.weight = label.font.weight,
   label.bottom.font.color = label.font.color, label.bottom.height = 1.2 *
@@ -49,7 +49,7 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
   nchar(label.bottom)), width.height.ratio = 0,
   background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 5,
-  pad.col = 5, pad.icon.row = 0, pad.icon.col = 0)
+  pad.col = 5, pad.icon.row = 0, pad.icon.col = 0, print.config = FALSE)
 }
 \arguments{
 \item{x}{Data for charting}
@@ -88,6 +88,10 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
 
 \item{label.font.size}{Size of label text.}
 
+\item{label.font.weight}{Weight of label text, e.g. "normal", "bold", "900"}
+
+\item{label.font.color}{Colour of labels.}
+
 \item{label.top.height}{Height of top label row in pixels.}
 
 \item{label.left.width}{Width of left label column in pixels.}
@@ -102,7 +106,7 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
 
 \item{column.width}{Width of graphic cells.}
 
-\item{width.height.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{wh.ratio}.}
+\item{width.height.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.}
 
 \item{background.color}{Background colour of pictograph}
 
@@ -117,10 +121,6 @@ PictoChart(x, fill.image, base.image = "", image.type = "url",
 \item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
 
 \item{legend.font.family.family}{Font of legend.}
-
-\item{label.weight}{Weight of label text, e.g. "normal", "bold", "900"}
-
-\item{label.color}{Colour of labels.}
 
 \item{pad.icon.ncol}{Spacing between horizontal spacing between icons inside each table cell.}
 }

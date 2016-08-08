@@ -5,8 +5,7 @@
 \title{Wrapper function to create Pictographs}
 \usage{
 PictoStdChart(x, by = NULL, image = "star", hide.base.image = FALSE,
-  num.max.icon = 0, read.KfromX = FALSE, K.varying = read.KfromX,
-  scale = 0, legend.text = "", legend.icon.color = "",
+  total.icons = 0, scale = 0, legend.text = "", legend.icon.color = "",
   aggregate.period = "month", mode = "table", stack = FALSE,
   gradient.col1 = "deepskyblue", gradient.col2 = "orange",
   gradient.dir = "column", fill.direction = "fromleft", icon.nrow = 1,
@@ -28,10 +27,6 @@ PictoStdChart(x, by = NULL, image = "star", hide.base.image = FALSE,
 
 \item{hide.base.image}{Turns off background image (on by default). In most cases it is appropriate to turn off the base image if num.max.icon varies between entries.}
 
-\item{num.max.icon}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
-
-\item{read.KfromX}{If set to true, maximum number of icons in each row is taken from the last column of X. This option cannot be used with \code{by}.}
-
 \item{scale}{Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
 \item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
@@ -51,6 +46,8 @@ PictoStdChart(x, by = NULL, image = "star", hide.base.image = FALSE,
 \item{hide.label.top}{Suppress labels above graphics.}
 
 \item{...}{Arguments passed to \code{PictoChart()}.}
+
+\item{num.max.icon}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
 }
 \description{
 \code{PictoStdChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.

@@ -4,7 +4,7 @@
 #' and dimensions.
 #' @seealso PictoStdChart to create a chart or table of pictographs
 #'
-#' @param x Data which determines the number of icons (\code{= x/scale}) filled in the pictograph.
+#' @param x Data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
 #' @param number.rows Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.
@@ -21,6 +21,7 @@
 #' @param pad.col Horizontal space between icons.
 #' @param margin Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.
 #' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
+#' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
 #'
 #' @importFrom  rhtmlPictographs graphic
 #' @export
@@ -44,7 +45,8 @@ SinglePicto <- function (x,
                          margin.right = margin,
                          margin.bottom = margin,
                          margin.left = margin,
-                         print.config = FALSE)
+                         print.config = FALSE,
+                         x.limit = 1000)
 {
     if (!(length(x) == 1 && x >= 0))
         stop("x must be a single numeric value\n")
@@ -52,10 +54,10 @@ SinglePicto <- function (x,
         stop("scale must be greater than zero\n")
 
     sc10 <- log10(x/scale)
-    if (sc10 > 2)
+    if (!is.na(x.limit) && x/scale > x.limit)
     {
-        scale <- scale * 10^{round(sc10)}
-        warning("x is too large to plot. scale has been set to", scale, "\n")
+        scale <- scale * 10^{floor(log10(x/scale))}
+        warning("x is too large to plot - scale has been set to ", scale, "\n")
     }
 
     x <- x/scale
@@ -87,7 +89,7 @@ SinglePicto <- function (x,
         number.rows <- ceiling(total.icons/number.cols)
     }
     if (is.na(number.rows) && is.na(number.cols))
-        number.rows <- floor(sqrt(total.icons))
+        number.rows <- round(sqrt(total.icons))
 
     base.image.str <- ""
     if (nchar(base.icon.color) > 0)
