@@ -7,8 +7,9 @@
 #' @param x Data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
-#' @param number.rows Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.
-#' @param number.cols Maximum number of icons in each column.
+#' @param number.rows Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
+#' @param number.cols Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.
+#' @param width.height.ratio Width to height ratio of pictograph. Ignored if \code{number.rows} or \code{number.cols} is set.
 #' @param image name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of base image.
 #' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
@@ -31,6 +32,7 @@ SinglePicto <- function (x,
                          scale = 1,
                          number.rows = NA,
                          number.cols = NA,
+                         width.height.ratio = 2,
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
                          fill.icon.color = "black",
@@ -57,7 +59,7 @@ SinglePicto <- function (x,
     if (!is.na(x.limit) && x/scale > x.limit)
     {
         scale <- scale * 10^{floor(log10(x/scale))}
-        warning("x is too large to plot - scale has been set to ", scale, "\n")
+        warning("The input value is too large to plot, and the Scale has been set to ", scale, ". Consider entering a larger Scale value in the inputs.\n")
     }
 
     x <- x/scale
@@ -71,6 +73,10 @@ SinglePicto <- function (x,
         stop("number.rows must be a positive integer\n")
     if (!is.na(number.cols) && (number.cols <= 0 || number.cols != ceiling(number.cols)))
         stop("number.cols must be a positive integer\n")
+    if (width.height.ratio <= 0)
+        stop("width.height.ratio must be greater than zero\n")
+    if (icon.width <= 0)
+        stop("icon.width must be greater than zero\n")
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
@@ -78,7 +84,9 @@ SinglePicto <- function (x,
     if (round(total.icons) != total.icons)
         stop("total.icons must be an integer\n")
 
+    # Determine layout based on which parameters are supplied
     layout.str <- ""
+    icon.WHratio <- imageWHRatio[image] * (1+pad.col) / (1+pad.row)
     if (!is.na(number.rows)  && is.na(number.cols))
     {
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
@@ -88,8 +96,11 @@ SinglePicto <- function (x,
         layout.str <- paste(",\"numCols\":", number.cols, sep="")
         number.rows <- ceiling(total.icons/number.cols)
     }
-    if (is.na(number.rows) && is.na(number.cols))
-        number.rows <- round(sqrt(total.icons))
+    if (!is.na(width.height.ratio)) # default
+    {
+        number.rows <- round(sqrt(icon.WHratio/width.height.ratio * total.icons))
+        layout.str <- paste(",\"numRows\":", number.rows, sep="")
+    }
 
     base.image.str <- ""
     if (nchar(base.icon.color) > 0)
@@ -98,7 +109,7 @@ SinglePicto <- function (x,
         base.image.str <- paste(",\"baseImage\":\"url:", base.icon.color, imageURL[image], "\"", sep="")
     variable.image <- paste("url:", fill.direction, ":", fill.icon.color, ":", imageURL[image], sep="")
 
-    image.height <- (icon.width/imageWHRatio[image] * number.rows) + margin.top + margin.bottom
+    image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,

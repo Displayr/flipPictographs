@@ -23,6 +23,7 @@
 PictoStdChart <- function(x,
                           by = NULL,
                           image = "star",
+                          image.type = "url",
                           hide.base.image = FALSE,
                           total.icons = 0,
                           scale = 0,
@@ -161,10 +162,12 @@ PictoStdChart <- function(x,
     }
 
 
-    base.image <- ""
+    base.image <- NA
     if (!hide.base.image)
         base.image <- imageURL[image]
-    return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex,
+    if (image %in% c("circle", "square"))
+        image.type <- image
+    return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex, image.type = image.type,
                       base.image = base.image, width.height.ratio = imageWHRatio[image],
                       total.icons = total.icons,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, icon.fixedsize = 1-icon.autosize,

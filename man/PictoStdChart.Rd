@@ -4,10 +4,10 @@
 \alias{PictoStdChart}
 \title{Wrapper function to create Pictographs}
 \usage{
-PictoStdChart(x, by = NULL, image = "star", hide.base.image = FALSE,
-  total.icons = 0, scale = 0, legend.text = "", legend.icon.color = "",
-  aggregate.period = "month", mode = "table", stack = FALSE,
-  gradient.col1 = "deepskyblue", gradient.col2 = "orange",
+PictoStdChart(x, by = NULL, image = "star", image.type = "url",
+  hide.base.image = FALSE, total.icons = 0, scale = 0, legend.text = "",
+  legend.icon.color = "", aggregate.period = "month", mode = "table",
+  stack = FALSE, gradient.col1 = "deepskyblue", gradient.col2 = "orange",
   gradient.dir = "column", fill.direction = "fromleft", icon.nrow = 1,
   icon.ncol = 0, icon.autosize = FALSE, icon.align.horizontal = "left",
   icon.align.vertical = "center", transpose = FALSE,

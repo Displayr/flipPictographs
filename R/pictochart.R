@@ -44,7 +44,7 @@
 
 PictoChart <- function(x,
                        fill.image,
-                       base.image = "",
+                       base.image = NA,
                        image.type = "url",
                        total.icons = max(ceiling(x)),
                        fill.icon.color = "",
@@ -197,7 +197,7 @@ PictoChart <- function(x,
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
     base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
-    base.image.str <- ifelse(nchar(base.image) > 0,
+    base.image.str <- ifelse(!is.na(base.image),
                              paste("\"baseImage\":\"", image.type, ":", base.icon.color.str,
                                 base.image, "\",", sep = ""), "")
 
@@ -218,18 +218,18 @@ PictoChart <- function(x,
         row.height <- rep(max(icon.nrow) * icon.height, n)
     }
 
-    if (icon.fixedsize)
-    {
-        icon.align.horizontal <- matrix(icon.align.horizontal, n, m, byrow = T)
-        l.coef <- c(left = 0, center = 0.5, right = 1)
-        r.coef <- c(left = 1, center = 0.5, right = 0)
+#    if (icon.fixedsize)
+#    {
+#        icon.align.horizontal <- matrix(icon.align.horizontal, n, m, byrow = T)
+#        l.coef <- c(left = 0, center = 0.5, right = 1)
+#        r.coef <- c(left = 1, center = 0.5, right = 0)
 
-        pad.left  <- l.coef[icon.align.horizontal] * (column.width - (icon.width)*icon.ncol)
-        pad.right <- r.coef[icon.align.horizontal] * (column.width - (icon.width)*icon.ncol)
-        pad.tmp <- (row.height - icon.height*icon.nrow)
-        pad.top <- switch(icon.align.vertical, top = matrix(0,n,m), bottom = pad.tmp, 0.5*pad.tmp)
-        pad.bottom <- switch(icon.align.vertical, top = pad.tmp, bottom = matrix(0,n,m), 0.5*pad.tmp)
-    }
+#        pad.left  <- l.coef[icon.align.horizontal] * (column.width - (icon.width)*icon.ncol)
+#        pad.right <- r.coef[icon.align.horizontal] * (column.width - (icon.width)*icon.ncol)
+#        pad.tmp <- (row.height - icon.height*icon.nrow)
+#        pad.top <- switch(icon.align.vertical, top = matrix(0,n,m), bottom = pad.tmp, 0.5*pad.tmp)
+#        pad.bottom <- switch(icon.align.vertical, top = pad.tmp, bottom = matrix(0,n,m), 0.5*pad.tmp)
+#    }
 
     # Compensating for rowGutters/pad.row
     lab.tpad <- rep(0, n)
@@ -338,20 +338,24 @@ PictoChart <- function(x,
         row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
         leg.row <- max(1, floor(nrow(row.str)/2))
         leg.col <- ncol(row.str)
-        leg.ipad <- 0
+        leg.vpad <- 0
+        leg.hpad <- 0
         legend.col.str <- ""
         if (nchar(legend.icon.color) > 0)
             legend.col.str <- paste(legend.icon.color[1], ":", sep="")
 
         if (max(icon.nrow[leg.row,]) > 1)
-            leg.ipad <- (row.height[leg.row]-icon.height)/2
+            leg.vpad <- (row.height[leg.row]-icon.height)/2 + (icon.height * pad.icon.row) + pad.row
+        if (max(icon.ncol) > 1)
+            leg.hpad <- (icon.width * pad.icon.col)/2 + 2*pad.col
+        cat("legend", leg.vpad, icon.height, pad.icon.row, "|", leg.hpad, icon.width, pad.icon.col, "\n", sep=" ")
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
                                                 \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
                                                 \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
                                                 legend.text, legend.font.family, legend.font.size, legend.font.weight, legend.font.color)
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
                          \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               image.type, legend.col.str, fill.direction[1], fill.image[1], leg.ipad, 0, leg.ipad, 0)
+                                               image.type, legend.col.str, fill.direction[1], fill.image[1], leg.vpad, leg.hpad, leg.vpad, 0)
         column.width <- c(column.width, pad.legend, icon.width, legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
@@ -373,7 +377,6 @@ PictoChart <- function(x,
     row.height <- pmax(1, row.height)
     column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
-    #cat("row.str:", row.str)
     json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
@@ -390,7 +393,6 @@ PictoChart <- function(x,
         json.str <- paste(json.str, "],[", paste(c(corner.bl, label.bottom.str, corner.br), collapse = ","), sep = "")
     json.str <- paste(json.str, "]]}}", sep = "")
 
-    #cat("pad.icon.row:", pad.icon.row, "\n")
 
 
     if (print.config)

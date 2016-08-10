@@ -5,13 +5,13 @@
 \title{SinglePicto}
 \usage{
 SinglePicto(x, total.icons = NA, image = "star", scale = 1,
-  number.rows = NA, number.cols = NA, hide.base.image = FALSE,
-  fill.direction = "fromleft", fill.icon.color = "black",
-  base.icon.color = "", background.color = "transparent",
-  auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
-  margin = 0, margin.top = margin, margin.right = margin,
-  margin.bottom = margin, margin.left = margin, print.config = FALSE,
-  x.limit = 1000)
+  number.rows = NA, number.cols = NA, width.height.ratio = 2,
+  hide.base.image = FALSE, fill.direction = "fromleft",
+  fill.icon.color = "black", base.icon.color = "",
+  background.color = "transparent", auto.size = FALSE, icon.width = 50,
+  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
+  margin.right = margin, margin.bottom = margin, margin.left = margin,
+  print.config = FALSE, x.limit = 1000)
 }
 \arguments{
 \item{x}{Data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
@@ -22,9 +22,11 @@ SinglePicto(x, total.icons = NA, image = "star", scale = 1,
 
 \item{scale}{Scaling factor for \code{x}. Defaults to 1.}
 
-\item{number.rows}{Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons in to a square. Note that number.rows is ignored when number.cols is non-zero.}
+\item{number.rows}{Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.}
 
-\item{number.cols}{Maximum number of icons in each column.}
+\item{number.cols}{Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.}
+
+\item{width.height.ratio}{Width to height ratio of pictograph. Ignored if \code{number.rows} or \code{number.cols} is set.}
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of base image.}
 

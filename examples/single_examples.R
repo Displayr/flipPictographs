@@ -30,9 +30,12 @@ s8c <- SinglePicto(2.5, 5, image="stickman", background.color="red", auto.size =
 s8d <- SinglePicto(2.5, 5, image="stickman", background.color="red", auto.size = F, margin=10)
 s8e <- SinglePicto(2.5, 5, image="stickman", background.color="red", auto.size = F, margin.top=10, margin.left=10)
 
+# Padding
+s10 <- SinglePicto(10, width.height.ratio = 2, auto.size=T, background.color="green", image="star", pad.row=0.2)
+
 # Check ratios of built in images
 i.list <- names(flipPictographs:::imageURL)
 s9 <- list()
-n <- length(i.list)
+n <- length(i.list)-2
 for (i in 1:n)
     s9[[i]] <- SinglePicto(9, 9, 3, image=i.list[i], margin.left=100, background.color = "red")

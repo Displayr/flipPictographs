@@ -12,6 +12,7 @@ p2e <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3
 
 # Padding
 p3a <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", pad.icon.row=0.5)
+p3c <- PictoStdChart(x1, total.icons=10, icon.ncol=2, show.legend=T, mode="bar", pad.legend=3, background.color="green", pad.icon.row=0.5, show.lines=T)
 p3b <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", pad.icon.col=0.5)
 
 # Data labels (error)

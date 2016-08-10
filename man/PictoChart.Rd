@@ -4,7 +4,7 @@
 \alias{PictoChart}
 \title{PictoChart}
 \usage{
-PictoChart(x, fill.image, base.image = "", image.type = "url",
+PictoChart(x, fill.image, base.image = NA, image.type = "url",
   total.icons = max(ceiling(x)), fill.icon.color = "",
   base.icon.color = "", fill.direction = "fromleft", show.lines = FALSE,
   show.legend = FALSE, legend.text = "", icon.nrow = 1,

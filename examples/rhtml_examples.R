@@ -21,3 +21,7 @@ b2 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":5,"numRows":1,"va
 c1 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":20, "variableImage":"url:fromleft:black:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","width":250,"height":70,"background-color":"transparent","resizable":"false"}')
 c2 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":50, "variableImage":"url:fromleft:black:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","width":250,"height":70,"background-color":"transparent","resizable":"false"}')
 c3 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":90, "variableImage":"url:fromleft:black:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","width":250,"height":70,"background-color":"transparent","resizable":"true"}')
+
+# Does it sense dimensions of image slot?
+d1 <- rhtmlPictographs::graphic('{"proportion":1,"numImages":10,"variableImage":"url:fromleft:black:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_grey.svg","background-color":"transparent","width":20, "height":200, "columnGutter":0,"rowGutter":0,"padding":"0 0 0 0", "preserveAspectRatio":"xMidYMid"}')
+
