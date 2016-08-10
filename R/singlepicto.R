@@ -58,7 +58,7 @@ SinglePicto <- function (x,
     sc10 <- log10(x/scale)
     if (!is.na(x.limit) && x/scale > x.limit)
     {
-        scale <- scale * 10^{floor(log10(x/scale))}
+        scale <- scale * 10^{floor(log10(x/scale)) - 1}
         warning("The input value is too large to plot, and the Scale has been set to ", scale, ". Consider entering a larger Scale value in the inputs.\n")
     }
 

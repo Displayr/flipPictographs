@@ -214,8 +214,8 @@ PictoChart <- function(x,
     {
         icon.width <- max(icon.width, width.height.ratio * icon.height)
         icon.height <- icon.width/width.height.ratio
-        column.width <- rep(max(icon.ncol) * icon.width, m)
-        row.height <- rep(max(icon.nrow) * icon.height, n)
+        column.width <- rep((max(icon.ncol) * icon.width * (1+pad.icon.col)) + pad.col, m)
+        row.height <-   rep((max(icon.nrow) * icon.height * (1+pad.icon.row)) + pad.row, n)
     }
 
 #    if (icon.fixedsize)
@@ -345,9 +345,9 @@ PictoChart <- function(x,
             legend.col.str <- paste(legend.icon.color[1], ":", sep="")
 
         if (max(icon.nrow[leg.row,]) > 1)
-            leg.vpad <- (row.height[leg.row]-icon.height)/2 + (icon.height * pad.icon.row) + pad.row
+            leg.vpad <- (row.height[leg.row]-icon.height)/2
         if (max(icon.ncol) > 1)
-            leg.hpad <- (icon.width * pad.icon.col)/2 + 2*pad.col
+            leg.hpad <- 0
         cat("legend", leg.vpad, icon.height, pad.icon.row, "|", leg.hpad, icon.width, pad.icon.col, "\n", sep=" ")
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
                                                 \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
@@ -355,7 +355,8 @@ PictoChart <- function(x,
                                                 legend.text, legend.font.family, legend.font.size, legend.font.weight, legend.font.color)
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
                          \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               image.type, legend.col.str, fill.direction[1], fill.image[1], leg.vpad, leg.hpad, leg.vpad, 0)
+                                               image.type, legend.col.str, fill.direction[1], fill.image[1],
+                                               leg.vpad, leg.hpad, leg.vpad, 0)
         column.width <- c(column.width, pad.legend, icon.width, legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
