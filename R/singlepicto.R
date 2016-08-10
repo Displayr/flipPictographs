@@ -32,7 +32,7 @@ SinglePicto <- function (x,
                          scale = 1,
                          number.rows = NA,
                          number.cols = NA,
-                         width.height.ratio = 2,
+                         width.height.ratio = 1,
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
                          fill.icon.color = "black",
@@ -90,13 +90,11 @@ SinglePicto <- function (x,
     if (!is.na(number.rows)  && is.na(number.cols))
     {
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
-    }
-    if (!is.na(number.cols))
+    } else if (!is.na(number.cols))
     {
         layout.str <- paste(",\"numCols\":", number.cols, sep="")
         number.rows <- ceiling(total.icons/number.cols)
-    }
-    if (!is.na(width.height.ratio)) # default
+    } else
     {
         number.rows <- round(sqrt(icon.WHratio/width.height.ratio * total.icons))
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
