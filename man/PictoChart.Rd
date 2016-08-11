@@ -9,7 +9,6 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
   base.icon.color = "", fill.direction = "fromleft", show.lines = FALSE,
   show.legend = FALSE, legend.text = "", icon.nrow = 1,
   icon.ncol = unlist(total.icons)/icon.nrow, icon.fixedsize = FALSE,
-  icon.align.horizontal = "left", icon.align.vertical = "center",
   label.left = c(), label.right = c(), label.top = c(),
   label.bottom = c(), label.font.family = "arial", label.font.size = 12,
   label.font.weight = "normal", label.font.color = "#2C2C2C",
@@ -74,8 +73,6 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{icon.fixedsize}{When \code{true}, icons will not automatically resize to fill table cell.}
 
-\item{icon.align.horizontal}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
-
 \item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  rep("", length(x))}.}
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
@@ -121,6 +118,8 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
 
 \item{legend.font.family.family}{Font of legend.}
+
+\item{icon.align.horizontal}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
 
 \item{pad.icon.ncol}{Spacing between horizontal spacing between icons inside each table cell.}
 }

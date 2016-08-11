@@ -7,7 +7,10 @@ x2 <- 100*x1
 p2 <- PictoStdChart(x1)
 p2b <- PictoStdChart(x1, show.legend=T, mode="column")
 p2c <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, legend.icon.color="red")
-p2d <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green")
+p2d <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.col=0)
 p2e <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.icon.col=0.5)
+p2f <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.icon.row=0.5)
+p2g <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.col=20)
+p2h <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.row=20, pad.icon.row=0.5)
 
 #0 Need to see what happens with fonts after the image slot is resized!

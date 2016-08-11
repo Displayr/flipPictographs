@@ -7,10 +7,11 @@
 #' @param x Data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
-#' @param number.rows Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
+#' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns"}. If not supplied, a decision will be made based on which parameters are supplied
+#' @param number.rows If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.
 #' @param width.height.ratio Width to height ratio of pictograph. Ignored if \code{number.rows} or \code{number.cols} is set.
-#' @param image name of icon
+#' @param image Name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of base image.
 #' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
 #' @param fill.icon.color Color of the filled icons
@@ -29,10 +30,11 @@
 SinglePicto <- function (x,
                          total.icons = NA,
                          image = "star",
-                         scale = 1,
                          number.rows = NA,
                          number.cols = NA,
                          width.height.ratio = 1,
+                         layout = NA,
+                         scale = 1,
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
                          fill.icon.color = "black",
@@ -54,6 +56,21 @@ SinglePicto <- function (x,
         stop("x must be a single numeric value\n")
     if (scale <= 0)
         stop("scale must be greater than zero\n")
+
+    # Some parameter substitutions for R GUI Controls
+    image <- gsub(" ", "", tolower(image))
+    fill.direction <- gsub(" ", "", tolower(fill.direction))
+    if (auto.size)
+        icon.width <- 50
+    if (!is.na(layout))
+    {
+        if (layout != "Width-to-height ratio")
+            width.height.ratio = 1
+        if (layout != "Number of rows")
+            number.rows = NA
+        if (layout != "Number of columns")
+            number.cols = NA
+    }
 
     sc10 <- log10(x/scale)
     if (!is.na(x.limit) && x/scale > x.limit)
@@ -100,12 +117,16 @@ SinglePicto <- function (x,
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
     }
 
+    image.type <- "url"
+    if (image %in% c("circle", "square"))
+        image.type <- image
+
     base.image.str <- ""
-    if (nchar(base.icon.color) > 0)
+    if (!hide.base.image && nchar(base.icon.color) > 0)
         base.icon.color <- paste(base.icon.color, ":", sep="")
     if (!hide.base.image)
-        base.image.str <- paste(",\"baseImage\":\"url:", base.icon.color, imageURL[image], "\"", sep="")
-    variable.image <- paste("url:", fill.direction, ":", fill.icon.color, ":", imageURL[image], sep="")
+        base.image.str <- paste(",\"baseImage\":\"", image.type, ":", base.icon.color, imageURL[image], "\"", sep="")
+    variable.image <- paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", imageURL[image], sep="")
 
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right

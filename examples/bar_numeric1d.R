@@ -1,7 +1,7 @@
 # In StdRPage set hide.base.image=T
 
 x1 <- c(First=1, SecondLonger=4.5, Third=3)
-p1 <- PictoStdChart(x1, mode="bar")
+#p1 <- PictoStdChart(x1, mode="bar")
 
 x2 <- 100*x1
 p2 <- PictoStdChart(x1)
@@ -18,6 +18,9 @@ p3b <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3
 # Data labels (error)
 p4a <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", label.data.type="count")
 p4b <- PictoStdChart(x1, show.legend=T, mode="bar", label.data.type="percentage")
+
+p5 <- PictoStdChart(x1, show.legend=T, mode="bar", hide.label.right = F)
+p5b <- PictoStdChart(x1, show.legend=T, mode="bar", hide.label.right = F, hide.label.left=T)
 
 # Need to see what happens with fonts after the image slot is resized!
 # Check other icons with WHratio != 1

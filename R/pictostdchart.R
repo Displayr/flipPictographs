@@ -26,9 +26,7 @@ PictoStdChart <- function(x,
                           image.type = "url",
                           hide.base.image = FALSE,
                           total.icons = 0,
-                          scale = 0,
-                          legend.text = "",
-                          legend.icon.color = "",
+                          scale = NA,
                           aggregate.period = "month",
                           mode = "table",
                           stack = FALSE,
@@ -42,13 +40,16 @@ PictoStdChart <- function(x,
                           icon.align.horizontal = "left",
                           icon.align.vertical = "center",
                           transpose = FALSE,
+                          legend.text = "",
+                          legend.icon.color = gradient.col1,
                           hide.label.left = FALSE,
-                          hide.label.right = FALSE,
+                          hide.label.right = TRUE,
                           hide.label.bottom = FALSE,
-                          hide.label.top = FALSE,
+                          hide.label.top = TRUE,
                           label.left = c(),
                           label.top = c(),
                           label.bottom = c(),
+                          label.right = c(),
                           label.bottom.align.horizontal = "center",
                           width.height.ratio = 0,
                           label.data.type = "none",
@@ -77,10 +78,12 @@ PictoStdChart <- function(x,
     }
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
-    if (scale == 0 && max(x) > 1)
+    if (is.na(scale) && max(x) > 1)
         scale <- max(1, round(floor(total.icons.tmp/10)/5)*5)
-    if (scale == 0 && max(x) <=  1)
+    if (is.na(scale) && max(x) <=  1)
         scale <- 10^{round(log10(median(x)))}
+    if (scale <= 0)
+        stop("Scale must be greater than zero\n")
 
     if (total.icons == 0)
         total.icons <- ceiling(total.icons.tmp/scale)
@@ -117,8 +120,10 @@ PictoStdChart <- function(x,
             x <- matrix(unlist(x), ncol = 1)
             rownames(x) <- tmpnames
         }
-        fill.direction <- "fromleft"
-        icon.autosize <- FALSE
+        if (!hide.label.right)
+            label.right <- rownames(x)
+        #fill.direction <- "fromleft"
+        #icon.autosize <- FALSE
     }
 
 
@@ -141,10 +146,13 @@ PictoStdChart <- function(x,
     if (hide.label.right)
         label.right <- rep("", n)
 
+    if (image %in% c("circle", "square"))
+        image.type <- image
     if (stack)
     {
-        return(pictoStack(x, image = image, mode = mode, col1 = gradient.col1, col2 = gradient.col2,
-                          label.left = label.left, label.top = label.top,
+        return(pictoStack(x, image = image, image.type = image.type, mode = mode,
+                          col1 = gradient.col1, col2 = gradient.col2,
+                          label.left = label.left, label.top = label.top, label.right = label.right,
                           label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
                           fill.direction = fill.direction, legend.text = legend.text, ...))
     }
@@ -165,14 +173,13 @@ PictoStdChart <- function(x,
     base.image <- NA
     if (!hide.base.image)
         base.image <- imageURL[image]
-    if (image %in% c("circle", "square"))
-        image.type <- image
+
     return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex, image.type = image.type,
                       base.image = base.image, width.height.ratio = imageWHRatio[image],
                       total.icons = total.icons,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, icon.fixedsize = 1-icon.autosize,
-                      icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
-                      label.left = label.left, label.top = label.top,
+                      #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
+                      label.left = label.left, label.top = label.top, label.right = label.right,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
                       fill.direction = fill.direction, legend.text = legend.text, legend.icon.color = legend.icon.color,
                       label.data.position = label.data.position, label.data.type = label.data.type,

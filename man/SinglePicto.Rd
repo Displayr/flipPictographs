@@ -4,8 +4,8 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, total.icons = NA, image = "star", scale = 1,
-  number.rows = NA, number.cols = NA, width.height.ratio = 2,
+SinglePicto(x, total.icons = NA, image = "star", number.rows = NA,
+  number.cols = NA, width.height.ratio = 1, layout = NA, scale = 1,
   hide.base.image = FALSE, fill.direction = "fromleft",
   fill.icon.color = "black", base.icon.color = "",
   background.color = "transparent", auto.size = FALSE, icon.width = 50,
@@ -18,15 +18,17 @@ SinglePicto(x, total.icons = NA, image = "star", scale = 1,
 
 \item{total.icons}{Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.}
 
-\item{image}{name of icon}
+\item{image}{Name of icon}
 
-\item{scale}{Scaling factor for \code{x}. Defaults to 1.}
-
-\item{number.rows}{Controls layout of icons. If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.}
+\item{number.rows}{If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.}
 
 \item{number.cols}{Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.}
 
 \item{width.height.ratio}{Width to height ratio of pictograph. Ignored if \code{number.rows} or \code{number.cols} is set.}
+
+\item{layout}{Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns"}. If not supplied, a decision will be made based on which parameters are supplied}
+
+\item{scale}{Scaling factor for \code{x}. Defaults to 1.}
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of base image.}
 

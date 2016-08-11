@@ -40,9 +40,10 @@ pictoStack <- function(x, image, mode, col1, col2, ...)
             c.bg[i,j] <- c.hex[k]
         }
     }
-
     pad.col <- 0
     pad.row <- 5
+
+    # Undo transform for column charts
     if (mode=="column")
     {
         pad.col <- 5
@@ -52,9 +53,9 @@ pictoStack <- function(x, image, mode, col1, col2, ...)
         c.bg <- t(c.bg[,m2:1])
     }
     c.fg <- paste(c.fg, ":", imageURL[image], sep="")
-    c.bg <- ifelse(nchar(c.bg) > 0, paste(c.bg, ":", imageURL[image], sep=""), "")
+    c.bg <- ifelse(nchar(c.bg) > 0, paste(c.bg, ":", imageURL[image], sep=""), NA)
 
-    return(PictoChart(x2, image.type="url",
+    return(PictoChart(x2,
                       fill.image=c.fg, base.image=c.bg, pad.col=pad.col, pad.row=pad.row,
                       total.icons=1, icon.nrow=1, icon.ncol=1, width.height.ratio=0, ...))
 }

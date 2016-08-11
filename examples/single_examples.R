@@ -8,19 +8,19 @@ s2 <- SinglePicto(2.5, 5, hide.base.image = T)
 # for a fixed icon.width, size of icons remain constant
 s3 <- SinglePicto(4.5, 6, icon.width=10)
 
-s4 <- SinglePicto(4.5, 6, 3)
-s4b <- SinglePicto(4.5, 6, 3, fill.direction="fromleft")
-s4c <- SinglePicto(4.5, 6, 3, fill.direction="fromright")
-s4d <- SinglePicto(4.5, 6, 3, fill.direction="fromtop")
-s4e <- SinglePicto(4.5, 6, 3, fill.direction="frombottom")
+s4 <- SinglePicto(4.5, 6, number.rows=3)
+s4b <- SinglePicto(4.5, 6, number.rows=3, fill.direction="fromleft")
+s4c <- SinglePicto(4.5, 6, number.rows=3, fill.direction="fromright")
+s4d <- SinglePicto(4.5, 6, number.rows=3, fill.direction="fromtop")
+s4e <- SinglePicto(4.5, 6, number.rows=3, fill.direction="frombottom")
 
 # Dimensions change depending on aspect ratio of image
-s5 <- SinglePicto(4.5, 6, 3, image="stickwoman")
+s5 <- SinglePicto(4.5, 6, number.cols=3, image="stickwoman")
 
-s6 <- SinglePicto(2.5, 5, 5, image="stickman", background.color="red")
+s6 <- SinglePicto(2.5, 5, number.cols=5, image="stickman", background.color="red")
 
 # Autosize
-s7 <- SinglePicto(2.5, 4, 4, image="stickman", background.color="red", auto.size = T)
+s7 <- SinglePicto(2.5, 4, number.rows=4, image="stickman", background.color="red", auto.size = T)
 
 # Margins
 s8  <- SinglePicto(2.5, 5, image="stickman", background.color="red", auto.size = T)

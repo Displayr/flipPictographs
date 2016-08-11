@@ -5,15 +5,16 @@
 \title{Wrapper function to create Pictographs}
 \usage{
 PictoStdChart(x, by = NULL, image = "star", image.type = "url",
-  hide.base.image = FALSE, total.icons = 0, scale = 0, legend.text = "",
-  legend.icon.color = "", aggregate.period = "month", mode = "table",
-  stack = FALSE, gradient.col1 = "deepskyblue", gradient.col2 = "orange",
+  hide.base.image = FALSE, total.icons = 0, scale = NA,
+  aggregate.period = "month", mode = "table", stack = FALSE,
+  gradient.col1 = "deepskyblue", gradient.col2 = "orange",
   gradient.dir = "column", fill.direction = "fromleft", icon.nrow = 1,
   icon.ncol = 0, icon.autosize = FALSE, icon.align.horizontal = "left",
-  icon.align.vertical = "center", transpose = FALSE,
-  hide.label.left = FALSE, hide.label.right = FALSE,
-  hide.label.bottom = FALSE, hide.label.top = FALSE, label.left = c(),
-  label.top = c(), label.bottom = c(),
+  icon.align.vertical = "center", transpose = FALSE, legend.text = "",
+  legend.icon.color = gradient.col1, hide.label.left = FALSE,
+  hide.label.right = TRUE, hide.label.bottom = FALSE,
+  hide.label.top = TRUE, label.left = c(), label.top = c(),
+  label.bottom = c(), label.right = c(),
   label.bottom.align.horizontal = "center", width.height.ratio = 0,
   label.data.type = "none", label.data.text = NULL,
   label.data.position = "footer", ...)
@@ -29,8 +30,6 @@ PictoStdChart(x, by = NULL, image = "star", image.type = "url",
 
 \item{scale}{Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
-\item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
-
 \item{aggregate.period}{Time period in by (e.g. "month", "year").}
 
 \item{mode}{Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.}
@@ -40,6 +39,8 @@ PictoStdChart(x, by = NULL, image = "star", image.type = "url",
 \item{icon.autosize}{Rescale icons to fill up table cell. If num.max.icon varies between cells, this can result in icons of varying sizes.}
 
 \item{transpose}{Swap rows and columns in data matrix \code{x}.}
+
+\item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
 
 \item{hide.label.left}{Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.}
 

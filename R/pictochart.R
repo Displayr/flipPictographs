@@ -56,8 +56,8 @@ PictoChart <- function(x,
                        icon.nrow = 1,
                        icon.ncol = unlist(total.icons)/icon.nrow,
                        icon.fixedsize = FALSE,
-                       icon.align.horizontal = "left",
-                       icon.align.vertical = "center",
+                       #icon.align.horizontal = "left",
+                       #icon.align.vertical = "center",
                        label.left = c(),
                        label.right = c(),
                        label.top = c(),
@@ -266,7 +266,7 @@ PictoChart <- function(x,
                          \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                          \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
                          label.right, lab.tpad, lab.bpad,
-                         label.right.font,family, label.right.font.size, label.right.font.weight,
+                         label.right.font.family, label.right.font.size, label.right.font.weight,
                          label.right.font.color, label.right.align.horizontal, label.right.align.vertical)
     if (length(label.left) > 0)
         label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
@@ -292,6 +292,7 @@ PictoChart <- function(x,
                             label.data.font.size, label.data.font.weight, label.data.font.family,
                             label.data.align.horizontal)
         row.height <- row.height + label.data.font.size
+        cat ("data-labels added to row height\n")
     }
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
@@ -336,19 +337,14 @@ PictoChart <- function(x,
     if (show.legend)
     {
         row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
-        leg.row <- max(1, floor(nrow(row.str)/2))
+        leg.row <- ceiling(nrow(row.str)/2)
         leg.col <- ncol(row.str)
-        leg.vpad <- 0
-        leg.hpad <- 0
         legend.col.str <- ""
         if (nchar(legend.icon.color) > 0)
             legend.col.str <- paste(legend.icon.color[1], ":", sep="")
 
-        if (max(icon.nrow[leg.row,]) > 1)
-            leg.vpad <- (row.height[leg.row]-icon.height)/2
-        if (max(icon.ncol) > 1)
-            leg.hpad <- 0
-        cat("legend", leg.vpad, icon.height, pad.icon.row, "|", leg.hpad, icon.width, pad.icon.col, "\n", sep=" ")
+        leg.vpad <- (row.height[leg.row]-icon.height)/2
+        cat("legend", leg.vpad, icon.height, row.height[leg.row], pad.icon.row, "|", 0, icon.width, pad.icon.col, column.width[2], "\n", sep=" ")
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
                                                 \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
                                                 \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
@@ -356,7 +352,7 @@ PictoChart <- function(x,
         row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
                          \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
                                                image.type, legend.col.str, fill.direction[1], fill.image[1],
-                                               leg.vpad, leg.hpad, leg.vpad, 0)
+                                               leg.vpad, 0, leg.vpad, 0)
         column.width <- c(column.width, pad.legend, icon.width, legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
