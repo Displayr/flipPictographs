@@ -210,6 +210,7 @@ PictoChart <- function(x,
     icon.width <- min(column.width/icon.ncol)
     icon.height <- min(row.height/icon.nrow)
 
+    # Padding should not affect size of the icons
     if (width.height.ratio != 0)
     {
         icon.width <- max(icon.width, width.height.ratio * icon.height)
@@ -316,7 +317,7 @@ PictoChart <- function(x,
         corner.tl <- empty.str
         corner.bl <- empty.str
         if (label.left.width == 0)
-            label.left.width <- 0.4 * label.left.font.size * max(nchar(label.left))
+            label.left.width <- 1.0 * label.left.font.size * max(nchar(label.left))
         column.width <- c(label.left.width, column.width)
     }
     if (any(nchar(label.right) > 0))
@@ -374,14 +375,15 @@ PictoChart <- function(x,
     row.height <- pmax(1, row.height)
     column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
-    json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
+    json.str <- paste("{", #\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
              #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",
              #"\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
              #"\"padding\":\"", paste(margin.top, margin.right, margin.bottom, margin.left, sep = " "), "\",",
              "\"rowGutterLength\":", pad.row, ",\"columnGutterLength\":", pad.col, ",",
-             "\"colWidths\":[", paste(column.width, collapse = ","), "],", sep = "")
+             "\"colWidths\":[", paste(column.width, collapse = ","), "],",
+             sep = "")
     json.str <- paste(json.str, lines.str, "\"rows\":[[", sep = "")
     if (any(nchar(label.top) > 0))
         json.str <- paste(json.str, paste(c(corner.tl, label.top.str, corner.tr), collapse = ","), "],[", sep = "")

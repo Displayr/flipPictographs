@@ -42,10 +42,10 @@ PictoStdChart <- function(x,
                           transpose = FALSE,
                           legend.text = "",
                           legend.icon.color = gradient.col1,
-                          hide.label.left = FALSE,
                           hide.label.right = TRUE,
-                          hide.label.bottom = FALSE,
-                          hide.label.top = TRUE,
+                          hide.label.left = !hide.label.right,
+                          hide.label.bottom = (mode!="column"),
+                          hide.label.top = (mode=="column"),
                           label.left = c(),
                           label.top = c(),
                           label.bottom = c(),
@@ -92,6 +92,8 @@ PictoStdChart <- function(x,
         legend.text  =  sprintf(paste(" =  %.", 0-min(0,floor(log10(scale))), "f", sep = ""), scale)
     x <- x/scale
 
+    # Restructure 2D matrices if not stacked and mode is column or bar
+
     if (mode == "column")
     {
         if (is.null(dim(x)))
@@ -106,10 +108,14 @@ PictoStdChart <- function(x,
             x <- matrix(unlist(x), nrow = 1)
             colnames(x) <- tmpnames
         }
-        label.bottom <- colnames(x)
-        fill.direction <- "frombottom"
-        hide.label.top <- TRUE
-        icon.align.vertical <- "bottom"
+
+        # Defaults will put labels on the top - add functionality for bottom
+        if (!hide.label.bottom)
+            label.bottom <- colnames(x)
+
+        #fill.direction <- "frombottom"
+        #hide.label.top <- TRUE
+        #icon.align.vertical <- "bottom"
 
     }
     if (mode == "bar")
@@ -120,12 +126,17 @@ PictoStdChart <- function(x,
             x <- matrix(unlist(x), ncol = 1)
             rownames(x) <- tmpnames
         }
+        # Defaults will put labels on the left - add functionality for right
         if (!hide.label.right)
-            label.right <- rownames(x)
+        {
+            if (is.null(dim(x)))
+                label.right <- names(x)
+            if (length(dim(x)) == 2)
+                label.right <- rownames(x)
+        }
         #fill.direction <- "fromleft"
         #icon.autosize <- FALSE
     }
-
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (icon.ncol == 0)
