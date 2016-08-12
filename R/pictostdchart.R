@@ -36,9 +36,9 @@ PictoStdChart <- function(x,
                           fill.direction = "fromleft",
                           icon.nrow = 1,
                           icon.ncol = 0,
-                          icon.autosize = FALSE,
-                          icon.align.horizontal = "left",
-                          icon.align.vertical = "center",
+                          #icon.autosize = FALSE,
+                          #icon.align.horizontal = "left",
+                          #icon.align.vertical = "center",
                           transpose = FALSE,
                           legend.text = "",
                           legend.icon.color = gradient.col1,
@@ -51,12 +51,22 @@ PictoStdChart <- function(x,
                           label.bottom = c(),
                           label.right = c(),
                           label.bottom.align.horizontal = "center",
-                          width.height.ratio = 0,
+                          width.height.ratio = NA,
                           label.data.type = "none",
                           label.data.text = NULL,
                           label.data.position = "footer",
+                          label.data.font.weight = "normal",
+                          label.data.align.horizontal = "right",
                           ...)
 {
+    # Parameter substitutions for R Gui Controls
+    fill.direction <- gsub(" ", "", tolower(fill.direction))
+    label.data.align.horizontal <- tolower(label.data.align.horizontal)
+    if (label.data.position == "Above icons")
+        label.data.position <- "header"
+    if (label.data.position == "Below icons")
+        label.data.position <- "footer"
+
     # Get maximum before any aggregating
     total.icons.tmp <- NA
     if (is.na(total.icons) && is.numeric(x))
@@ -188,13 +198,14 @@ PictoStdChart <- function(x,
     return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex, image.type = image.type,
                       base.image = base.image, width.height.ratio = imageWHRatio[image],
                       total.icons = total.icons,
-                      icon.nrow = icon.nrow, icon.ncol = icon.ncol, icon.fixedsize = 1-icon.autosize,
+                      icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
                       #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top, label.right = label.right,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
                       fill.direction = fill.direction, legend.text = legend.text, legend.icon.color = legend.icon.color,
                       label.data.position = label.data.position, label.data.type = label.data.type,
-                      label.data.text = label.data.text, ...))
+                      label.data.text = label.data.text, label.data.font.weight = "normal",
+                      label.data.align.horizontal = "right",...))
 }
 
 

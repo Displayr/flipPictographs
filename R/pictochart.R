@@ -55,7 +55,7 @@ PictoChart <- function(x,
                        legend.text = "",
                        icon.nrow = 1,
                        icon.ncol = unlist(total.icons)/icon.nrow,
-                       icon.fixedsize = FALSE,
+                       #icon.fixedsize = FALSE,
                        #icon.align.horizontal = "left",
                        #icon.align.vertical = "center",
                        label.left = c(),
@@ -108,7 +108,7 @@ PictoChart <- function(x,
                        label.data.align.horizontal = "right",
                        row.height = 1.5*label.font.size*max(icon.nrow),
                        column.width = max(15*max(icon.ncol), 0.5*label.top.font.size*nchar(label.top), 0.5*label.bottom.font.size*nchar(label.bottom)),
-                       width.height.ratio = 0,
+                       width.height.ratio = NA,
                        background.color = "transparent",
                        line.color = "#A8A8A8",
                        line.width = 0.5,
@@ -202,10 +202,12 @@ PictoChart <- function(x,
     # label.data.type, label.data.position, image.type
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
-    base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
-    base.image.str <- ifelse(!is.na(base.image),
-                             paste("\"baseImage\":\"", image.type, ":", base.icon.color.str,
-                                base.image, "\",", sep = ""), "")
+    base.image.str <- ""
+    if (!is.na(base.image))
+    {
+        base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
+        base.image.str <- paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = "")
+    }
 
 
     # Calculating padding/alignment
@@ -217,7 +219,7 @@ PictoChart <- function(x,
     icon.height <- min(row.height/icon.nrow)
 
     # Padding should not affect size of the icons
-    if (width.height.ratio != 0)
+    if (!is.na(width.height.ratio))
     {
         icon.width <- max(icon.width, width.height.ratio * icon.height)
         icon.height <- icon.width/width.height.ratio
@@ -299,7 +301,6 @@ PictoChart <- function(x,
                             label.data.font.size, label.data.font.weight, label.data.font.family,
                             label.data.align.horizontal)
         row.height <- row.height + label.data.font.size
-        cat ("data-labels added to row height\n")
     }
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
@@ -351,7 +352,6 @@ PictoChart <- function(x,
             legend.col.str <- paste(legend.icon.color[1], ":", sep="")
 
         leg.vpad <- (row.height[leg.row]-icon.height)/2
-        cat("legend", leg.vpad, icon.height, row.height[leg.row], pad.icon.row, "|", 0, icon.width, pad.icon.col, column.width[2], "\n", sep=" ")
         row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
                                                 \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
                                                 \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
@@ -397,8 +397,6 @@ PictoChart <- function(x,
     if (any(nchar(label.bottom) > 0))
         json.str <- paste(json.str, "],[", paste(c(corner.bl, label.bottom.str, corner.br), collapse = ","), sep = "")
     json.str <- paste(json.str, "]]}}", sep = "")
-
-
 
     if (print.config)
         cat(json.str, "\n")
