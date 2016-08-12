@@ -40,8 +40,10 @@ PictoStdChart <- function(x,
                           #icon.align.horizontal = "left",
                           #icon.align.vertical = "center",
                           transpose = FALSE,
+                          show.legend = FALSE,
                           legend.text = "",
                           legend.icon.color = gradient.col1,
+                          pad.legend = 5,
                           hide.label.right = TRUE,
                           hide.label.left = !hide.label.right,
                           hide.label.bottom = (mode!="column"),
@@ -61,11 +63,20 @@ PictoStdChart <- function(x,
 {
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
-    label.data.align.horizontal <- tolower(label.data.align.horizontal)
-    if (label.data.position == "Above icons")
-        label.data.position <- "header"
-    if (label.data.position == "Below icons")
-        label.data.position <- "footer"
+    label.data.type <- tolower(label.data.type)
+    if (label.data.type != "none")
+    {
+        label.data.align.horizontal <- tolower(label.data.align.horizontal)
+        if (label.data.position == "Above icons")
+            label.data.position <- "header"
+        if (label.data.position == "Below icons")
+            label.data.position <- "footer"
+    }
+    if (!show.legend)
+    {
+        legend.text <- ""
+        pad.legend <- 0
+    }
 
     # Get maximum before any aggregating
     total.icons.tmp <- NA
@@ -202,10 +213,11 @@ PictoStdChart <- function(x,
                       #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top, label.right = label.right,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
-                      fill.direction = fill.direction, legend.text = legend.text, legend.icon.color = legend.icon.color,
+                      fill.direction = fill.direction, pad.legend = pad.legend,
+                      show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
                       label.data.position = label.data.position, label.data.type = label.data.type,
-                      label.data.text = label.data.text, label.data.font.weight = "normal",
-                      label.data.align.horizontal = "right",...))
+                      label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
+                      label.data.align.horizontal = label.data.align.horizontal,...))
 }
 
 
