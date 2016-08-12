@@ -9,6 +9,7 @@ p2b <- PictoStdChart(x1, show.legend=T, mode="bar")
 p2c <- PictoStdChart(x1, show.legend=T, mode="bar", pad.legend=3, legend.icon.color="red")
 p2d <- PictoStdChart(x1, show.legend=T, mode="bar", pad.legend=3, background.color="green")
 p2e <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green")
+p2f <- PictoStdChart(x2, show.legend=T, mode="bar", background.color="green", hide.label.right=F, pad.legend=0)
 
 # Padding
 p3a <- PictoStdChart(x1, total.icons=10, show.legend=T, mode="bar", pad.legend=3, background.color="green", pad.icon.row=0.5)

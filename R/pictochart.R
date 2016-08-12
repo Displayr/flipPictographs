@@ -130,6 +130,8 @@ PictoChart <- function(x,
 
     if (any(total.icons != ceiling(total.icons)))
         stop("Parameter total.icons must be a whole number\n")
+    if (any(total.icons <= 0))
+        stop("Parameter total.icons must be greater than zero\n")
 
     if (any(icon.nrow * icon.ncol != total.icons))
     {
@@ -148,6 +150,10 @@ PictoChart <- function(x,
     if (length(icon.ncol) !=  1 && length(unlist(icon.ncol)) !=  length(unlist(x)) &&
         length(icon.ncol) != n && length(icon.ncol) !=  m)
         stop("icon.ncol does not match dimensions of x\n")
+    if (pad.icon.row < 0 || pad.icon.row >= 1)
+        stop("pad.icon.row must be smaller than 1 and greater or equal to 0\n")
+    if (pad.icon.col < 0 || pad.icon.col >= 1)
+        stop("pad.icon.col must be smaller than 1 and greater or equal to 0\n")
 
     # Try column-first order first (i.e. each entry of total.icons to one row)
     byrow  =  (length(total.icons)!= n && length(unlist(total.icons)) !=  length(unlist(x)) && !is.data.frame(total.icons))
@@ -215,8 +221,8 @@ PictoChart <- function(x,
     {
         icon.width <- max(icon.width, width.height.ratio * icon.height)
         icon.height <- icon.width/width.height.ratio
-        column.width <- rep((max(icon.ncol) * icon.width * (1+pad.icon.col)) + pad.col, m)
-        row.height <-   rep((max(icon.nrow) * icon.height * (1+pad.icon.row)) + pad.row, n)
+        column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)) + pad.col, m)
+        row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)) + pad.row, n)
     }
 
 #    if (icon.fixedsize)
@@ -375,7 +381,7 @@ PictoChart <- function(x,
     row.height <- pmax(1, row.height)
     column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
-    json.str <- paste("{", #\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
+    json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
              #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",

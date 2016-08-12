@@ -25,7 +25,7 @@ PictoStdChart <- function(x,
                           image = "star",
                           image.type = "url",
                           hide.base.image = FALSE,
-                          total.icons = 0,
+                          total.icons = NA,
                           scale = NA,
                           aggregate.period = "month",
                           mode = "table",
@@ -58,16 +58,16 @@ PictoStdChart <- function(x,
                           ...)
 {
     # Get maximum before any aggregating
-    total.icons.tmp <- 0
-    if (total.icons == 0 && is.numeric(x))
+    total.icons.tmp <- NA
+    if (is.na(total.icons) && is.numeric(x))
         total.icons.tmp <- ceiling(max(x))
-    if (total.icons == 0 && is.factor(x))
+    if (is.na(total.icons) && is.factor(x))
         total.icons.tmp <- sum(!is.na(x))
 
     x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
     if (length(dim(x)) == 1)
         x <- matrix(x, ncol = 1, dimnames = list(names(x)))
-    if (total.icons == 0 && total.icons.tmp == 0)
+    if (is.na(total.icons) && is.na(total.icons.tmp))
         total.icons.tmp <- ceiling(max(x))
 
     # Need to get counts before scaling
@@ -85,7 +85,7 @@ PictoStdChart <- function(x,
     if (scale <= 0)
         stop("Scale must be greater than zero\n")
 
-    if (total.icons == 0)
+    if (is.na(total.icons))
         total.icons <- ceiling(total.icons.tmp/scale)
 
     if (nchar(legend.text) == 0 && scale > 0)
