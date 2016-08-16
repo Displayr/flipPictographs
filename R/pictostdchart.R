@@ -43,7 +43,7 @@ PictoStdChart <- function(x,
                           show.legend = FALSE,
                           legend.text = "",
                           legend.icon.color = gradient.col1,
-                          pad.legend = 5,
+                          pad.legend = 40,
                           hide.label.right = TRUE,
                           hide.label.left = !hide.label.right,
                           hide.label.bottom = (mode!="column"),
@@ -79,7 +79,7 @@ PictoStdChart <- function(x,
     }
 
     # Get maximum before any aggregating
-    total.icons.tmp <- NA
+    total.icons.tmp <- ceiling(max(x))
     if (is.na(total.icons) && is.numeric(x))
         total.icons.tmp <- ceiling(max(x))
     if (is.na(total.icons) && is.factor(x))

@@ -66,6 +66,7 @@ PictoChart <- function(x,
                        label.font.size = 12,
                        label.font.weight = "normal",
                        label.font.color = "#2C2C2C",
+                       label.width = NA,
                        label.top.font.family = label.font.family,
                        label.top.font.size = label.font.size,
                        label.top.font.weight = "bold",
@@ -75,7 +76,7 @@ PictoChart <- function(x,
                        label.right.font.size = label.font.size,
                        label.right.font.weight = label.font.weight,
                        label.right.font.color = label.font.color,
-                       label.right.width = 0,
+                       label.right.width = label.width,
                        label.bottom.font.family = label.font.family,
                        label.bottom.font.size = label.font.size,
                        label.bottom.font.weight = label.font.weight,
@@ -85,7 +86,7 @@ PictoChart <- function(x,
                        label.left.font.size = label.font.size,
                        label.left.font.weight = label.font.weight,
                        label.left.font.color = label.font.color,
-                       label.left.width = 0,
+                       label.left.width = label.width,
                        label.left.align.horizontal = "right",
                        label.right.align.horizontal = "left",
                        label.top.align.horizontal = "center",
@@ -323,8 +324,8 @@ PictoChart <- function(x,
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
-        if (label.left.width == 0)
-            label.left.width <- 1.0 * label.left.font.size * max(nchar(label.left))
+        if (is.na(label.left.width))
+            label.left.width <- 0.6 * label.left.font.size * max(nchar(label.left))
         column.width <- c(label.left.width, column.width)
     }
     if (any(nchar(label.right) > 0))
@@ -332,8 +333,8 @@ PictoChart <- function(x,
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
-        if (label.right.width ==  0)
-            label.right.width <- label.right.font.size * max(nchar(label.right))
+        if (is.na(label.right.width))
+            label.right.width <- 0.6 * label.right.font.size * max(nchar(label.right))
         column.width <- c(column.width, label.right.width)
     }
 
