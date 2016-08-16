@@ -184,9 +184,10 @@ PictoStdChart <- function(x,
     {
         return(pictoStack(x, image = image, image.type = image.type, mode = mode,
                           col1 = gradient.col1, col2 = gradient.col2,
-                          label.left = label.left, label.top = label.top, label.right = label.right,
-                          label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
-                          fill.direction = fill.direction, legend.text = legend.text, ...))
+                          show.legend = show.legend, legend.icon.color = legend.icon.color, legend.text = legend.text,
+#                         label.left = label.left, label.top = label.top, label.right = label.right, label.bottom = label.bottom,
+                          label.bottom.align.horizontal = label.bottom.align.horizontal,
+                          fill.direction = fill.direction,  ...))
     }
 
     c.hex <- ""
@@ -195,6 +196,8 @@ PictoStdChart <- function(x,
         c.length <- m
         if (m == 1 || gradient.dir == "row")
             c.length <- n
+        if (mode %in% c("bar", "column"))
+            c.length <- n.col
 
         c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length = c.length))
         c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], maxColorValue = 255)

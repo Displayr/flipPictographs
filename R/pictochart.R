@@ -180,7 +180,7 @@ PictoChart <- function(x,
     if (length(label.top) > 0 && length(label.top) != m)
         stop("label.top must be of length ", m, "\n")
     if (length(label.bottom) > 0 && length(label.bottom) != m)
-        stop("label.bottom must be of length ", m, "\n")
+        stop("label.bottom must be of length ", m, "(", length(label.bottom), ")\n")
 
     if (m == 1 && is.null(row.names(x)) && !is.null(names(x)) && length(label.left) == 0)
         label.left <- names(x)
@@ -204,10 +204,10 @@ PictoChart <- function(x,
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
     base.image.str <- ""
-    if (!is.na(base.image))
+    if (any(!is.na(base.image)))
     {
         base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
-        base.image.str <- paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = "")
+        base.image.str <- ifelse(!is.na(base.image), paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = ""), "")
     }
 
 
@@ -220,7 +220,7 @@ PictoChart <- function(x,
     icon.height <- min(row.height/icon.nrow)
 
     # Padding should not affect size of the icons
-    if (!is.na(width.height.ratio))
+    if (!is.na(width.height.ratio) && width.height.ratio > 0)
     {
         icon.width <- max(icon.width, width.height.ratio * icon.height)
         icon.height <- icon.width/width.height.ratio
