@@ -126,7 +126,15 @@ PictoStdChart <- function(x,
     if (label.data.type == "count")
     {
         label.data.type <- "raw"
-        label.data.text <- sprintf("%.0f", unlist(x))
+        label.data.text <- gsub(" ", "", format(round(unlist(x)), big.mark=",", scientific=F))
+    }
+
+    # Percentage assumes data is already analysed, but proportion uses 'total.icons'
+    # Is this too inconsistent?
+    if (label.data.type == "percentage")
+    {
+        label.data.type <- "raw"
+        label.data.text <- sprintf("%.0f%%", round(unlist(x)*100))
     }
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text

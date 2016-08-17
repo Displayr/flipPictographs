@@ -30,3 +30,15 @@ x4 <- matrix(c(2500,50,70,560,100,650,650,2500,1700,450,
 p4 <- PictoStdChart(x4, icon.ncol=10, scale=50, total.icons=500,
                     label.data.type="count", label.data.align.horizontal="right",
                     pad.row=200, pad.col=200)
+
+# Data labels
+x5 <- c(0.35, 0.28, 0.14, 0.12, 0.09, 0.03, 0)
+p5 <- PictoStdChart(x5, icon.ncol=5, scale=0.01, transpose=T,
+                    hide.base.image = T, fill.direction="frombottom",
+                    label.data.type="percentage", total.icons=35)
+p5b <- PictoStdChart(x5, icon.ncol=5, scale=0.01, transpose=T,
+                    hide.base.image = T, fill.direction="frombottom",
+                    label.data.type="proportion", total.icons=35)
+p5c <- PictoStdChart(x5, icon.ncol=5, scale=0.01, transpose=T,
+                    hide.base.image = T, fill.direction="frombottom",
+                    label.data.type="count", total.icons=35)
