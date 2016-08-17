@@ -15,6 +15,10 @@ p3 <- PictoStdChart(x3, transpose=T, image="stickman", scale=1, hide.base.image 
                     icon.ncol=8, fill.direction="frombottom",
                     label.data.type="count", label.data.align.horizontal = "center")
 
+p3b <- PictoStdChart(x3, transpose=T, image="stickman", scale=1, hide.base.image = T,
+                    icon.ncol=8, fill.direction="frombottom", hide.label.top = T,
+                    label.data.type="count", label.data.align.horizontal = "center")
+
 
 # Spacing
 # This example has been implemented, but the load it too heavy to run

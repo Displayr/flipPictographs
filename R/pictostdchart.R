@@ -34,6 +34,7 @@ PictoStdChart <- function(x,
                           gradient.col2 = "orange",
                           gradient.dir = "column",
                           fill.direction = "fromleft",
+                          show.lines = FALSE,
                           layout = NA,
                           icon.nrow = 1,
                           icon.ncol = NA,
@@ -94,13 +95,13 @@ PictoStdChart <- function(x,
     if (hide.label.left)
     {
         label.width <- NA
-        label.left.font.size <- NA
-        label.left.font.weight <- NA
+        label.left.font.size <- label.font.size
+        label.left.font.weight <- label.font.weight
     }
     if (hide.label.top)
     {
-        label.top.font.size <- NA
-        label.top.font.weight <- NA
+        label.top.font.size <- label.font.size
+        label.top.font.weight <- label.font.weight
     }
     if (!show.legend)
     {
@@ -245,7 +246,7 @@ PictoStdChart <- function(x,
 
     return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex, image.type = image.type,
                       base.image = base.image, width.height.ratio = imageWHRatio[image],
-                      total.icons = total.icons,
+                      total.icons = total.icons, show.lines = show.lines,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
                       #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top, label.right = label.right,
