@@ -134,9 +134,9 @@ PictoChart <- function(x,
     if (any(total.icons <= 0))
         stop("Parameter total.icons must be greater than zero\n")
 
-    if (any(icon.nrow * icon.ncol != total.icons))
+    if (any(is.na(icon.nrow)) || any(icon.nrow * icon.ncol != total.icons))
     {
-        if (any(icon.nrow != 1))
+        if (all(!is.na(icon.nrow)) && any(icon.nrow != 1))
             total.icons  =  ceiling(icon.nrow * icon.ncol)
         else
             icon.nrow  =  ceiling(total.icons/icon.ncol)

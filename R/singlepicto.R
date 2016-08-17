@@ -4,7 +4,7 @@
 #' and dimensions.
 #' @seealso PictoStdChart to create a chart or table of pictographs
 #'
-#' @param x Data which determines the number of icons (\code{x/scale}) filled in the pictograph.
+#' @param x Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
 #' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns"}. If not supplied, a decision will be made based on which parameters are supplied
@@ -53,9 +53,9 @@ SinglePicto <- function (x,
                          x.limit = 1000)
 {
     if (!(length(x) == 1 && x >= 0))
-        stop("x must be a single numeric value\n")
+        stop("Input data must be a single numeric value\n")
     if (scale <= 0)
-        stop("scale must be greater than zero\n")
+        stop("Scale must be greater than zero\n")
 
     # Some parameter substitutions for R GUI Controls
     image <- gsub(" ", "", tolower(image))
@@ -97,7 +97,7 @@ SinglePicto <- function (x,
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
-        stop("x/scale must be between 0 and total.icons\n")
+        stop("Input data/scale must be between 0 and total.icons\n")
     if (round(total.icons) != total.icons)
         stop("total.icons must be an integer\n")
 

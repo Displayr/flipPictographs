@@ -34,8 +34,9 @@ PictoStdChart <- function(x,
                           gradient.col2 = "orange",
                           gradient.dir = "column",
                           fill.direction = "fromleft",
+                          layout = NA,
                           icon.nrow = 1,
-                          icon.ncol = 0,
+                          icon.ncol = NA,
                           #icon.autosize = FALSE,
                           #icon.align.horizontal = "left",
                           #icon.align.vertical = "center",
@@ -64,6 +65,8 @@ PictoStdChart <- function(x,
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     label.data.type <- tolower(label.data.type)
+    image <- gsub(" ", "", tolower(image))
+    gradient.dir <- tolower(gradient.dir)
     if (label.data.type != "none")
     {
         label.data.align.horizontal <- tolower(label.data.align.horizontal)
@@ -71,6 +74,13 @@ PictoStdChart <- function(x,
             label.data.position <- "header"
         if (label.data.position == "Below icons")
             label.data.position <- "footer"
+    }
+    if (!is.na(layout))
+    {
+        if (layout != "Number of rows")
+            icon.nrow <- NA
+        if (layout != "Number of columns")
+            icon.ncol <- NA
     }
     if (!show.legend)
     {
@@ -95,7 +105,7 @@ PictoStdChart <- function(x,
     if (label.data.type == "count")
     {
         label.data.type <- "raw"
-        label.data.text <- as.character(unlist(x))
+        label.data.text <- sprintf("%.0f", unlist(x))
     }
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
@@ -117,6 +127,8 @@ PictoStdChart <- function(x,
 
     if (mode == "column")
     {
+        icon.ncol <- 1
+        icon.nrow <- NA
         if (is.null(dim(x)))
         {
             tmpnames <- names(x)
@@ -141,6 +153,8 @@ PictoStdChart <- function(x,
     }
     if (mode == "bar")
     {
+        icon.ncol <- NA
+        icon.nrow <- 1
         if (!is.null(dim(x)) && nrow(x) == 1)
         {
             tmpnames <- colnames(x)
@@ -160,10 +174,10 @@ PictoStdChart <- function(x,
     }
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
-    if (icon.ncol == 0)
+    if (is.na(icon.ncol))
         icon.ncol <- unlist(total.icons)/icon.nrow
-    if (fill.direction %in% c("vertical", "fromtop", "frombottom"))
-        icon.ncol <- 1
+    #if (fill.direction %in% c("vertical", "fromtop", "frombottom"))
+    #    icon.ncol <- 1
 
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
@@ -196,8 +210,8 @@ PictoStdChart <- function(x,
         c.length <- m
         if (m == 1 || gradient.dir == "row")
             c.length <- n
-        if (mode %in% c("bar", "column"))
-            c.length <- n.col
+        #if (mode %in% c("bar", "column"))
+        #    c.length <- n.col
 
         c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length = c.length))
         c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], maxColorValue = 255)
