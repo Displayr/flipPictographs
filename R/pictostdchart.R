@@ -55,6 +55,15 @@ PictoStdChart <- function(x,
                           label.right = c(),
                           label.bottom.align.horizontal = "center",
                           width.height.ratio = NA,
+                          label.width = NA,
+                          label.left.width = label.width,
+                          label.right.width = label.width,
+                          label.font.size = 12,
+                          label.left.font.size = label.font.size,
+                          label.top.font.size = label.font.size,
+                          label.font.weight = "normal",
+                          label.left.font.weight = label.font.weight,
+                          label.top.font.weight = label.font.weight,
                           label.data.type = "none",
                           label.data.text = NULL,
                           label.data.position = "footer",
@@ -81,6 +90,17 @@ PictoStdChart <- function(x,
             icon.nrow <- NA
         if (layout != "Number of columns")
             icon.ncol <- NA
+    }
+    if (hide.label.left)
+    {
+        label.width <- NA
+        label.left.font.size <- NA
+        label.left.weight <- NA
+    }
+    if (hide.label.top)
+    {
+        label.top.font.size <- NA
+        label.top.font.weight <- NA
     }
     if (!show.legend)
     {
@@ -229,6 +249,10 @@ PictoStdChart <- function(x,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
                       #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top, label.right = label.right,
+                      label.left.width = label.left.width, label.right.width = label.right.width,
+                      label.font.size = label.font.size, label.left.font.size = lable.left.font.size,
+                      label.top.font.size = label.top.font.size, label.font.weight = label.font.weight,
+                      label.left.font.weight = label.left.font.weight, label.top.font.weight, label.top.font.weight,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
                       fill.direction = fill.direction, pad.legend = pad.legend,
                       show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
