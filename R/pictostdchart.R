@@ -95,7 +95,7 @@ PictoStdChart <- function(x,
     {
         label.width <- NA
         label.left.font.size <- NA
-        label.left.weight <- NA
+        label.left.font.weight <- NA
     }
     if (hide.label.top)
     {
