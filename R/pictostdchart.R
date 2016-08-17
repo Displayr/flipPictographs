@@ -60,16 +60,11 @@ PictoStdChart <- function(x,
                           label.left.width = label.width,
                           label.right.width = label.width,
                           label.font.family = "arial",
-                          #label.left.font.family = label.font.family,
-                          #label.right.font.family = label.font.family,
-                          #label.top.font.family = label.font.family,
-                          #label.bottom.font.family = label.font.family,
                           label.font.size = 12,
                           label.left.font.size = label.font.size,
                           label.top.font.size = label.font.size,
-                          label.font.weight = "normal",
-                          label.left.font.weight = label.font.weight,
-                          label.top.font.weight = label.font.weight,
+                          label.left.font.weight = "normal",
+                          label.top.font.weight = "normal",
                           label.data.type = "none",
                           label.data.text = NULL,
                           label.data.position = "footer",
@@ -101,12 +96,12 @@ PictoStdChart <- function(x,
     {
         label.width <- NA
         label.left.font.size <- label.font.size
-        label.left.font.weight <- label.font.weight
+        label.left.font.weight <- "normal"
     }
     if (hide.label.top)
     {
         label.top.font.size <- label.font.size
-        label.top.font.weight <- label.font.weight
+        label.top.font.weight <- "normal"
     }
     if (!show.legend)
     {
@@ -258,8 +253,8 @@ PictoStdChart <- function(x,
                       label.font.family = label.font.family,
                       label.left.width = label.left.width, label.right.width = label.right.width,
                       label.font.size = label.font.size, label.left.font.size = label.left.font.size,
-                      label.top.font.size = label.top.font.size, label.font.weight = label.font.weight,
-                      label.left.font.weight = label.left.font.weight, label.top.font.weight, label.top.font.weight,
+                      label.top.font.size = label.top.font.size,
+                      label.left.font.weight = label.left.font.weight, label.top.font.weight = label.top.font.weight,
                       label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
                       fill.direction = fill.direction, pad.legend = pad.legend,
                       show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
