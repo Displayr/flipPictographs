@@ -68,7 +68,7 @@ PictoChart <- function(x,
                        label.top.font.size = label.font.size,
                        label.top.font.weight = "normal",
                        label.top.font.color = label.font.color,
-                       label.top.height = 2.0*label.top.font.size,
+                       label.top.height = NA,
                        label.right.font.family = label.font.family,
                        label.right.font.size = label.font.size,
                        label.right.font.weight = "normal",
@@ -78,7 +78,7 @@ PictoChart <- function(x,
                        label.bottom.font.size = label.font.size,
                        label.bottom.font.weight = "normal",
                        label.bottom.font.color = label.font.color,
-                       label.bottom.height = 2.0*label.bottom.font.size,
+                       label.bottom.height = NA,
                        label.left.font.family = label.font.family,
                        label.left.font.size = label.font.size,
                        label.left.font.weight = "normal",
@@ -196,6 +196,11 @@ PictoChart <- function(x,
     if (length(column.width) == 1)
         column.width <- rep(column.width, m)
 
+    if(is.na(label.top.height))
+        label.top.height = label.top.font.size*2
+    if(is.na(label.bottom.height))
+        label.bottom.height = label.bottom.font.size*2
+
     # To check: fill.direction, images, alignments,
     # label.data.type, label.data.position, image.type
 
@@ -206,7 +211,6 @@ PictoChart <- function(x,
         base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
         base.image.str <- ifelse(!is.na(base.image), paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = ""), "")
     }
-
 
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)

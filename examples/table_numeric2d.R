@@ -21,8 +21,7 @@ p3b <- PictoStdChart(x3, transpose=T, image="stickman", scale=1, hide.base.image
 
 
 # Spacing
-# This example has been implemented, but the load it too heavy to run
-# Most of the load problems are from the AJAX recoloring request
+# This example has been implemented, but running it will freeze RStudio
 x4 <- matrix(c(2500,50,70,560,100,650,650,2500,1700,450,
                2500,2400,750,650,125,1000,90,840,150,720,
                4650,1830,1440,1200,1170,2500,4250,2700,5000,200),
@@ -57,5 +56,5 @@ p6 <- PictoStdChart(x6, show.lines=T, scale=10, icon.ncol=10,
                     label.left.align.horizontal="left", label.left.align.vertical="top",
                     label.top.align.horizontal="left", label.left.width=500,
                     label.font.family="Arial Black", label.font.size=9,
-                    label.data.type="count")
-#                    label.top.height=18)
+                    label.data.type="count",
+                    label.top.height=NA)
