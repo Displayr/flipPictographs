@@ -126,6 +126,8 @@ SinglePicto <- function (x,
         base.icon.color <- paste(base.icon.color, ":", sep="")
     if (!hide.base.image)
         base.image.str <- paste(",\"baseImage\":\"", image.type, ":", base.icon.color, imageURL[image], "\"", sep="")
+    #base.image.str <- gsub(":\"$", "\"", base.image.str)
+    #cat("baseImageString:", base.image.str, "\n")
     variable.image <- paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", imageURL[image], sep="")
 
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom

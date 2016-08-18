@@ -27,7 +27,7 @@ x4 <- matrix(c(2500,50,70,560,100,650,650,2500,1700,450,
                2500,2400,750,650,125,1000,90,840,150,720,
                4650,1830,1440,1200,1170,2500,4250,2700,5000,200),
              byrow=T, ncol=5)
-p4 <- PictoStdChart(x4, icon.ncol=10, scale=50, total.icons=500,
+p4 <- PictoStdChart(x4, icon.ncol=10, scale=50, total.icons=500, image="waterdrop",
                     label.data.type="count", label.data.align.horizontal="right",
                     pad.row=200, pad.col=200)
 

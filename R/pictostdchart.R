@@ -122,20 +122,11 @@ PictoStdChart <- function(x,
     if (is.na(total.icons) && is.na(total.icons.tmp))
         total.icons.tmp <- ceiling(max(x))
 
-    # Need to get counts before scaling
-    if (label.data.type == "count")
-    {
-        label.data.type <- "raw"
-        label.data.text <- gsub(" ", "", format(round(unlist(x)), big.mark=",", scientific=F))
-    }
-
-    # Percentage assumes data is already analysed, but proportion uses 'total.icons'
-    # Is this too inconsistent?
-    if (label.data.type == "percentage")
-    {
-        label.data.type <- "raw"
-        label.data.text <- sprintf("%.0f%%", round(unlist(x)*100))
-    }
+    # Need to get counts before scaling (for data labels)
+    count.data <- unlist(x)
+    prop.data <- NA
+    if (max(x) < 1)
+        prop.data <- unlist(x)
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (is.na(scale) && max(x) > 1)
@@ -151,6 +142,18 @@ PictoStdChart <- function(x,
     if (nchar(legend.text) == 0 && scale > 0)
         legend.text  =  sprintf(paste(" =  %.", 0-min(0,floor(log10(scale))), "f", sep = ""), scale)
     x <- x/scale
+
+    # Handling data labels
+    if (any(is.na(prop.data)))
+        prop.data <- unlist(x)/total.icons
+    if (label.data.type == "count")
+       label.data.text <- gsub(" ", "", format(count.data, big.mark=",", scientific=F))
+    if (label.data.type == "percentage")
+        label.data.text <- sprintf("%.0f%%", round(prop.data*100))
+    if (label.data.type == "proportion")
+        label.data.text <- sprintf("%.2f", prop.data)
+    if (label.data.type != "none")
+        label.data.type <- "raw"
 
     # Restructure 2D matrices if not stacked and mode is column or bar
 

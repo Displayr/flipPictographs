@@ -283,10 +283,12 @@ PictoChart <- function(x,
                          label.left, lab.tpad, lab.bpad,
                          label.left.font.family, label.left.font.size, label.left.font.weight,
                          label.left.font.color, label.left.align.horizontal, label.left.align.vertical)
-    # Preparing text
+
+    # Preparing data labels
     label.data.str <- ""
     if (label.data.type != "none")
     {
+        # PictoStdChart always passes in a raw text vector
         if (label.data.type == "count")
             label.data.text <- as.character(unlist(x))
 
