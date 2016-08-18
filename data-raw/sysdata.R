@@ -22,7 +22,7 @@ imageWHRatio <- c(apple=0.884,baby=1.0,banana=1.124,bank=1.039,barn=1.358,book=1
 image.names <- names(imageWHRatio)
 imageURL <- sprintf("https://dl.dropboxusercontent.com/u/539177224/%s_grey.svg", image.names)
 names(imageURL) <- image.names
-imageURL["circle"] <- ""
-imageURL["square"] <- ""
+#imageURL["circle"] <- ""
+#imageURL["square"] <- ""
 
 save(imageURL, imageWHRatio, file = "R/sysdata.rda")

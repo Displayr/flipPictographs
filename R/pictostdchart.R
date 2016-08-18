@@ -238,8 +238,8 @@ PictoStdChart <- function(x,
     if (hide.label.right)
         label.right <- rep("", n)
 
-    if (image %in% c("circle", "square"))
-        image.type <- image
+    #if (image %in% c("circle", "square"))
+    #    image.type <- image
     if (stack)
     {
         return(pictoStack(x, image = image, image.type = image.type, mode = mode,

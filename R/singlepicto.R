@@ -118,8 +118,8 @@ SinglePicto <- function (x,
     }
 
     image.type <- "url"
-    if (image %in% c("circle", "square"))
-        image.type <- image
+    #if (image %in% c("circle", "square"))
+    #    image.type <- image
 
     base.image.str <- ""
     if (!hide.base.image && nchar(base.icon.color) > 0)
