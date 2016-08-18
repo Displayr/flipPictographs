@@ -42,3 +42,20 @@ p5b <- PictoStdChart(x5, icon.ncol=5, scale=0.01, transpose=T,
 p5c <- PictoStdChart(x5, icon.ncol=5, scale=0.01, transpose=T,
                     hide.base.image = T, fill.direction="frombottom",
                     label.data.type="count", total.icons=35)
+
+# Lines
+x6 <- data.frame(China=c(1,73,58,2100),
+                 Japan=c(0,47,16,353),
+                 US=c(1,9,2,54),
+                 Vietnam=c(0,7,0,213),
+                 Philippines=c(0,3,0,8))
+rownames(x6) <- c("Aircraft carriers",
+                  "Destroyers/frigates",
+                  "Submarines",
+                  "Fighter/bomber aircraft")
+p6 <- PictoStdChart(x6, show.lines=T, scale=10, icon.ncol=10,
+                    label.left.align.horizontal="left", label.left.align.vertical="top",
+                    label.top.align.horizontal="left", label.left.width=500,
+                    label.font.family="Arial Black", label.font.size=9,
+                    label.data.type="count")
+#                    label.top.height=18)
