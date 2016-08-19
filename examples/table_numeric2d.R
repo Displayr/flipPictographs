@@ -58,3 +58,25 @@ p6 <- PictoStdChart(x6, show.lines=T, scale=10, icon.ncol=10,
                     label.font.family="Arial Black", label.font.size=9,
                     label.data.type="count",
                     label.top.height=NA)
+
+
+
+afflicted <- matrix(c(3.46e8, 3.4e7, 1.2e8, 1e9), 2, 2)
+papers <- matrix(c(194481, 154562, 1858, 10770), 2, 2)
+p7a <- PictoStdChart(afflicted,  image="stickman", icon.ncol=10, scale=1e7,
+                     hide.base.image=T, fill.direction="fromtop", label.data.type="count",
+                     label.data.position="header", pad.row=100, pad.col=100)
+p7b <- PictoStdChart(papers, image="stack", icon.ncol=1, fill.direction="frombottom",
+                     scale=500, hide.base.image = T, label.data.type="count",
+                     label.data.position="footer")
+
+# label colors
+x8 <- data.frame(ArmedForces=c(2.3e6, 1.4e6),
+                  ArtillaryPieces=c(13790,7429),
+                  BattleTanks=c(6540,2785),
+                  Submarines=c(70,73),
+                  CombatAircraft=c(2571,3680),
+                  Destroyers=c(17,62))
+rownames(x8) <- c("China", "US")
+p8 <- PictoStdChart(x8, icon.ncol=10, label.font.color="red", label.font.family="Arial Black", show.legend=T,
+                    label.data.type="count", label.data.position="header", label.data.align.horizontal = "center")

@@ -103,6 +103,7 @@ PictoChart <- function(x,
                        label.data.font.family = label.font.family,
                        label.data.font.size = 0.8*label.font.size,
                        label.data.font.weight = "normal",
+                       label.data.font.color = label.font.color,
                        label.data.align.horizontal = "right",
                        row.height = 1.5*label.font.size*max(icon.nrow),
                        column.width = max(15*max(icon.ncol), 0.5*label.top.font.size*nchar(label.top), 0.5*label.bottom.font.size*nchar(label.bottom)),
@@ -300,10 +301,10 @@ PictoChart <- function(x,
             label.data.text <- label.data.type
 
         label.data.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                             \"font-family\":\"%s\", \"horizontal-align\":\"%s\"},",
+                             \"font-family\":\"%s\", \"font-color\":\"%s\", \"horizontal-align\":\"%s\"},",
                             label.data.position, label.data.text,
                             label.data.font.size, label.data.font.weight, label.data.font.family,
-                            label.data.align.horizontal)
+                            label.data.font.color, label.data.align.horizontal)
         row.height <- row.height + label.data.font.size
     }
 

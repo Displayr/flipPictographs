@@ -115,13 +115,16 @@ PictoStdChart <- function(x,
     }
     label.top.align.horizontal <- tolower(label.top.align.horizontal)
     label.top.align.vertical <- tolower(label.top.align.vertical)
-    label.left.align.horizontal <- tolower(label.top.align.horizontal)
-    label.left.align.vertical <- tolower(label.top.align.vertical)
+    label.left.align.horizontal <- tolower(label.left.align.horizontal)
+    label.left.align.vertical <- tolower(label.left.align.vertical)
     if (!show.legend)
     {
         legend.text <- ""
         pad.legend <- 0
     }
+
+    # lump label alignments together
+    # options are: top-left, top-right, center-center
 
     # Get maximum before any aggregating
     total.icons.tmp <- ceiling(max(x))
@@ -155,7 +158,11 @@ PictoStdChart <- function(x,
 
     if (nchar(legend.text) == 0 && scale > 0)
         legend.text  =  sprintf(paste(" =  %.", 0-min(0,floor(log10(scale))), "f", sep = ""), scale)
+
     x <- x/scale
+    # if mode==table, and dim(x)==2 and show.legend is false, check range of data
+    # if range differs by more than a range of 100 and the greatest and 2nd greatest
+    # are in the same row/column then compute scale for each row/column
 
     # Handling data labels
     if (any(is.na(prop.data)))
@@ -278,7 +285,8 @@ PictoStdChart <- function(x,
                       label.font.family = label.font.family,
                       label.left.width = label.left.width, label.right.width = label.right.width,
                       label.font.size = label.font.size, label.left.font.size = label.left.font.size,
-                      label.left.align.horizontal = label.left.align.horizontal, label.left.align.vertical = label.left.align.vertical,
+                      label.left.align.horizontal = label.left.align.horizontal,
+                      label.left.align.vertical = label.left.align.vertical,
                       label.top.height = label.top.height, label.top.font.size = label.top.font.size,
                       label.top.align.horizontal = label.top.align.horizontal, label.top.align.vertical = label.top.align.vertical,
                       label.left.font.weight = label.left.font.weight, label.top.font.weight = label.top.font.weight,
