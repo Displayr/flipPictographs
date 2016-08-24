@@ -1,7 +1,12 @@
 # Check that the underlying rhtmlPictographs package is working properly with some simple examples
 
+# Native circles
+circle1 <- rhtmlPictographs::graphic('{"proportion":1.0,"numImages":6,"numRows":1,"variableImage":"circle:fromleft:red","width":250,"height":50,"background-color":"grey","resizable":"false"}')
+
+circle2 <- rhtmlPictographs::graphic('{"proportion":1.0,"numImages":6,"numRows":1,"variableImage":"circle:fromleft:red", "baseImage":"circle:blue", "width":250,"height":50,"background-color":"grey","resizable":"false"}')
+
 # No recoloring
-a1 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":5,"numRows":1,"variableImage":"url:fromleft:https://dl.dropboxusercontent.com/u/539177224/star_filled.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_unfilled.svg","width":250,"height":50,"background-color":"transparent","resizable":"false"}')
+a1 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":5,"numRows":1,"variableImage":"url:fromleft:https://dl.dropboxusercontent.com/u/539177224/star_filled.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_unfilled2.svg","width":250,"height":50,"background-color":"transparent","resizable":"false"}')
 
 # When variable image is recolored, the base image disappears
 a2 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":5,"numRows":1,"variableImage":"url:fromleft:red:https://dl.dropboxusercontent.com/u/539177224/star_filled.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_unfilled.svg","width":250,"height":50,"background-color":"transparent","resizable":"false"}')

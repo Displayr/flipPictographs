@@ -3,15 +3,15 @@
 #' \code{PictoStdChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.
 #'
 #' @param x Data to plot. Can be vector, matrix or data.frame.
-#' @param by Optional vector for aggregating \code{x}.
 #' @param image Name of icon, e.g. \code{"star", "stickman",...}.
 #' @param hide.base.image Turns off background image (on by default). In most cases it is appropriate to turn off the base image if num.max.icon varies between entries.
 #' @param num.max.icon Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})
-#' @param aggregate.period Time period in by (e.g. "month", "year").
 #' @param icon.autosize Rescale icons to fill up table cell. If num.max.icon varies between cells, this can result in icons of varying sizes.
 #' @param fill.direction Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.
+#' @param bar.order Specify order of bars when \code{mode=="bar"}. Should be one of \code{NA, "Ascending", "Descending"}.
+#' @param column.order Specify order of bars when \code{mode=="column"}. Should be one of \code{NA, "Ascending", "Descending"}.
 #' @param transpose Swap rows and columns in data matrix \code{x}.
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
@@ -30,21 +30,26 @@ PictoStdChart <- function(x,
                           aggregate.period = "month",
                           mode = "table",
                           stack = FALSE,
-                          gradient.col1 = "deepskyblue",
-                          gradient.col2 = "orange",
-                          gradient.dir = "column",
+                          #gradient.col1 = "deepskyblue",
+                          #gradient.col2 = "orange",
+                          #gradient.dir = "column",
+                          icon.palette = "Set3",
+                          icon.colors = "black",
                           fill.direction = "fromleft",
                           show.lines = FALSE,
                           layout = NA,
                           icon.nrow = 1,
                           icon.ncol = NA,
+                          table.by.row = FALSE,
+                          bar.order = NA,
+                          column.order = NA,
                           #icon.autosize = FALSE,
                           #icon.align.horizontal = "left",
                           #icon.align.vertical = "center",
                           transpose = FALSE,
                           show.legend = FALSE,
                           legend.text = "",
-                          legend.icon.color = gradient.col1,
+                          legend.icon.color = NA,
                           pad.legend = 40,
                           hide.label.right = TRUE,
                           hide.label.left = !hide.label.right,
@@ -81,7 +86,7 @@ PictoStdChart <- function(x,
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     label.data.type <- tolower(label.data.type)
     image <- gsub(" ", "", tolower(image))
-    gradient.dir <- tolower(gradient.dir)
+    #gradient.dir <- tolower(gradient.dir)
     if (label.data.type != "none")
     {
         label.data.align.horizontal <- tolower(label.data.align.horizontal)
@@ -168,11 +173,13 @@ PictoStdChart <- function(x,
     if (any(is.na(prop.data)))
         prop.data <- unlist(x)/total.icons
     if (label.data.type == "count")
-       label.data.text <- gsub(" ", "", format(count.data, big.mark=",", scientific=F))
+       label.data.text <- gsub(" ", "", format(count.data, big.mark=",", scientific=F, digits=0+2*(max(x)<=1)))
     if (label.data.type == "percentage")
         label.data.text <- sprintf("%.0f%%", round(prop.data*100))
     if (label.data.type == "proportion")
         label.data.text <- sprintf("%.2f", prop.data)
+    #if (label.data.text == "fraction")
+    #    label.data.text <- sprintf("%.0f/%d", round(prop.data*total.icons), total.icons)
     if (label.data.type != "none")
         label.data.type <- "raw"
 
@@ -180,50 +187,51 @@ PictoStdChart <- function(x,
 
     if (mode == "column")
     {
-        icon.ncol <- 1
+        if (is.na(icon.ncol))
+            icon.ncol <- 1
         icon.nrow <- NA
-        if (is.null(dim(x)))
+
+        if (!is.null(dim(x)) && min(dim(x)) > 1)
+            stop("Column chart expects input of 1-dimensional array")
+
+        # Also converted to a 2D matrix
+        if (is.null(ncol(x)) || is.na(ncol(x)))
         {
             tmpnames <- names(x)
             x <- matrix(x, nrow = 1)
             colnames(x) <- tmpnames
         }
         if (ncol(x) == 1)
-        {
-            tmpnames <- rownames(x)
-            x <- matrix(unlist(x), nrow = 1)
-            colnames(x) <- tmpnames
-        }
+            x <- t(x)
+        if (length(grep("cending", column.order)))
+            x <- x[,order(x, decreasing=(column.order=="Descending")),drop=F]
 
         # Defaults will put labels on the top - add functionality for bottom
         if (!hide.label.bottom)
             label.bottom <- colnames(x)
 
-        #fill.direction <- "frombottom"
-        #hide.label.top <- TRUE
-        #icon.align.vertical <- "bottom"
-
     }
     if (mode == "bar")
     {
         icon.ncol <- NA
-        icon.nrow <- 1
-        if (!is.null(dim(x)) && nrow(x) == 1)
+
+        if (!is.null(dim(x)) && min(dim(x)) > 1)
+            stop("Column chart expects input of 1-dimensional array")
+        if (is.null(nrow(x)) || is.na(nrow(x)))
         {
-            tmpnames <- colnames(x)
+            tmpnames <- names(x)
             x <- matrix(unlist(x), ncol = 1)
             rownames(x) <- tmpnames
         }
+        if (nrow(x) == 1)
+            x <- t(x)
+        if (length(grep("cending", bar.order)))
+            x <- x[order(x, decreasing=(bar.order=="Descending")),,drop=F]
+
+
         # Defaults will put labels on the left - add functionality for right
         if (!hide.label.right)
-        {
-            if (is.null(dim(x)))
-                label.right <- names(x)
-            if (length(dim(x)) == 2)
-                label.right <- rownames(x)
-        }
-        #fill.direction <- "fromleft"
-        #icon.autosize <- FALSE
+            label.right <- rownames(x)
     }
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
@@ -250,27 +258,31 @@ PictoStdChart <- function(x,
     if (stack)
     {
         return(pictoStack(x, image = image, image.type = image.type, mode = mode,
-                          col1 = gradient.col1, col2 = gradient.col2,
+                          #col1 = gradient.col1, col2 = gradient.col2,
                           show.legend = show.legend, legend.icon.color = legend.icon.color, legend.text = legend.text,
 #                         label.left = label.left, label.top = label.top, label.right = label.right, label.bottom = label.bottom,
                           label.bottom.align.horizontal = label.bottom.align.horizontal,
                           fill.direction = fill.direction,  ...))
     }
 
-    c.hex <- ""
-    if (nchar(gradient.col1) > 0)
+    # Icon colors
+    c.hex <- unlist(strsplit(split=",", icon.colors))
+    if (icon.palette != "Other colors")
     {
         c.length <- m
-        if (m == 1 || gradient.dir == "row")
+        if (m == 1 || table.by.row)
             c.length <- n
-        #if (mode %in% c("bar", "column"))
-        #    c.length <- n.col
 
-        c.rgb <- colorRamp(c(gradient.col1, gradient.col2))(seq(0,1,length = c.length))
-        c.hex <- rgb(c.rgb[,1], c.rgb[,2], c.rgb[,3], maxColorValue = 255)
-        c.hex <- matrix(c.hex, n, m, byrow = (gradient.dir != "row"))
+        c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette)
+        if (any(is.na(c.hex)))
+            stop("Unknown color palette specified")
     }
+    c.hex <- matrix(c.hex, n, m, byrow = table.by.row)
+    if (is.na(legend.icon.color))
+        legend.icon.color <- c.hex[1]
 
+
+    # Font colors!
 
     base.image <- NA
     if (!hide.base.image)

@@ -61,6 +61,8 @@ PictoChart <- function(x,
                        label.right = c(),
                        label.top = c(),
                        label.bottom = c(),
+                       label.left2 = c(),
+                       label.right2 = c(),
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",
@@ -92,6 +94,10 @@ PictoChart <- function(x,
                        label.right.align.vertical = "center",
                        label.top.align.vertical = "center",
                        label.bottom.align.vertical = "center",
+                       label.left2.font.size = label.left.font.size,
+                       label.left2.font.weight = label.left.font.weight,
+                       label.right2.font.size = label.right.font.size,
+                       label.right2.font.weight = label.right.font.weight,
                        legend.font.family = label.font.family,
                        legend.font.size = 0.8*label.font.size,
                        legend.font.weight = "normal",
@@ -272,33 +278,65 @@ PictoChart <- function(x,
                          \"font-color\":\"%s\",\"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
                          label.bottom, label.bottom.font.family, label.bottom.font.size, label.bottom.font.weight,
                          label.bottom.font.color, label.bottom.align.horizontal, label.bottom.align.vertical)
-    if (length(label.right) > 0)
-        label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
+    if (length(label.right) > 0 || length(label.right2) > 0)
+    {
+        text.str <- ""
+        if (length(label.right) > 0 && length(label.right2) == 0)
+            text.str <- paste("\"text\":\"", label.right, "\"", sep="")
+        if (length(label.right) == 0 && length(label.right2) > 0)
+        {
+            label.right.font.size <- label.right2.font.size
+            label.right.font.weight <- label.right2.font.weight
+            text.str <- paste("\"text\":\"", label.right2, "\"", sep="")
+        }
+        if (length(label.right) > 0 && length(label.right2) > 0)
+            text.str <- sprintf("\"labels\": [\"%s\", {\"text\": \"%s\", \"font-size\": \"%fpx\", \"font-weight\":\"%s\"}]",
+                                label.right, label.right2, label.right2.font.size, label.right2.font.weight)
+
+
+        label.right.str <- sprintf("{\"type\":\"label\", \"value\":{
                          \"padding-top\":%f, \"padding-bottom\":%f,
                          \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
-                         label.right, lab.tpad, lab.bpad,
+                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\", %s}}",
+                         lab.tpad, lab.bpad,
                          label.right.font.family, label.right.font.size, label.right.font.weight,
-                         label.right.font.color, label.right.align.horizontal, label.right.align.vertical)
-    if (length(label.left) > 0)
-        label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
-                         \"padding-top\":%f, \"padding-bottom\":%f,
-                         \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                         \"font-color\":\"%s\", \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
-                         label.left, lab.tpad, lab.bpad,
-                         label.left.font.family, label.left.font.size, label.left.font.weight,
-                         label.left.font.color, label.left.align.horizontal, label.left.align.vertical)
+                         label.right.font.color, label.right.align.horizontal, label.right.align.vertical, text.str)
+    }
+    if (length(label.left) > 0 || length(label.left2) > 0)
+    {
+        text.str <- ""
+        config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\"",
+                               label.left.font.size, label.left.font.weight)
+        config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\"",
+                               label.left2.font.size, label.left2.font.weight)
+        config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\", \"horizontal-align\":\"%s\"",
+                              label.left.font.family, label.left.font.color, label.left.align.horizontal)
+
+        if (length(label.left) > 0 && length(label.left2) == 0)
+            text.str <- paste("\"text\":\"", label.left, "\",", config1.str, ",", config12.str, sep="")
+        if (length(label.left) == 0 && length(label.left2) > 0)
+            text.str <- paste("\"text\":\"", label.left2, "\",", config2.str,  ",", config12.str, sep="")
+        if (length(label.left) > 0 && length(label.left2) > 0)
+        {
+            # padding-inner
+            text.str <- sprintf("\"labels\": [{\"text\":\"%s\", %s, %s},{\"text\": \"%s\", %s, %s}]",
+                                label.left, config1.str, config12.str, label.left2, config2.str, config12.str)
+        }
+
+        label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
+                         lab.tpad, lab.bpad, label.left.align.vertical, text.str)
+    }
 
     # Preparing data labels
     label.data.str <- ""
     if (label.data.type != "none")
     {
         # PictoStdChart always passes in a raw text vector
-        if (label.data.type == "count")
-            label.data.text <- as.character(unlist(x))
-
-        if (label.data.type %in% c("proportion", "percentage"))
-            label.data.text <- label.data.type
+        #if (label.data.type == "count")
+        #    label.data.text <- as.character(unlist(x))
+        #
+        #if (label.data.type %in% c("proportion", "percentage"))
+        #    label.data.text <- label.data.type
 
         label.data.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                              \"font-family\":\"%s\", \"font-color\":\"%s\", \"horizontal-align\":\"%s\"},",

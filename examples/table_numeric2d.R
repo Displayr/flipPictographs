@@ -28,7 +28,7 @@ x4 <- matrix(c(2500,50,70,560,100,650,650,2500,1700,450,
              byrow=T, ncol=5)
 p4 <- PictoStdChart(x4, icon.ncol=10, scale=50, total.icons=500, image="waterdrop",
                     label.data.type="count", label.data.align.horizontal="right",
-                    pad.row=200, pad.col=200)
+                    pad.row=200, pad.col=200, print.config=T)
 
 # Data labels
 x5 <- c(0.35, 0.28, 0.14, 0.12, 0.09, 0.03, 0)
@@ -52,11 +52,11 @@ rownames(x6) <- c("Aircraft carriers",
                   "Destroyers/frigates",
                   "Submarines",
                   "Fighter/bomber aircraft")
-p6 <- PictoStdChart(x6, show.lines=T, scale=10, icon.ncol=10,
+p6 <- PictoStdChart(x6, show.lines=T, scale=10, icon.ncol=10,image="circle",
                     label.left.align.horizontal="left", label.left.align.vertical="top",
                     label.top.align.horizontal="left", label.left.width=500,
                     label.font.family="Arial Black", label.font.size=9,
-                    label.data.type="count",
+                    label.data.type="count",print.config=T,
                     label.top.height=NA)
 
 
