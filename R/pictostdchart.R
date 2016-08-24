@@ -80,6 +80,7 @@ PictoStdChart <- function(x,
                           label.data.position = "footer",
                           label.data.font.weight = "normal",
                           label.data.align.horizontal = "right",
+                          label.data.onTop = FALSE,
                           ...)
 {
     # Parameter substitutions for R Gui Controls
@@ -214,7 +215,6 @@ PictoStdChart <- function(x,
     if (mode == "bar")
     {
         icon.ncol <- NA
-
         if (!is.null(dim(x)) && min(dim(x)) > 1)
             stop("Column chart expects input of 1-dimensional array")
         if (is.null(nrow(x)) || is.na(nrow(x)))
@@ -232,13 +232,55 @@ PictoStdChart <- function(x,
         # Defaults will put labels on the left - add functionality for right
         if (!hide.label.right)
             label.right <- rownames(x)
+
+        # Allow data labels to be positioned near row labels
+        if (label.data.position == "On left")
+        {
+            if (!hide.label.left && label.data.onTop)
+            {
+                label.left2 <- rownames(x)
+                tmp.size <- label.data.font.size
+                tmp.weight <- label.data.font.weight
+                label.left2.font.size <- label.left.font.size
+                label.left2.font.weight <- label.left.font.weight
+                label.left <- label.data.text
+                label.left.font.size <- label.data.font.size
+                label.left.font.weight <- label.data.font.weight
+
+            } else
+            {
+                label.left2 <- label.data.text
+                label.left2.font.size <- label.data.font.size
+                label.left2.font.weight <- label.data.font.weight
+            }
+            label.data.type <- "none"
+        }
+        if (label.data.position == "On right")
+        {
+            if (!hide.label.right && label.data.onTop)
+            {
+                label.right2 <- rownames(x)
+                tmp.size <- label.data.font.size
+                tmp.weight <- label.data.font.weight
+                label.right2.font.size <- label.right.font.size
+                label.right2.font.weight <- label.right.font.weight
+                label.right <- label.data.text
+                label.right.font.size <- label.data.font.size
+                label.right.font.weight <- label.data.font.weight
+
+            } else
+            {
+                label.right2 <- label.data.text
+                label.right2.font.size <- label.data.font.size
+                label.right2.font.weight <- label.data.font.weight
+            }
+            label.data.type <- "none"
+        }
     }
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (is.na(icon.ncol))
         icon.ncol <- unlist(total.icons)/icon.nrow
-    #if (fill.direction %in% c("vertical", "fromtop", "frombottom"))
-    #    icon.ncol <- 1
 
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)

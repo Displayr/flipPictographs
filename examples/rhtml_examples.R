@@ -5,6 +5,9 @@ circle1 <- rhtmlPictographs::graphic('{"proportion":1.0,"numImages":6,"numRows":
 
 circle2 <- rhtmlPictographs::graphic('{"proportion":1.0,"numImages":6,"numRows":1,"variableImage":"circle:fromleft:red", "baseImage":"circle:blue", "width":250,"height":50,"background-color":"grey","resizable":"false"}')
 
+# testing load
+circle3 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":1000,"numRows":30,"variableImage":"circle:fromleft:red", "baseImage":"circle:blue", "width":250,"height":50,"background-color":"grey","resizable":"false"}')
+
 # No recoloring
 a1 <- rhtmlPictographs::graphic('{"proportion":0.5,"numImages":5,"numRows":1,"variableImage":"url:fromleft:https://dl.dropboxusercontent.com/u/539177224/star_filled.svg","baseImage":"url:https://dl.dropboxusercontent.com/u/539177224/star_unfilled2.svg","width":250,"height":50,"background-color":"transparent","resizable":"false"}')
 

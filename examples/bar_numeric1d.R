@@ -32,5 +32,10 @@ p6 <- PictoStdChart(x1, label.left2=lab2, label.font.family="Impact")
 p6b <- PictoStdChart(x1, label.left2=lab2, label.left.font.family="Impact", label.left.font.size=20)
 p6c <- PictoStdChart(x1, label.left2=lab2, label.left.font.family="Impact", label.left.font.size=20, label.left2.font.size=5)
 
+p7 <- PictoStdChart(x1, mode="bar", hide.label.right = F, label.font.family = "Impact")
+p7b <- PictoStdChart(x1, mode="bar", hide.label.right = F, label.font.family = "Impact",
+                     label.right2=lab2, label.right.font.size=20)
+p7c <- PictoStdChart(x1, mode="bar", hide.label.right = F, label.font.family = "Impact",
+                     label.right2=lab2, label.right.font.size=20, label.right2.font.size=5)
 # Need to see what happens with fonts after the image slot is resized!
 # Check other icons with WHratio != 1
