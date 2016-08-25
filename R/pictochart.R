@@ -57,12 +57,12 @@ PictoChart <- function(x,
                        #icon.fixedsize = FALSE,
                        #icon.align.horizontal = "left",
                        #icon.align.vertical = "center",
-                       label.left = c(),
-                       label.right = c(),
-                       label.top = c(),
-                       label.bottom = c(),
-                       label.left2 = c(),
-                       label.right2 = c(),
+                       label.left = NA,
+                       label.right = NA,
+                       label.top = NA,
+                       label.bottom = NA,
+                       label.left2 = NA,
+                       label.right2 = NA,
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",
@@ -96,8 +96,10 @@ PictoChart <- function(x,
                        label.bottom.align.vertical = "center",
                        label.left2.font.size = label.left.font.size,
                        label.left2.font.weight = label.left.font.weight,
+                       label.left2.align.horizontal = label.left.align.horizontal,
                        label.right2.font.size = label.right.font.size,
                        label.right2.font.weight = label.right.font.weight,
+                       label.right2.align.horizontal = label.right.align.horizontal,
                        legend.font.family = label.font.family,
                        legend.font.size = 0.8*label.font.size,
                        legend.font.weight = "normal",
@@ -177,21 +179,40 @@ PictoChart <- function(x,
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
         stop("x must be a number between 0 and total.icons\n")
 
-    if (length(label.left) > 0 && length(label.left) != n)
-        stop("label.left must be of length ", n, "\n")
-    if (length(label.right) > 0 && length(label.right) != n)
-        stop("label.right must be of length ", n, "\n")
-    if (length(label.top) > 0 && length(label.top) != m)
-        stop("label.top must be of length ", m, "\n")
-    if (length(label.bottom) > 0 && length(label.bottom) != m)
-        stop("label.bottom must be of length ", m, "(", length(label.bottom), ")\n")
-
-    if (m == 1 && is.null(row.names(x)) && !is.null(names(x)) && length(label.left) == 0)
+    # Fill row/column labels with defaults
+    if (!is.null(label.left) && is.na(label.left) && m == 1 && is.null(row.names(x)) && !is.null(names(x)))
         label.left <- names(x)
-    if (length(label.left) == 0 & !is.null(rownames(x)))
+    if (!is.null(label.left) && all(is.na(label.left)) && !is.null(rownames(x)))
         label.left <- rownames(x)
-    if (length(label.top) == 0 & !is.null(colnames(x)))
+    if (!is.null(label.top) && all(is.na(label.top)) && !is.null(colnames(x)))
         label.top <- colnames(x)
+    if (!is.null(label.right) && all(is.na(label.right)))
+        label.right <- NULL
+    if (!is.null(label.bottom) && all(is.na(label.bottom)))
+        label.bottom <- NULL
+    if (!is.null(label.right) && all(is.na(label.right)))
+        label.right <- NULL
+
+    if (!is.null(label.left) && all(is.na(label.left)))
+        label.left <- NULL
+    if (!is.null(label.top) && all(is.na(label.top)))
+        label.top <- NULL
+
+    if (!is.null(label.left2) && all(is.na(label.left2)))
+        label.left2 <- NULL
+    if (!is.null(label.right2) && all(is.na(label.right2)))
+        label.right2 <- NULL
+
+    if (!is.null(label.left) && length(label.left) != n)
+        stop("label.left must be of length ", n, "\n")
+    if (!is.null(label.right) && length(label.right) != n)
+        stop("label.right must be of length ", n, "\n")
+    if (!is.null(label.top) && length(label.top) != m)
+        stop("label.top must be of length ", m, "\n")
+    if (!is.null(label.bottom) && length(label.bottom) != m)
+        stop("label.bottom must be of length ", m, "\n")
+
+
 
     if (length(row.height) !=  1 && length(row.height) !=  n)
         stop("row.height must be of length 1 or ", n, "\n")
@@ -281,12 +302,12 @@ PictoChart <- function(x,
     if (length(label.left) > 0 || length(label.left2) > 0)
     {
         text.str <- ""
-        config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\"",
-                               label.left.font.size, label.left.font.weight)
-        config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\"",
-                               label.left2.font.size, label.left2.font.weight)
-        config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\", \"horizontal-align\":\"%s\"",
-                              label.left.font.family, label.left.font.color, label.left.align.horizontal)
+        config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
+                               label.left.font.size, label.left.font.weight, label.left.align.horizontal)
+        config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
+                               label.left2.font.size, label.left2.font.weight, label.left2.align.horizontal)
+        config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\"",
+                              label.left.font.family, label.left.font.color)
 
         if (length(label.left) > 0 && length(label.left2) == 0)
             text.str <- paste("\"text\":\"", label.left, "\",", config1.str, ",", config12.str, sep="")
@@ -305,12 +326,12 @@ PictoChart <- function(x,
     if (length(label.right) > 0 || length(label.right2) > 0)
     {
         text.str <- ""
-        config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\"",
-                               label.right.font.size, label.right.font.weight)
-        config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\"",
-                               label.right2.font.size, label.right2.font.weight)
-        config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\", \"horizontal-align\":\"%s\"",
-                              label.right.font.family, label.right.font.color, label.right.align.horizontal)
+        config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
+                               label.right.font.size, label.right.font.weight, label.right.align.horizontal)
+        config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
+                               label.right2.font.size, label.right2.font.weight, label.right2.align.horizontal)
+        config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\"",
+                              label.right.font.family, label.right.font.color)
 
         if (length(label.right) > 0 && length(label.right2) == 0)
             text.str <- paste("\"text\":\"", label.right, "\",", config1.str, ",", config12.str, sep="")
@@ -361,22 +382,22 @@ PictoChart <- function(x,
     corner.bl <- NULL
     corner.br <- NULL
 
-    if (any(nchar(label.left) > 0))
+    if (length(label.left) > 0 || length(label.left2) > 0)
     {
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
         if (is.na(label.left.width))
-            label.left.width <- 0.6 * label.left.font.size * max(nchar(label.left))
+            label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left), label.left2.font.size * nchar(label.left2)))
         column.width <- c(label.left.width, column.width)
     }
-    if (any(nchar(label.right) > 0))
+    if (length(label.right) > 0 || length(label.right2) > 0)
     {
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
         if (is.na(label.right.width))
-            label.right.width <- 0.6 * label.right.font.size * max(nchar(label.right))
+            label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right), label.right2.font.size * nchar(label.right2)))
         column.width <- c(column.width, label.right.width)
     }
 

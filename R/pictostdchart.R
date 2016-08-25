@@ -16,6 +16,7 @@
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
+#' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{label.left2} and \code{"On right"} will overrride \code{label.right2}.
 #' @param ... Arguments passed to \code{PictoChart()}.
 #' @importFrom flipChartBasics AsChartMatrix
 #' @export
@@ -29,7 +30,7 @@ PictoStdChart <- function(x,
                           scale = NA,
                           aggregate.period = "month",
                           mode = "table",
-                          stack = FALSE,
+                          #stack = FALSE,
                           #gradient.col1 = "deepskyblue",
                           #gradient.col2 = "orange",
                           #gradient.dir = "column",
@@ -55,15 +56,21 @@ PictoStdChart <- function(x,
                           hide.label.left = !hide.label.right,
                           hide.label.bottom = (mode!="column"),
                           hide.label.top = (mode=="column"),
-                          label.left = c(),
-                          label.top = c(),
-                          label.bottom = c(),
-                          label.right = c(),
+                          label.color.asIcon = FALSE,
+                          label.left = NA,
+                          label.top = NA,
+                          label.bottom = NA,
+                          label.right = NA,
+                          label.left2 = NA,
+                          label.right2 = NA,
                           label.bottom.align.horizontal = "center",
                           label.left.align.horizontal = "center",
-                          label.left.align.vertical = "center",
+                          label.right.align.horizontal = "center",
                           label.top.align.horizontal = "center",
+                          label.left.align.vertical = "center",
                           label.top.align.vertical = "center",
+                          label.left2.align.horizontal = "center",
+                          label.right2.align.horizontal = "center",
                           width.height.ratio = NA,
                           label.width = NA,
                           label.top.height = NA,
@@ -71,15 +78,29 @@ PictoStdChart <- function(x,
                           label.right.width = label.width,
                           label.font.family = "arial",
                           label.font.size = 12,
+                          label.font.color = "#2C2C2C",
+                          label.left.font.color = label.font.color,
+                          label.right.font.color = label.font.color,
+                          label.top.font.color = label.font.color,
+                          label.bottom.font.color = label.font.color,
                           label.left.font.size = label.font.size,
                           label.top.font.size = label.font.size,
+                          label.right.font.size = label.font.size,
+                          label.bottom.font.size = label.font.size,
+                          label.left2.font.size = label.left.font.size,
+                          label.right2.font.size = label.right.font.size,
                           label.left.font.weight = "normal",
                           label.top.font.weight = "normal",
+                          label.bottom.font.weight = "normal",
+                          label.right.font.weight = "normal",
+                          label.left2.font.weight = label.left.font.weight,
+                          label.right2.font.weight = label.right.font.weight,
                           label.data.type = "none",
                           label.data.text = NULL,
                           label.data.position = "footer",
                           label.data.font.weight = "normal",
-                          label.data.align.horizontal = "right",
+                          label.data.font.size = 0.8*label.font.size,
+                          label.data.align.horizontal = "default",
                           label.data.onTop = FALSE,
                           ...)
 {
@@ -123,6 +144,8 @@ PictoStdChart <- function(x,
     label.top.align.vertical <- tolower(label.top.align.vertical)
     label.left.align.horizontal <- tolower(label.left.align.horizontal)
     label.left.align.vertical <- tolower(label.left.align.vertical)
+    label.data.align.horizontal <- tolower(label.data.align.horizontal)
+
     if (!show.legend)
     {
         legend.text <- ""
@@ -236,37 +259,43 @@ PictoStdChart <- function(x,
         # Allow data labels to be positioned near row labels
         if (label.data.position == "On left")
         {
+            if (label.data.align.horizontal == "default")
+                label.data.align.horizontal <- label.left.align.horizontal
             if (!hide.label.left && label.data.onTop)
             {
                 label.left2 <- rownames(x)
-                tmp.size <- label.data.font.size
-                tmp.weight <- label.data.font.weight
                 label.left2.font.size <- label.left.font.size
                 label.left2.font.weight <- label.left.font.weight
+                label.left2.align.horizontal <- label.left.align.horizontal
+
                 label.left <- label.data.text
                 label.left.font.size <- label.data.font.size
                 label.left.font.weight <- label.data.font.weight
-
+                label.left.align.horizontal <- label.data.align.horizontal
             } else
             {
                 label.left2 <- label.data.text
                 label.left2.font.size <- label.data.font.size
                 label.left2.font.weight <- label.data.font.weight
+                label.left2.align.horizontal <- label.data.align.horizontal
             }
             label.data.type <- "none"
         }
         if (label.data.position == "On right")
         {
+            if (label.data.align.horizontal == "default")
+                label.data.align.horizontal <- label.right.align.horizontal
             if (!hide.label.right && label.data.onTop)
             {
                 label.right2 <- rownames(x)
-                tmp.size <- label.data.font.size
-                tmp.weight <- label.data.font.weight
                 label.right2.font.size <- label.right.font.size
                 label.right2.font.weight <- label.right.font.weight
+                label.right2.align.horizontal <- label.right.align.horizontal
+
                 label.right <- label.data.text
                 label.right.font.size <- label.data.font.size
                 label.right.font.weight <- label.data.font.weight
+                label.right.align.horizontal <- label.data.align.horizontal
 
             } else
             {
@@ -287,25 +316,25 @@ PictoStdChart <- function(x,
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
     if (hide.label.left)
-        label.left <- rep("", n)
+        label.left <- NULL
     if (hide.label.top)
-        label.top <- rep("", m)
+        label.top <- NULL
     if (hide.label.bottom)
-        label.bottom <- rep("", m)
+        label.bottom <- NULL
     if (hide.label.right)
-        label.right <- rep("", n)
+        label.right <- NULL
 
     #if (image %in% c("circle", "square"))
     #    image.type <- image
-    if (stack)
-    {
-        return(pictoStack(x, image = image, image.type = image.type, mode = mode,
-                          #col1 = gradient.col1, col2 = gradient.col2,
-                          show.legend = show.legend, legend.icon.color = legend.icon.color, legend.text = legend.text,
+#    if (stack)
+#    {
+#        return(pictoStack(x, image = image, image.type = image.type, mode = mode,
+#                          #col1 = gradient.col1, col2 = gradient.col2,
+#                          show.legend = show.legend, legend.icon.color = legend.icon.color, legend.text = legend.text,
 #                         label.left = label.left, label.top = label.top, label.right = label.right, label.bottom = label.bottom,
-                          label.bottom.align.horizontal = label.bottom.align.horizontal,
-                          fill.direction = fill.direction,  ...))
-    }
+#                          label.bottom.align.horizontal = label.bottom.align.horizontal,
+#                          fill.direction = fill.direction,  ...))
+#    }
 
     # Icon colors
     c.hex <- unlist(strsplit(split=",", icon.colors))
@@ -325,6 +354,14 @@ PictoStdChart <- function(x,
 
 
     # Font colors!
+    if (label.color.asIcon && mode == "bar")
+    {
+        label.left.font.color <- c.hex[,1]
+        label.right.font.color <- c.hex[,1]
+    }
+
+    if (label.data.align.horizontal == "default")
+        label.data.align.horizontal <- "right"
 
     base.image <- NA
     if (!hide.base.image)
@@ -336,15 +373,26 @@ PictoStdChart <- function(x,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
                       #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
                       label.left = label.left, label.top = label.top, label.right = label.right,
+                      label.left2 = label.left2, label.right2 = label.right2,
                       label.font.family = label.font.family,
                       label.left.width = label.left.width, label.right.width = label.right.width,
+                      label.font.color = label.font.color,
+                      label.left.font.color = label.left.font.color, label.right.font.color = label.right.font.color,
+                      label.top.font.color = label.top.font.color, label.bottom.font.color = label.bottom.font.color,
                       label.font.size = label.font.size, label.left.font.size = label.left.font.size,
-                      label.left.align.horizontal = label.left.align.horizontal,
+                      label.right.font.size = label.right.font.size, label.bottom.font.size = label.bottom.font.size,
+                      label.left2.font.size = label.left2.font.size, label.right2.font.size = label.right2.font.size,
+                      label.data.font.size = label.data.font.size, label.top.font.size = label.top.font.size,
+                      label.left.font.weight = label.left.font.weight, label.right.font.weight = label.right.font.weight,
+                      label.top.font.weight = label.top.font.weight, label.bottom.font.weight = label.bottom.font.weight,
+                      label.left2.font.weight = label.left2.font.weight, label.right2.font.weight = label.right2.font.weight,
+                      label.left.align.horizontal = label.left.align.horizontal, label.top.align.horizontal = label.top.align.horizontal,
+                      label.right.align.horizontal = label.right.align.horizontal, label.bottom.align.horizontal = label.bottom.align.horizontal,
+                      label.left2.align.horizontal = label.left2.align.horizontal, label.right2.align.horizontal = label.right2.align.horizontal,
                       label.left.align.vertical = label.left.align.vertical,
-                      label.top.height = label.top.height, label.top.font.size = label.top.font.size,
-                      label.top.align.horizontal = label.top.align.horizontal, label.top.align.vertical = label.top.align.vertical,
-                      label.left.font.weight = label.left.font.weight, label.top.font.weight = label.top.font.weight,
-                      label.bottom = label.bottom, label.bottom.align.horizontal = label.bottom.align.horizontal,
+                      label.top.height = label.top.height,
+                      label.top.align.vertical = label.top.align.vertical,
+                      label.bottom = label.bottom,
                       fill.direction = fill.direction, pad.legend = pad.legend,
                       show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
                       label.data.position = label.data.position, label.data.type = label.data.type,

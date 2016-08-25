@@ -3,7 +3,7 @@
 x1 <- c(First=1, SecondLonger=4.5, Third=3)
 x2 <- 100*x1
 
-#p1 <- PictoStdChart(x1, mode="bar")
+p1 <- PictoStdChart(x1, mode="bar")
 
 p2 <- PictoStdChart(x1)
 p2b <- PictoStdChart(x1, show.legend=T, mode="bar")
@@ -26,7 +26,7 @@ p5b <- PictoStdChart(x1, show.legend=T, mode="bar", hide.label.right = F, hide.l
 p5c <- PictoStdChart(x1, show.legend=T, mode="bar", hide.label.right = F, hide.label.left=F)
 
 
-# Sub-labels
+# Sublabels (direct)
 lab2 <- letters[1:3]
 p6 <- PictoStdChart(x1, label.left2=lab2, label.font.family="Impact")
 p6b <- PictoStdChart(x1, label.left2=lab2, label.left.font.family="Impact", label.left.font.size=20)
@@ -37,5 +37,34 @@ p7b <- PictoStdChart(x1, mode="bar", hide.label.right = F, label.font.family = "
                      label.right2=lab2, label.right.font.size=20)
 p7c <- PictoStdChart(x1, mode="bar", hide.label.right = F, label.font.family = "Impact",
                      label.right2=lab2, label.right.font.size=20, label.right2.font.size=5)
+
+# Moving data label to sublabels
+p8 <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left")
+p8b <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left", label.data.font.size=20)
+p8c <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left", label.data.font.size=20, label.font.family="Impact")
+p8d <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left", label.data.font.size=20, label.font.family="Impact", label.data.onTop=T)
+
+
+p9 <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On right")
+p9b <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On right", label.data.font.size=20)
+p9c <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On right", label.data.font.size=20, label.font.family="Impact")
+p9d <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On right", label.data.font.size=20, label.font.family="Impact", label.data.onTop=T)
+p9e <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On right", label.data.font.size=20, label.font.family="Impact",
+                     label.data.onTop=T, hide.label.right=F) #ugly!
+p9f <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On right", label.data.font.size=20, label.font.family="Impact",
+                     label.data.onTop=T, hide.label.right=F, label.right.align.horizontal = "left", label.data.align.horizontal = "left")
+
+# Label colors
+p10 <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left", label.color.asIcon = T,
+                     label.data.font.size=20, label.font.family="Impact",
+                     label.data.onTop=T, label.left.align.horizontal = "right", label.data.align.horizontal = "right")
+
+p10b <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left",
+                     label.color.asIcon = T, icon.colors = "red,green,blue", icon.palette = "Other colors",
+                     label.data.font.size=20, label.font.family="Impact",
+                     label.data.onTop=T, label.left.align.horizontal = "right", label.data.align.horizontal = "right")
+
+
+
 # Need to see what happens with fonts after the image slot is resized!
 # Check other icons with WHratio != 1
