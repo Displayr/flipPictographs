@@ -68,3 +68,14 @@ p10b <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.positi
 
 # Need to see what happens with fonts after the image slot is resized!
 # Check other icons with WHratio != 1
+
+# Examples
+dat1 <- c(Upper=3, UpperMid=5, LowerMid=6, Lower=7)
+ex1 <- PictoStdChart(dat1, mode="bar", hide.base.image=T, hide.label.left=T,
+                     label.data.type="count", label.data.position="On left")
+
+dat3 <- c('2012'=0.53, '2014'=0.41)
+ex3 <- PictoStdChart(dat3, mode="bar", scale=0.01, icon.nrow=3,
+                     hide.base.image=F, label.color.asIcon = T,
+                     icon.palette="Other colors", icon.colors="grey,blue",
+                     label.data.type="percentage",label.data.position = "On right")

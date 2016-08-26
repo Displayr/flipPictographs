@@ -237,7 +237,8 @@ PictoStdChart <- function(x,
     }
     if (mode == "bar")
     {
-        icon.ncol <- NA
+        if (is.na(icon.ncol))
+            icon.nrow <- 1
         if (!is.null(dim(x)) && min(dim(x)) > 1)
             stop("Column chart expects input of 1-dimensional array")
         if (is.null(nrow(x)) || is.na(nrow(x)))
@@ -337,8 +338,10 @@ PictoStdChart <- function(x,
 #    }
 
     # Icon colors
-    c.hex <- unlist(strsplit(split=",", icon.colors))
-    if (icon.palette != "Other colors")
+    if (icon.palette == "Other colors")
+    {
+        c.hex <- unlist(strsplit(split=",", icon.colors))
+    } else
     {
         c.length <- m
         if (m == 1 || table.by.row)
