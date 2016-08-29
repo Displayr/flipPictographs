@@ -60,7 +60,7 @@ p10 <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.positio
                      label.data.onTop=T, label.left.align.horizontal = "right", label.data.align.horizontal = "right")
 
 p10b <- PictoStdChart(x1, mode="bar", label.data.type="count", label.data.position="On left",
-                     label.color.asIcon = T, icon.colors = "red,green,blue", icon.palette = "Other colors",
+                     label.color.asIcon = T, icon.colors = "read,green,blue", icon.palette = "User-specified",
                      label.data.font.size=20, label.font.family="Impact",
                      label.data.onTop=T, label.left.align.horizontal = "right", label.data.align.horizontal = "right")
 
@@ -77,5 +77,5 @@ ex1 <- PictoStdChart(dat1, mode="bar", hide.base.image=T, hide.label.left=T,
 dat3 <- c('2012'=0.53, '2014'=0.41)
 ex3 <- PictoStdChart(dat3, mode="bar", scale=0.01, icon.nrow=3,
                      hide.base.image=F, label.color.asIcon = T,
-                     icon.palette="Other colors", icon.colors="grey,blue",
+                     icon.palette="User-specified", icon.colors="grey,blue",
                      label.data.type="percentage",label.data.position = "On right")

@@ -359,6 +359,9 @@ PictoStdChart <- function(x,
     if (icon.palette == "User-specified")
     {
         c.hex <- unlist(strsplit(split=",", icon.colors))
+        tryCatch(tmp.col <- col2rgb(c.hex),
+                 error = function(cond){cat("Invalid color specified\n")},
+                 finally = c.hex <- "black")
     } else
     {
         c.length <- m
