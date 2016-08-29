@@ -133,6 +133,14 @@ PictoStdChart <- function(x,
         label.left.align.horizontal <- "center"
         label.left.align.vertical <- "center"
     }
+    if (hide.label.right)
+    {
+        label.width <- NA
+        label.right.font.size <- label.font.size
+        label.right.font.weight <- "normal"
+        label.right.align.horizontal <- "center"
+        label.right.align.vertical <- "center"
+    }
     if (hide.label.top)
     {
         label.top.height <- NA
