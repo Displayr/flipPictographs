@@ -360,8 +360,7 @@ PictoStdChart <- function(x,
     {
         c.hex <- unlist(strsplit(split=",", icon.colors))
         tryCatch(tmp.col <- col2rgb(c.hex),
-                 error = function(cond){cat("Invalid color specified\n")},
-                 finally = c.hex <- "black")
+                 error = function(cond){cat("Invalid color specified\n"); c.hex <- "black"})
     } else
     {
         c.length <- m
