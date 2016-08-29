@@ -110,7 +110,11 @@ PictoStdChart <- function(x,
     image <- gsub(" ", "", tolower(image))
     #gradient.dir <- tolower(gradient.dir)
     if (label.data.type == "none")
+    {
         label.data.align.horizontal <- "center"
+        label.data.position <- ""
+        label.data.onTop <- FALSE
+    }
     if (label.data.type != "none")
     {
         if (label.data.position == "Above icons")
