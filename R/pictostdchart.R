@@ -109,7 +109,7 @@ PictoStdChart <- function(x,
     label.data.type <- tolower(label.data.type)
     image <- gsub(" ", "", tolower(image))
     #gradient.dir <- tolower(gradient.dir)
-    if (label.data.type != "none")
+    if (label.data.type == "none")
     {
         label.data.align.horizontal <- "center"
         if (label.data.position == "Above icons")
@@ -117,7 +117,6 @@ PictoStdChart <- function(x,
         if (label.data.position == "Below icons")
             label.data.position <- "footer"
     }
-    label.data.align.horizontal <- tolower(label.data.align.horizontal)
     if (!is.na(layout))
     {
         if (layout != "Number of rows")
@@ -153,6 +152,8 @@ PictoStdChart <- function(x,
     label.top.align.vertical <- tolower(label.top.align.vertical)
     label.left.align.horizontal <- tolower(label.left.align.horizontal)
     label.left.align.vertical <- tolower(label.left.align.vertical)
+    label.right.align.horizontal <- tolower(label.right.align.horizontal)
+    label.right.align.vertical <- tolower(label.right.align.vertical)
     label.data.align.horizontal <- tolower(label.data.align.horizontal)
 
     if (!show.legend)
