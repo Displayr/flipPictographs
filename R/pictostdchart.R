@@ -111,12 +111,13 @@ PictoStdChart <- function(x,
     #gradient.dir <- tolower(gradient.dir)
     if (label.data.type != "none")
     {
-        label.data.align.horizontal <- tolower(label.data.align.horizontal)
+        label.data.align.horizontal <- "center"
         if (label.data.position == "Above icons")
             label.data.position <- "header"
         if (label.data.position == "Below icons")
             label.data.position <- "footer"
     }
+    label.data.align.horizontal <- tolower(label.data.align.horizontal)
     if (!is.na(layout))
     {
         if (layout != "Number of rows")
@@ -150,6 +151,7 @@ PictoStdChart <- function(x,
     {
         legend.text <- ""
         pad.legend <- 0
+        legend.icon.color <- NA
     }
 
     # lump label alignments together
@@ -338,7 +340,7 @@ PictoStdChart <- function(x,
 #    }
 
     # Icon colors
-    if (icon.palette == "Other colors")
+    if (icon.palette == "User-specified")
     {
         c.hex <- unlist(strsplit(split=",", icon.colors))
     } else
