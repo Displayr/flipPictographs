@@ -102,6 +102,7 @@ PictoStdChart <- function(x,
                           label.data.position = "footer",
                           label.data.font.weight = "normal",
                           label.data.font.size = 0.8*label.font.size,
+                          label.data.font.color = label.font.color,
                           label.data.align.horizontal = "default",
                           label.data.onTop = FALSE,
                           ...)
@@ -381,6 +382,7 @@ PictoStdChart <- function(x,
     {
         label.left.font.color <- c.hex[,1]
         label.right.font.color <- c.hex[,1]
+        label.data.font.color <- c.hex[,1]
     }
 
     if (label.data.align.horizontal == "default")
@@ -422,6 +424,7 @@ PictoStdChart <- function(x,
                       show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
                       label.data.position = label.data.position, label.data.type = label.data.type,
                       label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
+                      label.data.font.color = label.data.font.color,
                       label.data.align.horizontal = label.data.align.horizontal,...))
 }
 
