@@ -63,6 +63,8 @@ PictoChart <- function(x,
                        label.bottom = NA,
                        label.left2 = NA,
                        label.right2 = NA,
+                       label.left.pad = 0,       # padding between label and icon
+                       label.right.pad = 0,
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",
@@ -314,14 +316,12 @@ PictoChart <- function(x,
         if (length(label.left) == 0 && length(label.left2) > 0)
             text.str <- paste("\"text\":\"", label.left2, "\",", config2.str,  ",", config12.str, sep="")
         if (length(label.left) > 0 && length(label.left2) > 0)
-        {
-            # padding-inner
             text.str <- sprintf("\"labels\": [{\"text\":\"%s\", %s, %s},{\"text\": \"%s\", %s, %s}]",
                                 label.left, config1.str, config12.str, label.left2, config2.str, config12.str)
-        }
 
-        label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
-                         lab.tpad, lab.bpad, label.left.align.vertical, text.str)
+        label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-right\":%f,
+                                    \"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
+                         label.left.pad, lab.tpad, lab.bpad, label.left.align.vertical, text.str)
     }
     if (length(label.right) > 0 || length(label.right2) > 0)
     {
@@ -338,14 +338,12 @@ PictoChart <- function(x,
         if (length(label.right) == 0 && length(label.right2) > 0)
             text.str <- paste("\"text\":\"", label.right2, "\",", config2.str,  ",", config12.str, sep="")
         if (length(label.right) > 0 && length(label.right2) > 0)
-        {
-            # padding-inner
             text.str <- sprintf("\"labels\": [{\"text\":\"%s\", %s, %s},{\"text\": \"%s\", %s, %s}]",
                                 label.right, config1.str, config12.str, label.right2, config2.str, config12.str)
-        }
 
-        label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
-                         lab.tpad, lab.bpad, label.right.align.vertical, text.str)
+        label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-left\":%f,
+                                     \"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
+                         label.right.pad, lab.tpad, lab.bpad, label.right.align.vertical, text.str)
     }
 
     # Preparing data labels

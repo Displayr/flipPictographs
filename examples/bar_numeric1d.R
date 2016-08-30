@@ -79,3 +79,9 @@ ex3 <- PictoStdChart(dat3, mode="bar", scale=0.01, icon.nrow=3,
                      hide.base.image=F, label.color.asIcon = T,
                      icon.palette="User-specified", icon.colors="grey,blue",
                      label.data.type="percentage",label.data.position = "On right")
+
+# Label padding
+p11a <- PictoStdChart(dat1, mode="bar", total.icons=20, label.left.align.horizontal="right", label.pad=20, background.color="red")
+p11b <- PictoStdChart(dat1, mode="bar", total.icons=20, hide.label.right=F,
+                      label.right.align.horizontal="left", label.right.width=25, label.pad=20, background.color="red")
+

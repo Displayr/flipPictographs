@@ -63,6 +63,9 @@ PictoStdChart <- function(x,
                           label.right = NA,
                           label.left2 = NA,
                           label.right2 = NA,
+                          label.pad = 0,
+                          label.left.pad = 0,
+                          label.right.pad = 0,
                           label.bottom.align.horizontal = "center",
                           label.left.align.horizontal = "center",
                           label.right.align.horizontal = "center",
@@ -274,7 +277,12 @@ PictoStdChart <- function(x,
 
         # Defaults will put labels on the left - add functionality for right
         if (!hide.label.right)
+        {
+            label.right.pad <- label.pad
             label.right <- rownames(x)
+        }
+        if (!hide.label.left)
+            label.left.pad <- label.pad
 
         # Allow data labels to be positioned near row labels
         if (label.data.position == "On left")
@@ -425,7 +433,8 @@ PictoStdChart <- function(x,
                       label.data.position = label.data.position, label.data.type = label.data.type,
                       label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
                       label.data.font.color = label.data.font.color,
-                      label.data.align.horizontal = label.data.align.horizontal,...))
+                      label.data.align.horizontal = label.data.align.horizontal,
+                      label.left.pad = label.left.pad, label.right.pad = label.right.pad, ...))
 }
 
 
