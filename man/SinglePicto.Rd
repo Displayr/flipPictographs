@@ -14,7 +14,7 @@ SinglePicto(x, total.icons = NA, image = "star", number.rows = NA,
   print.config = FALSE, x.limit = 1000)
 }
 \arguments{
-\item{x}{Data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
+\item{x}{Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
 
 \item{total.icons}{Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.}
 

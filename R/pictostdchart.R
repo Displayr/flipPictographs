@@ -16,7 +16,7 @@
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
-#' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{label.left2} and \code{"On right"} will overrride \code{label.right2}.
+#' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{label.left2} and \code{"On right"} will overrride \code{label.right2}.
 #' @param ... Arguments passed to \code{PictoChart()}.
 #' @importFrom flipChartBasics AsChartMatrix
 #' @export
@@ -352,8 +352,8 @@ PictoStdChart <- function(x,
     if (hide.label.right)
         label.right <- NULL
 
-    #if (image %in% c("circle", "square"))
-    #    image.type <- image
+    if (image %in% c("circle", "square"))
+        image.type <- image
 #    if (stack)
 #    {
 #        return(pictoStack(x, image = image, image.type = image.type, mode = mode,

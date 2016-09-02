@@ -8,25 +8,24 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
   total.icons = max(ceiling(x)), fill.icon.color = "",
   base.icon.color = "", fill.direction = "fromleft", show.lines = FALSE,
   show.legend = FALSE, legend.text = "", icon.nrow = 1,
-  icon.ncol = unlist(total.icons)/icon.nrow, icon.fixedsize = FALSE,
-  label.left = c(), label.right = c(), label.top = c(),
-  label.bottom = c(), label.font.family = "arial", label.font.size = 12,
-  label.font.weight = "normal", label.font.color = "#2C2C2C",
-  label.top.font.family = label.font.family,
-  label.top.font.size = label.font.size, label.top.font.weight = "bold",
-  label.top.font.color = label.font.color, label.top.height = 1.2 *
-  label.top.font.size, label.right.font.family = label.font.family,
+  icon.ncol = unlist(total.icons)/icon.nrow, label.left = NA,
+  label.right = NA, label.top = NA, label.bottom = NA, label.left2 = NA,
+  label.right2 = NA, label.left.pad = 0, label.right.pad = 0,
+  label.font.family = "arial", label.font.size = 12,
+  label.font.color = "#2C2C2C", label.top.font.family = label.font.family,
+  label.top.font.size = label.font.size, label.top.font.weight = "normal",
+  label.top.font.color = label.font.color, label.top.height = NA,
+  label.right.font.family = label.font.family,
   label.right.font.size = label.font.size,
-  label.right.font.weight = label.font.weight,
-  label.right.font.color = label.font.color, label.right.width = 0,
+  label.right.font.weight = "normal",
+  label.right.font.color = label.font.color, label.right.width = NA,
   label.bottom.font.family = label.font.family,
   label.bottom.font.size = label.font.size,
-  label.bottom.font.weight = label.font.weight,
-  label.bottom.font.color = label.font.color, label.bottom.height = 1.2 *
-  label.bottom.font.size, label.left.font.family = label.font.family,
-  label.left.font.size = label.font.size,
-  label.left.font.weight = label.font.weight,
-  label.left.font.color = label.font.color, label.left.width = 0,
+  label.bottom.font.weight = "normal",
+  label.bottom.font.color = label.font.color, label.bottom.height = NA,
+  label.left.font.family = label.font.family,
+  label.left.font.size = label.font.size, label.left.font.weight = "normal",
+  label.left.font.color = label.font.color, label.left.width = NA,
   label.left.align.horizontal = "right",
   label.right.align.horizontal = "left",
   label.top.align.horizontal = "center",
@@ -35,17 +34,24 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
   label.right.align.vertical = "center",
   label.top.align.vertical = "center",
   label.bottom.align.vertical = "center",
+  label.left2.font.size = label.left.font.size,
+  label.left2.font.weight = label.left.font.weight,
+  label.left2.align.horizontal = label.left.align.horizontal,
+  label.right2.font.size = label.right.font.size,
+  label.right2.font.weight = label.right.font.weight,
+  label.right2.align.horizontal = label.right.align.horizontal,
   legend.font.family = label.font.family, legend.font.size = 0.8 *
-  label.font.size, legend.font.weight = label.font.weight,
+  label.font.size, legend.font.weight = "normal",
   legend.font.color = label.font.color,
   legend.icon.color = fill.icon.color[1], label.data.type = "none",
   label.data.text = NULL, label.data.position = "footer",
   label.data.font.family = label.font.family, label.data.font.size = 0.8 *
   label.font.size, label.data.font.weight = "normal",
+  label.data.font.color = label.font.color,
   label.data.align.horizontal = "right", row.height = 1.5 * label.font.size
   * max(icon.nrow), column.width = max(15 * max(icon.ncol), 0.5 *
   label.top.font.size * nchar(label.top), 0.5 * label.bottom.font.size *
-  nchar(label.bottom)), width.height.ratio = 0,
+  nchar(label.bottom)), width.height.ratio = NA,
   background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 5,
   pad.col = 5, pad.icon.row = 0, pad.icon.col = 0, print.config = FALSE)
@@ -71,8 +77,6 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{icon.ncol}{Configuration of icons in each table cell.}
 
-\item{icon.fixedsize}{When \code{true}, icons will not automatically resize to fill table cell.}
-
 \item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  rep("", length(x))}.}
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
@@ -84,8 +88,6 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.}
 
 \item{label.font.size}{Size of label text.}
-
-\item{label.font.weight}{Weight of label text, e.g. "normal", "bold", "900"}
 
 \item{label.font.color}{Colour of labels.}
 
@@ -118,6 +120,8 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
 
 \item{legend.font.family.family}{Font of legend.}
+
+\item{icon.fixedsize}{When \code{true}, icons will not automatically resize to fill table cell.}
 
 \item{icon.align.horizontal}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
 
