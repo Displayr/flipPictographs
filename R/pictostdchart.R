@@ -287,6 +287,7 @@ PictoStdChart <- function(x,
         # Allow data labels to be positioned near row labels
         if (label.data.position == "On left")
         {
+            label.left.pad <- label.pad
             if (label.data.align.horizontal == "default")
                 label.data.align.horizontal <- label.left.align.horizontal
             if (!hide.label.left && label.data.onTop)
@@ -311,6 +312,7 @@ PictoStdChart <- function(x,
         }
         if (label.data.position == "On right")
         {
+            label.right.pad <- label.pad
             if (label.data.align.horizontal == "default")
                 label.data.align.horizontal <- label.right.align.horizontal
             if (!hide.label.right && label.data.onTop)
