@@ -135,9 +135,11 @@ PictoStdChart <- function(x,
         if (layout != "Number of columns")
             icon.ncol <- NA
     }
+    if (mode=="bar" && hide.label.left && hide.label.right)
+        label.width <- NA
+
     if (hide.label.left)
     {
-        label.width <- NA
         label.left.font.size <- label.font.size
         label.left.font.weight <- "normal"
         label.left.align.horizontal <- "center"
@@ -145,7 +147,6 @@ PictoStdChart <- function(x,
     }
     if (hide.label.right)
     {
-        label.width <- NA
         label.right.font.size <- label.font.size
         label.right.font.weight <- "normal"
         label.right.align.horizontal <- "center"

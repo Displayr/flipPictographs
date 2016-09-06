@@ -85,3 +85,11 @@ p11a <- PictoStdChart(dat1, mode="bar", total.icons=20, label.left.align.horizon
 p11b <- PictoStdChart(dat1, mode="bar", total.icons=20, hide.label.right=F,
                       label.right.align.horizontal="left", label.right.width=25, label.pad=20, background.color="red")
 
+dat12 <- c(DEAD=9079,INJURED=2628,MISSING=12664)
+p12 <- PictoStdChart(dat12, mode="bar", scale=200, icon.ncol=15,
+                     hide.base.image=T, show.legend=F,image="circle",
+                     label.data.type="count", label.data.position="On left", label.font.family="Impact",
+                     label.left.align.horizontal = "left", label.width=20,
+                     label.data.font.size=40, background.color=rgb(0.8,0.8,0.8))
+
+
