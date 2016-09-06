@@ -140,6 +140,7 @@ PictoStdChart <- function(x,
 
     if (hide.label.left)
     {
+        label.left.width <- NA
         label.left.font.size <- label.font.size
         label.left.font.weight <- "normal"
         label.left.align.horizontal <- "center"
@@ -147,6 +148,7 @@ PictoStdChart <- function(x,
     }
     if (hide.label.right)
     {
+        label.right.width <- NA
         label.right.font.size <- label.font.size
         label.right.font.weight <- "normal"
         label.right.align.horizontal <- "center"
