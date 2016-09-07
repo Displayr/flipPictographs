@@ -13,4 +13,6 @@ p2f <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.
 p2g <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.col=20)
 p2h <- PictoStdChart(x1, show.legend=T, mode="column", pad.legend=3, background.color="green", pad.row=20, pad.icon.row=0.5)
 
-#0 Need to see what happens with fonts after the image slot is resized!
+# Padding between column
+p3 <- PictoStdChart(x2, mode="column", image="circle", hide.base.image = T, fill.direction = "frombottom",
+                    icon.ncol=2, pad.col=100, icon.palette = "Blues", show.legend=T)

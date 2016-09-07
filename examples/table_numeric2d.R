@@ -80,3 +80,7 @@ x8 <- data.frame(ArmedForces=c(2.3e6, 1.4e6),
 rownames(x8) <- c("China", "US")
 p8 <- PictoStdChart(x8, icon.ncol=10, label.font.color="red", label.font.family="Arial Black", show.legend=T,
                     label.data.type="count", label.data.position="header", label.data.align.horizontal = "center")
+
+
+# check padding
+p9 <- PictoStdChart(xx*100, image="square", icon.palette = "Blues", scale=4, icon.ncol=10, background.color="gold", pad.col=100, pad.row=50, show.lines=T, label.bottom=colnames(x3), hide.label.top=T, hide.label.right=F, hide.label.left=F, hide.label.bottom=T, print.config=F, label.right=rownames(x3), label.left.align.horizontal = "right", label.right.align.horizontal = "left", table.by.row = T, label.top.align.vertical = "center", label.bottom.align.vertical = "center")

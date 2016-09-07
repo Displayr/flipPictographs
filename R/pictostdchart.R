@@ -343,6 +343,7 @@ PictoStdChart <- function(x,
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (is.na(icon.ncol))
         icon.ncol <- unlist(total.icons)/icon.nrow
+    icon.ncol <- min(icon.ncol, total.icons)
 
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
@@ -359,15 +360,7 @@ PictoStdChart <- function(x,
 
     if (image %in% c("circle", "square"))
         image.type <- image
-#    if (stack)
-#    {
-#        return(pictoStack(x, image = image, image.type = image.type, mode = mode,
-#                          #col1 = gradient.col1, col2 = gradient.col2,
-#                          show.legend = show.legend, legend.icon.color = legend.icon.color, legend.text = legend.text,
-#                         label.left = label.left, label.top = label.top, label.right = label.right, label.bottom = label.bottom,
-#                          label.bottom.align.horizontal = label.bottom.align.horizontal,
-#                          fill.direction = fill.direction,  ...))
-#    }
+
 
     # Icon colors
     if (icon.palette == "User-specified")
@@ -385,7 +378,7 @@ PictoStdChart <- function(x,
         if (any(is.na(c.hex)))
             stop("Unknown color palette specified")
     }
-    c.hex <- matrix(c.hex, n, m, byrow = table.by.row)
+    c.hex <- matrix(c.hex, n, m, byrow = !table.by.row)
     if (is.na(legend.icon.color))
         legend.icon.color <- c.hex[1]
 
@@ -398,6 +391,14 @@ PictoStdChart <- function(x,
         label.data.font.color <- c.hex[,1]
     }
 
+    if (label.color.asIcon && mode == "column")
+    {
+        label.top.font.color <- c.hex[1,]
+        label.bottom.font.color <- c.hex[1,]
+        label.data.font.color <- c.hex[1,]
+    }
+
+    if (label.data.align.horizontal == "default")
     if (label.data.align.horizontal == "default")
         label.data.align.horizontal <- "right"
 

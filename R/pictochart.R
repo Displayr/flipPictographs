@@ -255,24 +255,14 @@ PictoChart <- function(x,
     {
         icon.width <- max(icon.width, width.height.ratio * icon.height)
         icon.height <- icon.width/width.height.ratio
-        column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)) + pad.col, m)
-        row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)) + pad.row, n)
+        column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)), m)
+        row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)), n)
     }
 
-#    if (icon.fixedsize)
-#    {
-#        icon.align.horizontal <- matrix(icon.align.horizontal, n, m, byrow = T)
-#        l.coef <- c(left = 0, center = 0.5, right = 1)
-#        r.coef <- c(left = 1, center = 0.5, right = 0)
-
-#        pad.left  <- l.coef[icon.align.horizontal] * (column.width - (icon.width)*icon.ncol)
-#        pad.right <- r.coef[icon.align.horizontal] * (column.width - (icon.width)*icon.ncol)
-#        pad.tmp <- (row.height - icon.height*icon.nrow)
-#        pad.top <- switch(icon.align.vertical, top = matrix(0,n,m), bottom = pad.tmp, 0.5*pad.tmp)
-#        pad.bottom <- switch(icon.align.vertical, top = pad.tmp, bottom = matrix(0,n,m), 0.5*pad.tmp)
-#    }
-
     # Compensating for rowGutters/pad.row
+    # This additional padding is required to ensure that all rowheights are the same and
+    # rowlabels on the top and bottom of the table remain vertically centered
+    # It also ensures that table lines show top and bottom lines
     lab.tpad <- rep(0, n)
     lab.bpad <- rep(0, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
@@ -428,11 +418,15 @@ PictoChart <- function(x,
 
     # Adding lines to make table
     lines.str <- ""
+    legendgap.str <- ""
     if (show.lines)
-    lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>0), collapse = ","), "],
-                       \"padding-left\":", 0.0*column.width[1],",
-                       \"padding-right\":", 0.0*column.width[m]+3*pad.col+leg.rpad, ",",
-                       "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep = "")
+    {
+        if (show.legend)
+            legendgap.str <- paste("\"padding-right\":", 3*pad.col+leg.rpad, ",")
+        lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>0), collapse = ","), "],",
+                           legendgap.str,
+                           "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep = "")
+    }
 
 
     # Adding top/bottom labels
@@ -443,7 +437,7 @@ PictoChart <- function(x,
     row.height <- pmax(1, row.height)
     column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
-    json.str <- paste("{\"width\":", sum(column.width+pad.col), ", \"height\":", sum(row.height+pad.row), ",",
+    json.str <- paste("{\"width\":", sum(column.width+pad.col)-pad.col, ", \"height\":", sum(row.height+pad.row)-pad.row, ",",
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
              #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",
