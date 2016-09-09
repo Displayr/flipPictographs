@@ -61,8 +61,8 @@ PictoChart <- function(x,
                        label.right = NA,
                        label.top = NA,
                        label.bottom = NA,
-                       label.left2 = NA,
-                       label.right2 = NA,
+                       sublabel.left = NA,
+                       sublabel.right = NA,
                        label.left.pad = 0,       # padding between label and icon
                        label.right.pad = 0,
                        label.font.family = "arial",
@@ -96,12 +96,12 @@ PictoChart <- function(x,
                        label.right.align.vertical = "center",
                        label.top.align.vertical = "center",
                        label.bottom.align.vertical = "center",
-                       label.left2.font.size = label.left.font.size,
-                       label.left2.font.weight = label.left.font.weight,
-                       label.left2.align.horizontal = label.left.align.horizontal,
-                       label.right2.font.size = label.right.font.size,
-                       label.right2.font.weight = label.right.font.weight,
-                       label.right2.align.horizontal = label.right.align.horizontal,
+                       sublabel.left.font.size = label.left.font.size,
+                       sublabel.left.font.weight = label.left.font.weight,
+                       sublabel.left.align.horizontal = label.left.align.horizontal,
+                       sublabel.right.font.size = label.right.font.size,
+                       sublabel.right.font.weight = label.right.font.weight,
+                       sublabel.right.align.horizontal = label.right.align.horizontal,
                        legend.font.family = label.font.family,
                        legend.font.size = 0.8*label.font.size,
                        legend.font.weight = "normal",
@@ -200,10 +200,10 @@ PictoChart <- function(x,
     if (!is.null(label.top) && all(is.na(label.top)))
         label.top <- NULL
 
-    if (!is.null(label.left2) && all(is.na(label.left2)))
-        label.left2 <- NULL
-    if (!is.null(label.right2) && all(is.na(label.right2)))
-        label.right2 <- NULL
+    if (!is.null(sublabel.left) && all(is.na(sublabel.left)))
+        sublabel.left <- NULL
+    if (!is.null(sublabel.right) && all(is.na(sublabel.right)))
+        sublabel.right <- NULL
 
     if (!is.null(label.left) && length(label.left) != n)
         stop("label.left must be of length ", n, "\n")
@@ -291,45 +291,45 @@ PictoChart <- function(x,
                          \"font-color\":\"%s\",\"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}}",
                          label.bottom, label.bottom.font.family, label.bottom.font.size, label.bottom.font.weight,
                          label.bottom.font.color, label.bottom.align.horizontal, label.bottom.align.vertical)
-    if (length(label.left) > 0 || length(label.left2) > 0)
+    if (length(label.left) > 0 || length(sublabel.left) > 0)
     {
         text.str <- ""
         config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
                                label.left.font.size, label.left.font.weight, label.left.align.horizontal)
         config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
-                               label.left2.font.size, label.left2.font.weight, label.left2.align.horizontal)
+                               sublabel.left.font.size, sublabel.left.font.weight, sublabel.left.align.horizontal)
         config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\"",
                               label.left.font.family, label.left.font.color)
 
-        if (length(label.left) > 0 && length(label.left2) == 0)
+        if (length(label.left) > 0 && length(sublabel.left) == 0)
             text.str <- paste("\"text\":\"", label.left, "\",", config1.str, ",", config12.str, sep="")
-        if (length(label.left) == 0 && length(label.left2) > 0)
-            text.str <- paste("\"text\":\"", label.left2, "\",", config2.str,  ",", config12.str, sep="")
-        if (length(label.left) > 0 && length(label.left2) > 0)
+        if (length(label.left) == 0 && length(sublabel.left) > 0)
+            text.str <- paste("\"text\":\"", sublabel.left, "\",", config2.str,  ",", config12.str, sep="")
+        if (length(label.left) > 0 && length(sublabel.left) > 0)
             text.str <- sprintf("\"labels\": [{\"text\":\"%s\", %s, %s},{\"text\": \"%s\", %s, %s}]",
-                                label.left, config1.str, config12.str, label.left2, config2.str, config12.str)
+                                label.left, config1.str, config12.str, sublabel.left, config2.str, config12.str)
 
         label.left.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-right\":%f,
                                     \"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
                          label.left.pad, lab.tpad, lab.bpad, label.left.align.vertical, text.str)
     }
-    if (length(label.right) > 0 || length(label.right2) > 0)
+    if (length(label.right) > 0 || length(sublabel.right) > 0)
     {
         text.str <- ""
         config1.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
                                label.right.font.size, label.right.font.weight, label.right.align.horizontal)
         config2.str  <- sprintf("\"font-size\": \"%fpx\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"",
-                               label.right2.font.size, label.right2.font.weight, label.right2.align.horizontal)
+                               sublabel.right.font.size, sublabel.right.font.weight, sublabel.right.align.horizontal)
         config12.str <- sprintf("\"font-family\":\"%s\",\"font-color\":\"%s\"",
                               label.right.font.family, label.right.font.color)
 
-        if (length(label.right) > 0 && length(label.right2) == 0)
+        if (length(label.right) > 0 && length(sublabel.right) == 0)
             text.str <- paste("\"text\":\"", label.right, "\",", config1.str, ",", config12.str, sep="")
-        if (length(label.right) == 0 && length(label.right2) > 0)
-            text.str <- paste("\"text\":\"", label.right2, "\",", config2.str,  ",", config12.str, sep="")
-        if (length(label.right) > 0 && length(label.right2) > 0)
+        if (length(label.right) == 0 && length(sublabel.right) > 0)
+            text.str <- paste("\"text\":\"", sublabel.right, "\",", config2.str,  ",", config12.str, sep="")
+        if (length(label.right) > 0 && length(sublabel.right) > 0)
             text.str <- sprintf("\"labels\": [{\"text\":\"%s\", %s, %s},{\"text\": \"%s\", %s, %s}]",
-                                label.right, config1.str, config12.str, label.right2, config2.str, config12.str)
+                                label.right, config1.str, config12.str, sublabel.right, config2.str, config12.str)
 
         label.right.str <- sprintf("{\"type\":\"label\", \"value\":{\"padding-left\":%f,
                                      \"padding-top\":%f, \"padding-bottom\":%f, \"vertical-align\":\"%s\", %s}}",
@@ -370,22 +370,22 @@ PictoChart <- function(x,
     corner.bl <- NULL
     corner.br <- NULL
 
-    if (length(label.left) > 0 || length(label.left2) > 0)
+    if (length(label.left) > 0 || length(sublabel.left) > 0)
     {
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
         if (is.na(label.left.width))
-            label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left), label.left2.font.size * nchar(label.left2)))
+            label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left), sublabel.left.font.size * nchar(sublabel.left)))
         column.width <- c(label.left.width, column.width)
     }
-    if (length(label.right) > 0 || length(label.right2) > 0)
+    if (length(label.right) > 0 || length(sublabel.right) > 0)
     {
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
         if (is.na(label.right.width))
-            label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right), label.right2.font.size * nchar(label.right2)))
+            label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right), sublabel.right.font.size * nchar(sublabel.right)))
         column.width <- c(column.width, label.right.width)
     }
 
