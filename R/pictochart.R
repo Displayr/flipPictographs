@@ -115,8 +115,10 @@ PictoChart <- function(x,
                        label.data.font.weight = "normal",
                        label.data.font.color = label.font.color,
                        label.data.align.horizontal = "right",
-                       row.height = 1.5*label.font.size*max(icon.nrow),
-                       column.width = max(15*max(icon.ncol), 0.5*label.top.font.size*nchar(label.top), 0.5*label.bottom.font.size*nchar(label.bottom)),
+                       row.height = NA,
+                       column.width = NA,
+                       #row.height = 1.5*label.font.size*max(icon.nrow),
+                       #column.width = max(15*max(icon.ncol), 0.5*label.top.font.size*nchar(label.top), 0.5*label.bottom.font.size*nchar(label.bottom)),
                        width.height.ratio = NA,
                        background.color = "transparent",
                        line.color = "#A8A8A8",
@@ -216,22 +218,11 @@ PictoChart <- function(x,
     if (!is.null(label.bottom) && length(label.bottom) != m)
         stop("label.bottom must be of length ", m, "\n")
 
-
-
     if (length(row.height) !=  1 && length(row.height) !=  n)
         stop("row.height must be of length 1 or ", n, "\n")
     if (length(column.width) !=  1 && length(column.width) != m)
         stop ("column.width must be of length 1 or ", m, "\n")
 
-    if (length(row.height) == 1)
-        row.height <- rep(row.height, n)
-    if (length(column.width) == 1)
-        column.width <- rep(column.width, m)
-
-    if(is.na(label.top.height))
-        label.top.height = label.top.font.size*2
-    if(is.na(label.bottom.height))
-        label.bottom.height = label.bottom.font.size*2
 
     # To check: fill.direction, images, alignments,
     # label.data.type, label.data.position, image.type
@@ -243,6 +234,31 @@ PictoChart <- function(x,
         base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
         base.image.str <- ifelse(!is.na(base.image), paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = ""), "")
     }
+
+    # Approximate row/column sizes
+    # The units should roughly be equal to 1 px
+     if (!is.null(label.left) && is.na(label.left.width))
+        label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left),
+                                        sublabel.left.font.size * nchar(sublabel.left)))
+    if (!is.null(label.right) && is.na(label.right.width))
+        label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right),
+                                         sublabel.right.font.size * nchar(sublabel.right)))
+
+    if (is.na(row.height))
+        row.height = 1.5*label.font.size*max(icon.nrow)
+    if (is.na(column.width))
+        column.width = max(15*max(icon.ncol),
+                           0.5*label.top.font.size*nchar(label.top),
+                           0.5*label.bottom.font.size*nchar(label.bottom))
+
+    if(is.na(label.top.height))
+        label.top.height = label.top.font.size*2
+    if(is.na(label.bottom.height))
+        label.bottom.height = label.bottom.font.size*2
+    if (length(row.height) == 1)
+        row.height <- rep(row.height, n)
+    if (length(column.width) == 1)
+        column.width <- rep(column.width, m)
 
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)
@@ -377,8 +393,8 @@ PictoChart <- function(x,
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
-        if (is.na(label.left.width))
-            label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left), sublabel.left.font.size * nchar(sublabel.left)))
+        #if (is.na(label.left.width))
+        #    label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left), sublabel.left.font.size * nchar(sublabel.left)))
         column.width <- c(label.left.width, column.width)
     }
     if (length(label.right) > 0 || length(sublabel.right) > 0)
@@ -386,8 +402,8 @@ PictoChart <- function(x,
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
-        if (is.na(label.right.width))
-            label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right), sublabel.right.font.size * nchar(sublabel.right)))
+        #if (is.na(label.right.width))
+        #    label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right), sublabel.right.font.size * nchar(sublabel.right)))
         column.width <- c(column.width, label.right.width)
     }
 
