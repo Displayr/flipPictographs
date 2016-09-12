@@ -130,6 +130,8 @@ PictoChart <- function(x,
                        #margin.right = 0,
                        #margin.bottom = 0,
                        #margin.left = 0,
+                       graphic.width.inch = NA,
+                       graphic.height.inch = NA,
                        print.config = FALSE)
 {
     n <- if (is.null(nrow(x))) length(x)
@@ -437,7 +439,22 @@ PictoChart <- function(x,
     row.height <- pmax(1, row.height)
     column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
-    json.str <- paste("{\"width\":", sum(column.width+pad.col)-pad.col, ", \"height\":", sum(row.height+pad.row)-pad.row, ",",
+    graphic.width <- sum(column.width+pad.col) - pad.col
+    graphic.height <- sum(row.height+pad.row) - pad.row
+
+    # Check if pictograph output fits within graphic dimensions
+    if (!is.na(graphic.width.inch) && !is.na(graphic.width.inch))
+    {
+        graphic.scale <- c(width=graphic.width/graphic.width.inch, height=graphic.height/graphic.height.inch)
+        if (max(graphic.scale) > 72)
+        {
+            warning("Pictograph is larger than the size of the window. Consider increasing image ",
+                     names(graphic.scale)[which.max(graphic.scale)],
+                    " (currently, scale is ", max(graphic.scale), " per inch)\n")
+        }
+    }
+
+    json.str <- paste("{\"width\":", graphic.width, ", \"height\":", graphic.height, ",",
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
              #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",

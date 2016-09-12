@@ -92,4 +92,21 @@ p12 <- PictoStdChart(dat12, mode="bar", scale=200, icon.ncol=15,
                      label.left.align.horizontal = "left", label.width=20,
                      label.data.font.size=40, background.color=rgb(0.8,0.8,0.8))
 
+# Size warnings
+dat13 <- structure(c(81.3, 81.1, 80.8, 80.8, 80.5, 80.5, 80.5, 80.3, 80.3,
+80.2, 80, 80, 79.9, 79.9, 79.8, 79.7, 79.6, 79.5, 79.5, 79.5,
+79.5, 79.4, 79.2, 79, 79, 78.8, 78.7, 78.5, 78.5, 78.5, 78.4,
+78.4, 78.3, 78.3, 78.2, 78.1, 77.8, 77.8, 77.6, 77.5, 77.2, 77,
+76.5, 76.3, 76, 76, 75.9, 75.7, 75.4, 75.4, 75), questiontype = "Number", name = "All", label = "All", question = "All", .Names = c("Hawaii",
+"Minnesota", "Connecticut", "California", "Massachusetts", "New York",
+"Vermont", "New Hampshire", "New Jersey", "Utah", "Colorado",
+"Wisconsin", "Washington", "Rhode Island", "Nebraska", "Iowa",
+"Arizona", "North Dakota", "Oregon", "Idaho", "South Dakota",
+"Florida", "Maine", "Virginia", "Illinois", "Maryland", "Kansas",
+"Pennsylvania", "Montana", "Texas", "New Mexico", "Delaware",
+"Wyoming", "Alaska", "Michigan", "Nevada", "North Carolina",
+"Ohio", "Indiana", "Missouri", "Georgia", "South Carolina", "District of Columbia",
+"Tennessee", "Kentucky", "Arkansas", "Oklahoma", "Louisiana",
+"Alabama", "West Virginia", "Mississippi"))
+
 

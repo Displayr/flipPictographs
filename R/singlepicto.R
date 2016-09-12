@@ -7,10 +7,10 @@
 #' @param x Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
-#' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns"}. If not supplied, a decision will be made based on which parameters are supplied
+#' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns", "Fill graphic"}. If not supplied, a decision will be made based on which parameters are supplied
 #' @param number.rows If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.
-#' @param width.height.ratio Width to height ratio of pictograph. Ignored if \code{number.rows} or \code{number.cols} is set.
+#' @param width.height.ratio Width to height ratio of pictograph if \code{layout == "Width-to-height ratio"}.
 #' @param image Name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of base image.
 #' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
@@ -33,6 +33,8 @@ SinglePicto <- function (x,
                          number.rows = NA,
                          number.cols = NA,
                          width.height.ratio = 1,
+                         graphic.width = NA,
+                         graphic.height = NA,
                          layout = NA,
                          scale = 1,
                          hide.base.image = FALSE,
