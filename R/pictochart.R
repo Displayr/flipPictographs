@@ -124,8 +124,8 @@ PictoChart <- function(x,
                        line.color = "#A8A8A8",
                        line.width = 0.5,
                        pad.legend = 0.5*column.width[1],
-                       pad.row = 5,
-                       pad.col = 5,
+                       pad.row = 2,
+                       pad.col = 2,
                        pad.icon.row = 0.0,
                        pad.icon.col = 0.0,
                        #margin.top = 0,
@@ -245,16 +245,31 @@ PictoChart <- function(x,
                                          sublabel.right.font.size * nchar(sublabel.right)))
 
     if (is.na(row.height))
-        row.height = 1.5*label.font.size*max(icon.nrow)
+        row.height <- 1.0*label.font.size*max(icon.nrow)
+    icon.height <- min(row.height/icon.nrow)
+
     if (is.na(column.width))
-        column.width = max(15*max(icon.ncol),
+    {
+        tmp.icon.width <- 15
+        legend.space <- 0
+        if (!is.na(graphic.width.inch))
+        {
+            if (show.legend)
+                legend.space <- pad.legend + legend.font.size*nchar(legend.text)
+            tmp.icon.width <- ((graphic.width.inch*72) - ((m+(3*show.legend))*pad.col) -
+                                   sum(c(label.left.width, label.right.width, legend.space), na.rm=T))/
+                                (max(icon.ncol)*m + show.legend)
+        }
+        column.width <- max(tmp.icon.width*max(icon.ncol),
                            0.5*label.top.font.size*nchar(label.top),
                            0.5*label.bottom.font.size*nchar(label.bottom))
+    }
+    icon.width <- min(column.width/icon.ncol)
 
     if(is.na(label.top.height))
-        label.top.height = label.top.font.size*2
+        label.top.height = label.top.font.size*1.0
     if(is.na(label.bottom.height))
-        label.bottom.height = label.bottom.font.size*2
+        label.bottom.height = label.bottom.font.size*1.0
     if (length(row.height) == 1)
         row.height <- rep(row.height, n)
     if (length(column.width) == 1)
@@ -265,13 +280,12 @@ PictoChart <- function(x,
     pad.right <- matrix(0, n, m)
     pad.top <- matrix(0, n, m)
     pad.bottom <- matrix(0, n, m)
-    icon.width <- min(column.width/icon.ncol)
-    icon.height <- min(row.height/icon.nrow)
+
 
     # Padding should not affect size of the icons
     if (!is.na(width.height.ratio) && width.height.ratio > 0)
     {
-        icon.width <- max(icon.width, width.height.ratio * icon.height)
+        icon.width <- min(icon.width, width.height.ratio * icon.height)
         icon.height <- icon.width/width.height.ratio
         column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)), m)
         row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)), n)
