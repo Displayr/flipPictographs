@@ -237,12 +237,12 @@ PictoChart <- function(x,
 
     # Approximate row/column sizes
     # The units should roughly be equal to 1 px
-     if (!is.null(label.left) && is.na(label.left.width))
+     if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
         label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left),
-                                        sublabel.left.font.size * nchar(sublabel.left)))
-    if (!is.null(label.right) && is.na(label.right.width))
+                                        sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
+    if (is.na(label.right.width) && (!is.null(label.right) || !is.null(sublabel.right)))
         label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right),
-                                         sublabel.right.font.size * nchar(sublabel.right)))
+                                         sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
 
     if (is.na(row.height))
         row.height <- 1.0*label.font.size*max(icon.nrow)
@@ -480,7 +480,7 @@ PictoChart <- function(x,
         {
             warning("Pictograph is larger than the size of the window. Consider increasing image ",
                      names(graphic.scale)[which.max(graphic.scale)],
-                    " (currently, scale is ", max(graphic.scale), " per inch)\n")
+                    " or reducing the number of rows or font size.\n")
         }
     }
 
