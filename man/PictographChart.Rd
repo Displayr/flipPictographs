@@ -4,19 +4,18 @@
 \alias{PictographChart}
 \title{Wrapper function to create Pictographs}
 \usage{
-PictographChart(x, by = NULL, image = "star", image.type = "url",
-  hide.base.image = FALSE, total.icons = NA, scale = NA,
-  aggregate.period = "month", mode = "table", icon.palette = "Set3",
-  icon.colors = "black", fill.direction = "fromleft", show.lines = FALSE,
-  layout = NA, icon.nrow = 1, icon.ncol = NA, table.by.row = FALSE,
-  bar.order = NA, column.order = NA, transpose = FALSE,
-  show.legend = FALSE, legend.text = "", legend.icon.color = NA,
-  pad.legend = 40, hide.label.right = TRUE,
+PictographChart(x, image = "star", image.type = "url",
+  hide.base.image = FALSE, total.icons = NA, scale = NA, mode = "table",
+  icon.palette = "Set3", icon.colors = "black",
+  fill.direction = "fromleft", show.lines = FALSE, layout = NA,
+  icon.nrow = 1, icon.ncol = NA, table.by.row = FALSE, bar.order = NA,
+  column.order = NA, show.legend = FALSE, legend.text = "",
+  legend.icon.color = NA, pad.legend = 40, hide.label.right = TRUE,
   hide.label.left = !hide.label.right, hide.label.bottom = (mode !=
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
-  label.bottom = NA, label.right = NA, label.left2 = NA,
-  label.right2 = NA, label.pad = 0, label.left.pad = 0,
+  label.bottom = NA, label.right = NA, sublabel.left = NA,
+  sublabel.right = NA, label.pad = 0, label.left.pad = 0,
   label.right.pad = 0, label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "center",
   label.right.align.horizontal = "center",
@@ -25,7 +24,7 @@ PictographChart(x, by = NULL, image = "star", image.type = "url",
   label.right.align.vertical = "center",
   label.bottom.align.vertical = "center",
   sublabel.left.align.horizontal = "center",
-  label.right2.align.horizontal = "center", width.height.ratio = NA,
+  sublabel.right.align.horizontal = "center", width.height.ratio = NA,
   label.width = NA, label.top.height = NA, label.left.width = label.width,
   label.right.width = label.width, label.font.family = "arial",
   label.font.size = 12, label.font.color = "#2C2C2C",
@@ -37,24 +36,26 @@ PictographChart(x, by = NULL, image = "star", image.type = "url",
   label.top.font.size = label.font.size,
   label.right.font.size = label.font.size,
   label.bottom.font.size = label.font.size,
-  label.left2.font.size = label.left.font.size,
-  label.right2.font.size = label.right.font.size,
+  sublabel.left.font.size = label.left.font.size,
+  sublabel.right.font.size = label.right.font.size,
   label.left.font.weight = "normal", label.top.font.weight = "normal",
   label.bottom.font.weight = "normal", label.right.font.weight = "normal",
-  label.left2.font.weight = label.left.font.weight,
-  label.right2.font.weight = label.right.font.weight,
+  sublabel.left.font.weight = label.left.font.weight,
+  sublabel.right.font.weight = label.right.font.weight,
   label.data.type = "none", label.data.text = NULL,
   label.data.position = "footer", label.data.font.weight = "normal",
   label.data.font.size = 0.8 * label.font.size,
   label.data.font.color = label.font.color,
-  label.data.align.horizontal = "default", label.data.onTop = FALSE, ...)
+  label.data.align.horizontal = "default", data.above.label = FALSE, ...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
 
 \item{image}{Name of icon, e.g. \code{"star", "stickman",...}.}
 
-\item{hide.base.image}{Turns off background image (on by default). In most cases it is appropriate to turn off the base image if num.max.icon varies between entries.}
+\item{hide.base.image}{Turns off background image (on by default). In general, the base image should only be shown if the input data is a proportion.}
+
+\item{total.icons}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
 
 \item{scale}{Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
@@ -66,8 +67,6 @@ PictographChart(x, by = NULL, image = "star", image.type = "url",
 
 \item{column.order}{Specify order of bars when \code{mode=="column"}. Should be one of \code{NA, "Ascending", "Descending"}.}
 
-\item{transpose}{Swap rows and columns in data matrix \code{x}.}
-
 \item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
 
 \item{hide.label.left}{Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.}
@@ -76,11 +75,7 @@ PictographChart(x, by = NULL, image = "star", image.type = "url",
 
 \item{...}{Arguments passed to \code{PictoChart()}.}
 
-\item{num.max.icon}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
-
-\item{icon.autosize}{Rescale icons to fill up table cell. If num.max.icon varies between cells, this can result in icons of varying sizes.}
-
-\item{data.label.position}{When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{label.left2} and \code{"On right"} will overrride \code{label.right2}.}
+\item{data.label.position}{When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.}
 }
 \description{
 \code{PictographChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.

@@ -10,7 +10,7 @@ test_that("SinglePicto accepts width parameter", {
 
 
 test_that("SinglePicto accepts direction parameter", {
-    expect_error( SinglePicto(4.5, 6, 2, fill.direction="fromright"), NA )
+    expect_error( SinglePicto(4.5, 6, number.rows=2, fill.direction="fromright"), NA )
 })
 
 test_that("SinglePicto accepts image parameter", {
