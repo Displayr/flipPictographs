@@ -48,13 +48,13 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
   label.data.font.family = label.font.family, label.data.font.size = 0.8 *
   label.font.size, label.data.font.weight = "normal",
   label.data.font.color = label.font.color,
-  label.data.align.horizontal = "right", row.height = 1.5 * label.font.size
-  * max(icon.nrow), column.width = max(15 * max(icon.ncol), 0.5 *
-  label.top.font.size * nchar(label.top), 0.5 * label.bottom.font.size *
-  nchar(label.bottom)), width.height.ratio = NA,
+  label.data.align.horizontal = "right", row.height = NA,
+  column.width = NA, width.height.ratio = NA,
   background.color = "transparent", line.color = "#A8A8A8",
-  line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 5,
-  pad.col = 5, pad.icon.row = 0, pad.icon.col = 0, print.config = FALSE)
+  line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 2,
+  pad.col = 2, pad.icon.row = 0, pad.icon.col = 0,
+  graphic.width.inch = NA, graphic.height.inch = NA, font.whratio = 0.5,
+  print.config = FALSE)
 }
 \arguments{
 \item{x}{Data for charting}
@@ -77,7 +77,7 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{icon.ncol}{Configuration of icons in each table cell.}
 
-\item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  rep("", length(x))}.}
+\item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.}
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
 
@@ -125,9 +125,12 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{icon.align.horizontal}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
 
-\item{pad.icon.ncol}{Spacing between horizontal spacing between icons inside each table cell.}
+\item{pad.icon.ncol}{Horizontal spacing between icons inside each table cell.}
 }
 \description{
-Function to create a chart of Pictographs
+Function to create a chart of Pictographs. This function passes output directly to the rhtmlPictograph package and is more flexible (but less user-friendly) than the PictographChart function. In particular, it accepts any URL image as an icon, and most of the parameters will accept vectors as well scalar values.
+}
+\seealso{
+PictographChart
 }
 

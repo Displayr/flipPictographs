@@ -1,6 +1,7 @@
-#' Wrapper function to create Pictographs
+#' Create chart of pictographs
 #'
-#' \code{PictographChart} provides a simpler interface to create pictographs. In particular it can automatically aggregate data to different time scales.
+#' \code{PictographChart} Create a chart to visually represent the data in a table or vector using the number of icons displayed
+#' @aliases PictoStdChart
 #'
 #' @param x Data to plot. Can be vector, matrix or data.frame.
 #' @param image Name of icon, e.g. \code{"star", "stickman",...}.
@@ -17,6 +18,7 @@
 #' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.
 #' @param ... Arguments passed to \code{PictoChart()}.
 #' @importFrom flipChartBasics AsChartMatrix
+#' @seealso PictoChart
 #' @export
 #'
 PictographChart <- function(x,
@@ -26,7 +28,7 @@ PictographChart <- function(x,
                           total.icons = NA,
                           scale = NA,
                           mode = "table",
-                          icon.palette = "Set3",
+                          icon.palette = "Set1",
                           icon.colors = "black",
                           fill.direction = "fromleft",
                           show.lines = FALSE,
@@ -98,6 +100,9 @@ PictographChart <- function(x,
                           data.above.label = FALSE,
                           ...)
 {
+    if (!is.numeric(unlist(x)))
+        stop("Input data must be numeric")
+
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     label.data.type <- tolower(label.data.type)

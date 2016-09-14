@@ -1,5 +1,5 @@
-#' Old function
-#'
+#' @description \code{PictoStdChart} Deprecated function for backwards-compatibility
+#' @rdname PictographChart
 #' @export
 
 PictoStdChart <- function(...)

@@ -1,6 +1,6 @@
 #' PictoChart
 #'
-#' Function to create a chart of Pictographs
+#' Function to create a chart of Pictographs. This function passes output directly to the rhtmlPictograph package and is more flexible (but less user-friendly) than the PictographChart function. In particular, it accepts any URL image as an icon, and most of the parameters will accept vectors as well scalar values.
 #'
 #' @param x Data for charting
 #' @param fill.image URL of icon
@@ -19,7 +19,7 @@
 #' @param icon.ncol Configuration of icons in each table cell.
 #' @param icon.fixedsize When \code{true}, icons will not automatically resize to fill table cell.
 #' @param icon.align.horizontal Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.
-#' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  rep("", length(x))}.
+#' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.
 #' @param label.top By default, labels are read from column names of \code{x}.
 #' @param label.bottom Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.
 #' @param label.right Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.
@@ -36,8 +36,8 @@
 #' @param pad.row Single numeric specifying vertical spacing between graphic cells in the table.
 #' @param pad.col Vertical spacing between cells in table.
 #' @param pad.icon.row Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
-#' @param pad.icon.ncol Spacing between horizontal spacing between icons inside each table cell.
-#'
+#' @param pad.icon.ncol Horizontal spacing between icons inside each table cell.
+#' @seealso PictographChart
 #' @importFrom  rhtmlPictographs graphic
 #' @export
 
@@ -134,6 +134,7 @@ PictoChart <- function(x,
                        #margin.left = 0,
                        graphic.width.inch = NA,
                        graphic.height.inch = NA,
+                       font.whratio = 0.5,
                        print.config = FALSE)
 {
     n <- if (is.null(nrow(x))) length(x)
@@ -235,36 +236,56 @@ PictoChart <- function(x,
         base.image.str <- ifelse(!is.na(base.image), paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = ""), "")
     }
 
-    # Approximate row/column sizes
-    # The units should roughly be equal to 1 px
-     if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
-        label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left),
-                                        sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
-    if (is.na(label.right.width) && (!is.null(label.right) || !is.null(sublabel.right)))
-        label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right),
-                                         sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
+    # Calculate approximate sizes
+    # The units should roughly be equal to 1 px = 1/72 inch
+    # Note that icons will resize automatically to fill table cell
+    # But label font sizes are in fixed px
+    if (is.null(label.left))
+        label.left.font.size <- 0
+    if (is.null(sublabel.left))
+        sublabel.left.font.size <- 0
+    if (is.null(label.right))
+        label.right.font.size <- 0
+    if (is.null(sublabel.right))
+        sublabel.right.font.size <- 0
+    max.font.size <- max(label.left.font.size + sublabel.left.font.size,
+                         label.right.font.size + sublabel.right.font.size)
 
     if (is.na(row.height))
-        row.height <- 1.0*label.font.size*max(icon.nrow)
+        row.height <- 1.1*max.font.size*max(icon.nrow)
     icon.height <- min(row.height/icon.nrow)
 
+    if (!is.na(width.height.ratio) || width.height.ratio <= 0)
+        width.height.ratio <- 1
     if (is.na(column.width))
     {
-        tmp.icon.width <- 15
-        legend.space <- 0
+        icon.width <- width.height.ratio * icon.height
+        column.width <- max(icon.width*max(icon.ncol),
+                           font.whratio*label.top.font.size*nchar(label.top),
+                           font.whratio*label.bottom.font.size*nchar(label.bottom))
+    }
+    icon.width <- min(width.height.ratio * icon.height, column.width/icon.ncol)
+
+    if (is.na(label.right.width) && (!is.null(label.right) || !is.null(sublabel.right)))
+        label.right.width <- font.whratio * max(c(label.right.font.size * nchar(label.right),
+                                         sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
+
+    # if graphic.width.inch is supplied, the left label will take up all remaining space
+    if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
+    {
         if (!is.na(graphic.width.inch))
         {
+            legend.space <- 0
             if (show.legend)
-                legend.space <- pad.legend + legend.font.size*nchar(legend.text)
-            tmp.icon.width <- ((graphic.width.inch*72) - ((m+(3*show.legend))*pad.col) -
-                                   sum(c(label.left.width, label.right.width, legend.space), na.rm=T))/
-                                (max(icon.ncol)*m + show.legend)
+                legend.space <- pad.legend + 0.5*legend.font.size*nchar(legend.text)
+            label.left.width <- (graphic.width.inch*72) - (pad.col*(m+(3*show.legend))) -
+                sum(c(column.width, label.right.width, legend.space), na.rm=T)
+        } else
+        {
+            label.left.width <- font.whratio * max(c(label.left.font.size * nchar(label.left),
+                                                     sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
         }
-        column.width <- max(tmp.icon.width*max(icon.ncol),
-                           0.5*label.top.font.size*nchar(label.top),
-                           0.5*label.bottom.font.size*nchar(label.bottom))
     }
-    icon.width <- min(column.width/icon.ncol)
 
     if(is.na(label.top.height))
         label.top.height = label.top.font.size*1.0
@@ -281,15 +302,9 @@ PictoChart <- function(x,
     pad.top <- matrix(0, n, m)
     pad.bottom <- matrix(0, n, m)
 
-
     # Padding should not affect size of the icons
-    if (!is.na(width.height.ratio) && width.height.ratio > 0)
-    {
-        icon.width <- min(icon.width, width.height.ratio * icon.height)
-        icon.height <- icon.width/width.height.ratio
-        column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)), m)
-        row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)), n)
-    }
+    column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)), m)
+    row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)), n)
 
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
@@ -444,7 +459,7 @@ PictoChart <- function(x,
                          \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
                                                image.type, legend.col.str, fill.direction[1], fill.image[1],
                                                leg.vpad, 0, leg.vpad, 0)
-        column.width <- c(column.width, pad.legend, icon.width, legend.font.size*nchar(legend.text))
+        column.width <- c(column.width, pad.legend, icon.width, font.whratio*legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
 
@@ -480,7 +495,7 @@ PictoChart <- function(x,
         {
             warning("Pictograph is larger than the size of the window. Consider increasing image ",
                      names(graphic.scale)[which.max(graphic.scale)],
-                    " or reducing the number of rows or font size.\n")
+                    " or reducing the size of the data or font.\n")
         }
     }
 
