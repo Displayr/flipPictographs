@@ -290,7 +290,11 @@ PictoChart <- function(x,
             # If chart is wider than the image box
             sc <- (label.left.width + other.width)/graphic.width.inch
             if (sc > 72)
+            {
+                cat("scale used to be", sc/72, "\n")
                 label.left.width <- 2*sc/72 * label.left.width
+                cat("Width is limiting\n")
+            }
         }
     }
 
@@ -493,7 +497,10 @@ PictoChart <- function(x,
     # Check if pictograph output fits within graphic dimensions
     if (!is.na(graphic.width.inch) && !is.na(graphic.width.inch))
     {
-        if (row.height[1] < max.font.size)
+        # Height of 1 px in relative units
+        graphic.scale <- max(graphic.width/graphic.width.inch, graphic.height/graphic.height.inch)/72
+        cat("graphic.scale =", graphic.scale, ", max.font =", max.font.size, ", row.height =", row.height[1], "\n")
+        if (row.height[1] < max.font.size * graphic.scale)
             warning("Pictograph is larger than the size of the window. Consider increasing the image height, reducing the number of rows or decreasing the font size\n")
     }
     cat("label.left.width =", label.left.width,
