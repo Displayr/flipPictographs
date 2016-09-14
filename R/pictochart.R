@@ -271,8 +271,8 @@ PictoChart <- function(x,
     icon.width <- min(width.height.ratio * icon.height, column.width/icon.ncol)
 
     if (is.na(label.right.width) && (!is.null(label.right) || !is.null(sublabel.right)))
-        label.right.width <- font.whratio * max(c(label.right.font.size * nchar(label.right),
-                                         sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
+        label.right.width <- font.whratio * max(c(label.right.font.size * (2+nchar(label.right)),
+                                         sublabel.right.font.size * (2+nchar(sublabel.right))), na.rm=T)
 
     # if graphic.width.inch is supplied, the left label will take up all remaining space
     if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
@@ -286,6 +286,11 @@ PictoChart <- function(x,
                 legend.space <- pad.legend + 0.5*legend.font.size*nchar(legend.text)
             other.width <- (pad.col*(m+(3*show.legend))) + sum(c(column.width, label.right.width, legend.space), na.rm=T)
             label.left.width <- max(label.left.width, (72*graphic.width.inch) - other.width)
+
+            # If chart is wider than the image box
+            sc <- (label.left.width + other.width)/graphic.width.inch
+            if (sc > 72)
+                label.left.width <- sc/72 * label.left.width
         }
     }
 
@@ -488,13 +493,8 @@ PictoChart <- function(x,
     # Check if pictograph output fits within graphic dimensions
     if (!is.na(graphic.width.inch) && !is.na(graphic.width.inch))
     {
-        graphic.scale <- c(width=graphic.width/graphic.width.inch, height=graphic.height/graphic.height.inch)
-        if (max(graphic.scale) > 72)
-        {
-            warning("Pictograph is larger than the size of the window. Consider increasing image ",
-                     names(graphic.scale)[which.max(graphic.scale)],
-                    " or reducing the size of the data or font.\n")
-        }
+        if (row.height[1] < max.font.size)
+            warning("Pictograph is larger than the size of the window. Consider increasing the image height, reducing the number of rows or decreasing the font size\n")
     }
     cat("label.left.width =", label.left.width,
         ", graphic.width =", graphic.width,
