@@ -290,7 +290,7 @@ PictoChart <- function(x,
             # If chart is wider than the image box
             sc <- (label.left.width + other.width)/graphic.width.inch
             if (sc > 72)
-                label.left.width <- sc/72 * label.left.width
+                label.left.width <- 2*sc/72 * label.left.width
         }
     }
 
