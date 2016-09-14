@@ -252,7 +252,11 @@ PictoChart <- function(x,
                          label.right.font.size + sublabel.right.font.size)
 
     if (is.na(row.height))
+    {
         row.height <- 1.1*max.font.size*max(icon.nrow)
+        if (!is.na(graphic.height.inch))
+            row.height <- 72 * graphic.height.inch/n
+    }
     icon.height <- min(row.height/icon.nrow)
 
     if (!is.na(width.height.ratio) || width.height.ratio <= 0)
@@ -273,17 +277,15 @@ PictoChart <- function(x,
     # if graphic.width.inch is supplied, the left label will take up all remaining space
     if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
     {
+        label.left.width <- font.whratio * max(c(label.left.font.size * nchar(label.left),
+                                                 sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
         if (!is.na(graphic.width.inch))
         {
             legend.space <- 0
             if (show.legend)
                 legend.space <- pad.legend + 0.5*legend.font.size*nchar(legend.text)
-            label.left.width <- (graphic.width.inch*72) - (pad.col*(m+(3*show.legend))) -
-                sum(c(column.width, label.right.width, legend.space), na.rm=T)
-        } else
-        {
-            label.left.width <- font.whratio * max(c(label.left.font.size * nchar(label.left),
-                                                     sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
+            other.width <- (pad.col*(m+(3*show.legend))) + sum(c(column.width, label.right.width, legend.space), na.rm=T)
+            label.left.width <- max(label.left.width, (72*graphic.width.inch) - other.width)
         }
     }
 
@@ -309,7 +311,7 @@ PictoChart <- function(x,
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
-    # It also ensures that table lines show top and bottom lines
+    # It also ensures that lines are visible at the top and bottom of the table
     lab.tpad <- rep(0, n)
     lab.bpad <- rep(0, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
@@ -422,8 +424,6 @@ PictoChart <- function(x,
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
-        #if (is.na(label.left.width))
-        #    label.left.width <- 0.6 * max(c(label.left.font.size * nchar(label.left), sublabel.left.font.size * nchar(sublabel.left)))
         column.width <- c(label.left.width, column.width)
     }
     if (length(label.right) > 0 || length(sublabel.right) > 0)
@@ -431,8 +431,6 @@ PictoChart <- function(x,
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
-        #if (is.na(label.right.width))
-        #    label.right.width <- 0.6 * max(c(label.right.font.size * nchar(label.right), sublabel.right.font.size * nchar(sublabel.right)))
         column.width <- c(column.width, label.right.width)
     }
 
@@ -498,6 +496,11 @@ PictoChart <- function(x,
                     " or reducing the size of the data or font.\n")
         }
     }
+    cat("label.left.width =", label.left.width,
+        ", graphic.width =", graphic.width,
+        ", graphic.height =", graphic.height,
+        ", icon.width = ", icon.width,
+        ", icon.height =", icon.height, "\n")
 
     json.str <- paste("{\"width\":", graphic.width, ", \"height\":", graphic.height, ",",
              "\"background-color\":\"", background.color, "\",",
