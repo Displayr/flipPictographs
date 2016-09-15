@@ -28,7 +28,7 @@ PictographChart <- function(x,
                           total.icons = NA,
                           scale = NA,
                           mode = "table",
-                          icon.palette = "Set1",
+                          icon.palette = "Strong colors",
                           icon.colors = "black",
                           fill.direction = "fromleft",
                           show.lines = FALSE,
@@ -129,6 +129,9 @@ PictographChart <- function(x,
         if (mode != "bar" && label.data.position %in% c("left", "right"))
             stop("label.data.position can only be \'left\' or \'right\' if mode = \'bar\'")
     }
+    if (label.data.type == "percentage" && is.na(total.icons) && max(x) > 1)
+        warning("Percentage is calculated as the proportion of icons filled out of the total icons. The value for total icons has not been supplied and is taken as the maximum of the supplied data.")
+
     if (!is.na(layout))
     {
         if (layout != "Number of rows")

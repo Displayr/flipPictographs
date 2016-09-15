@@ -251,7 +251,7 @@ PictoChart <- function(x,
     max.font.size <- max(label.left.font.size + sublabel.left.font.size,
                          label.right.font.size + sublabel.right.font.size)
 
-    # Fix row heights
+    # Fix height of icons - row height is adjusted later with padding
     if (is.na(row.height))
     {
         row.height <- 1.1*max.font.size*max(icon.nrow)
@@ -261,7 +261,7 @@ PictoChart <- function(x,
     icon.height <- min(row.height/icon.nrow)
     graphic.scale <- 1  # height of 1 px in rel units if image height is limiting
 
-    # Fix width of icon columns
+    # Fix width of icons - column width is adjusted later with padding
     if (is.na(width.height.ratio) || width.height.ratio <= 0)
         width.height.ratio <- 1
     if (is.na(column.width))
@@ -302,6 +302,7 @@ PictoChart <- function(x,
     # if graphic.width.inch is supplied, the left label will take up all remaining space
     if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
     {
+        cat("line 305: graphic.scale =", graphic.scale, row.height, "\n")
         label.left.width <- font.whratio * max(c(label.left.font.size * nchar(label.left),
                                                  sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
         if (!is.na(graphic.width.inch) && !is.null(label.left))
@@ -310,15 +311,20 @@ PictoChart <- function(x,
             label.left.width <- max(label.left.width, (72*graphic.width.inch) - other.width)
 
             # Widen label if chart is wider than the image box
-            graphic.scale <- max(graphic.scale, (label.left.width + other.width)/graphic.width.inch/72)
-            if (graphic.scale > 1)
+            sc <- (label.left.width + other.width)/graphic.width.inch/72
+            #graphic.scale <- max(graphic.scale, (label.left.width + other.width)/graphic.width.inch/72)
+            if (sc > 1)
             {
-                label.left.width <- 2*graphic.scale * label.left.width
+                icon.height <- icon.height/sc
+                label.left.width <- label.left.width * sc
                 graphic.scale <- (label.left.width + other.width)/graphic.width.inch/72
-                sc <- graphic.scale
+                cat("Widening label.width\n")
             }
         }
+        #icon.height <- graphic.scale * icon.height
+        cat("line 321: graphic.scale =", graphic.scale, row.height, "\n")
         label.right.width <- graphic.scale * label.right.width
+        #row.height <- graphic.scale * row.height    # row height is adjusted to fit textbox, introducing extra padding
     }
 
     if(is.na(label.top.height))
@@ -338,7 +344,7 @@ PictoChart <- function(x,
 
     # Padding should not affect size of the icons
     column.width <- rep((max(icon.ncol) * icon.width * 1/(1-pad.icon.col)), m)
-    row.height <-   rep((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)), n)
+    row.height <-   rep(max((max(icon.nrow) * icon.height * 1/(1-pad.icon.row)), graphic.scale * max.font.size), n)
 
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
@@ -360,6 +366,7 @@ PictoChart <- function(x,
     }
 
     # Preparing labels
+    # Dimensions of all table components are expected to be fixed by now
     if (length(label.top) > 0)
         label.top.str <- sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",
                          \"font-family\":\"%s\",\"font-size\":\"%fpx\",\"font-weight\":\"%s\",
@@ -517,6 +524,7 @@ PictoChart <- function(x,
     graphic.width <- sum(column.width+pad.col) - pad.col
     graphic.height <- sum(row.height+pad.row) - pad.row
 
+    cat("final:", graphic.width, graphic.height, "\n")
     # Check if pictograph output fits within graphic dimensions
     if (!is.na(graphic.width.inch) && !is.na(graphic.width.inch))
     {
