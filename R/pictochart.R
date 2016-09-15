@@ -262,7 +262,7 @@ PictoChart <- function(x,
     graphic.scale <- 1  # height of 1 px in rel units if image height is limiting
 
     # Fix width of icon columns
-    if (!is.na(width.height.ratio) || width.height.ratio <= 0)
+    if (is.na(width.height.ratio) || width.height.ratio <= 0)
         width.height.ratio <- 1
     if (is.na(column.width))
     {
