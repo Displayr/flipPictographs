@@ -57,15 +57,15 @@ PictographChart <- function(x,
                           label.left.pad = 0,
                           label.right.pad = 0,
                           label.bottom.align.horizontal = "center",
-                          label.left.align.horizontal = "center",
-                          label.right.align.horizontal = "center",
+                          label.left.align.horizontal = "left",
+                          label.right.align.horizontal = "left",
                           label.top.align.horizontal = "center",
                           label.left.align.vertical = "center",
                           label.top.align.vertical = "center",
                           label.right.align.vertical = "center",
                           label.bottom.align.vertical = "center",
-                          sublabel.left.align.horizontal = "center",
-                          sublabel.right.align.horizontal = "center",
+                          sublabel.left.align.horizontal = "left",
+                          sublabel.right.align.horizontal = "left",
                           width.height.ratio = NA,
                           label.width = NA,
                           label.top.height = NA,
@@ -339,6 +339,7 @@ PictographChart <- function(x,
                 sublabel.right <- label.data.text
                 sublabel.right.font.size <- label.data.font.size
                 sublabel.right.font.weight <- label.data.font.weight
+                sublabel.right.align.horizontal <- label.right.align.horizontal
             }
             label.data.type <- "none"
         }

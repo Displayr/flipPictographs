@@ -251,6 +251,7 @@ PictoChart <- function(x,
     max.font.size <- max(label.left.font.size + sublabel.left.font.size,
                          label.right.font.size + sublabel.right.font.size)
 
+    # Fix row heights
     if (is.na(row.height))
     {
         row.height <- 1.1*max.font.size*max(icon.nrow)
@@ -258,7 +259,9 @@ PictoChart <- function(x,
             row.height <- 72 * graphic.height.inch/n
     }
     icon.height <- min(row.height/icon.nrow)
+    graphic.scale <- 1  # height of 1 px in rel units if image height is limiting
 
+    # Fix width of icon columns
     if (!is.na(width.height.ratio) || width.height.ratio <= 0)
         width.height.ratio <- 1
     if (is.na(column.width))
@@ -270,32 +273,52 @@ PictoChart <- function(x,
     }
     icon.width <- min(width.height.ratio * icon.height, column.width/icon.ncol)
 
+    # Adjust width of row labels to fix window size if graphic.width.inch is supplied
+    # This will increase graphic.scale if the window width is limiting
+    legend.space <- 0
+    if (show.legend)
+        legend.space <- pad.legend + 0.5*legend.font.size*nchar(legend.text)
+
     if (is.na(label.right.width) && (!is.null(label.right) || !is.null(sublabel.right)))
+    {
         label.right.width <- font.whratio * max(c(label.right.font.size * (2+nchar(label.right)),
                                          sublabel.right.font.size * (2+nchar(sublabel.right))), na.rm=T)
+        if (!is.na(graphic.width.inch) && is.null(label.left))
+        {
+            other.width <- (pad.col*(m+(3*show.legend))) + sum(c(column.width, legend.space), na.rm=T)
+            label.right.width <- max(label.right.width, (72*graphic.width.inch) - other.width)
+
+            # Widen label if chart is wider than the image box
+            graphic.scale <- max(graphic.scale, (label.right.width + other.width)/graphic.width.inch/72)
+            if (graphic.scale > 1)
+            {
+                label.right.width <- 2*graphic.scale * label.right.width
+                graphic.scale <- (label.right.width + other.width)/graphic.width.inch/72
+            }
+
+        }
+    }
 
     # if graphic.width.inch is supplied, the left label will take up all remaining space
     if (is.na(label.left.width) && (!is.null(label.left) || !is.null(sublabel.left)))
     {
         label.left.width <- font.whratio * max(c(label.left.font.size * nchar(label.left),
                                                  sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
-        if (!is.na(graphic.width.inch))
+        if (!is.na(graphic.width.inch) && !is.null(label.left))
         {
-            legend.space <- 0
-            if (show.legend)
-                legend.space <- pad.legend + 0.5*legend.font.size*nchar(legend.text)
             other.width <- (pad.col*(m+(3*show.legend))) + sum(c(column.width, label.right.width, legend.space), na.rm=T)
             label.left.width <- max(label.left.width, (72*graphic.width.inch) - other.width)
 
-            # If chart is wider than the image box
-            sc <- (label.left.width + other.width)/graphic.width.inch
-            if (sc > 72)
+            # Widen label if chart is wider than the image box
+            graphic.scale <- max(graphic.scale, (label.left.width + other.width)/graphic.width.inch/72)
+            if (graphic.scale > 1)
             {
-                cat("scale used to be", sc/72, "\n")
-                label.left.width <- 2*sc/72 * label.left.width
-                cat("Width is limiting\n")
+                label.left.width <- 2*graphic.scale * label.left.width
+                graphic.scale <- (label.left.width + other.width)/graphic.width.inch/72
+                sc <- graphic.scale
             }
         }
+        label.right.width <- graphic.scale * label.right.width
     }
 
     if(is.na(label.top.height))
@@ -466,7 +489,7 @@ PictoChart <- function(x,
                          \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
                                                image.type, legend.col.str, fill.direction[1], fill.image[1],
                                                leg.vpad, 0, leg.vpad, 0)
-        column.width <- c(column.width, pad.legend, icon.width, font.whratio*legend.font.size*nchar(legend.text))
+        column.width <- c(column.width, pad.legend, icon.width, graphic.scale*font.whratio*legend.font.size*nchar(legend.text))
         leg.rpad <- sum(tail(column.width, 3))
     }
 
@@ -499,15 +522,9 @@ PictoChart <- function(x,
     {
         # Height of 1 px in relative units
         graphic.scale <- max(graphic.width/graphic.width.inch, graphic.height/graphic.height.inch)/72
-        cat("graphic.scale =", graphic.scale, ", max.font =", max.font.size, ", row.height =", row.height[1], "\n")
         if (row.height[1] < max.font.size * graphic.scale)
             warning("Pictograph is larger than the size of the window. Consider increasing the image height, reducing the number of rows or decreasing the font size\n")
     }
-    cat("label.left.width =", label.left.width,
-        ", graphic.width =", graphic.width,
-        ", graphic.height =", graphic.height,
-        ", icon.width = ", icon.width,
-        ", icon.height =", icon.height, "\n")
 
     json.str <- paste("{\"width\":", graphic.width, ", \"height\":", graphic.height, ",",
              "\"background-color\":\"", background.color, "\",",
