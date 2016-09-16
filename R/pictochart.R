@@ -37,6 +37,9 @@
 #' @param pad.col Vertical spacing between cells in table.
 #' @param pad.icon.row Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
 #' @param pad.icon.ncol Horizontal spacing between icons inside each table cell.
+#' @param font.whratio Numeric specifying the average aspect ratio of a single character, which usually varies around 0.4 - 0.6. It is used to calculate the minimum width of the labels.
+#' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
+#' @param graphic.height.inch Verical dimension of the chart output in inches.
 #' @seealso PictographChart
 #' @importFrom  rhtmlPictographs graphic
 #' @export
@@ -132,7 +135,7 @@ PictoChart <- function(x,
                        #margin.left = 0,
                        graphic.width.inch = NA,
                        graphic.height.inch = NA,
-                       font.whratio = 0.5,
+                       font.whratio = 0.6,
                        print.config = FALSE)
 {
     n <- if (is.null(nrow(x))) length(x)
@@ -300,13 +303,13 @@ PictoChart <- function(x,
 
             ifelse(!is.null(label.left), label.left.width <- label.left.width + extra.width,
                                          label.right.width <- label.right.width + extra.width)
-            cat("Height constrained", column.width, row.height, "\n")
+            #cat("Height constrained", column.width, row.height, "\n")
         } else
         {
             # Width constrained
             row.height <- h2
             column.width <- column.width.max
-            cat("Width constrained", column.width, row.height, "\n")
+            #cat("Width constrained", column.width, row.height, "\n")
         }
 
         # Very constrained case where icons are smaller than text (width-constrained)
@@ -315,7 +318,7 @@ PictoChart <- function(x,
             row.height <- max.font.size
             column.width <- column.width.max
 
-            cat("Very constrained case", column.width, row.height, "\n")
+            #cat("Very constrained case", column.width, row.height, "\n")
         }
     } else
     {

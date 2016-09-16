@@ -53,7 +53,7 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
   background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 2,
   pad.col = 2, pad.icon.row = 0, pad.icon.col = 0,
-  graphic.width.inch = NA, graphic.height.inch = NA, font.whratio = 0.5,
+  graphic.width.inch = NA, graphic.height.inch = NA, font.whratio = 0.6,
   print.config = FALSE)
 }
 \arguments{
@@ -118,6 +118,12 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{pad.col}{Vertical spacing between cells in table.}
 
 \item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
+
+\item{graphic.width.inch}{Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.}
+
+\item{graphic.height.inch}{Verical dimension of the chart output in inches.}
+
+\item{font.whratio}{Numeric specifying the average aspect ratio of a single character, which usually varies around 0.4 - 0.6. It is used to calculate the minimum width of the labels.}
 
 \item{legend.font.family.family}{Font of legend.}
 
