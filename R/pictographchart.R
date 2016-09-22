@@ -191,9 +191,12 @@ PictographChart <- function(x,
     # Some basic checks on input data
     #x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
     if (length(dim(x)) > 2)
-        stop("x has too many dimensions: ", dim(y), "\n")
+    {
+        err.msg <- ifelse(is.null(attr(x,"questions")), "x has too many dimensions\n", "Input table should only contain one statistic per cell\n")
+        stop(err.msg)
+    }
     if (!is.atomic(x) && !is.table(x) && !is.matrix(x) && !is.data.frame(x) && !is.array(x))
-            stop(paste("x must be a vector, matrix, data.frame or array"))
+        stop(paste("x must be a vector, matrix, data.frame or array"))
 
     if (length(dim(x)) == 1)
         x <- matrix(x, ncol = 1, dimnames = list(names(x)))
@@ -248,7 +251,7 @@ PictographChart <- function(x,
         icon.nrow <- NA
 
         if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Column chart expects input of 1-dimensional array")
+            stop("Input data should be in a single row or column")
 
         # Also converted to a 2D matrix
         if (is.null(ncol(x)) || is.na(ncol(x)))
@@ -272,7 +275,7 @@ PictographChart <- function(x,
         if (is.na(icon.ncol))
             icon.nrow <- 1
         if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Column chart expects input of 1-dimensional array")
+            stop("Input data should be in a single row or column")
         if (is.null(nrow(x)) || is.na(nrow(x)))
         {
             tmpnames <- names(x)
@@ -285,7 +288,7 @@ PictographChart <- function(x,
             x <- x[order(x, decreasing=(bar.order=="Descending")),,drop=F]
 
 
-        # Defaults will put labels on the left - add functionality for right
+        # Defaults will put labels on the left
         if (!hide.label.right)
         {
             label.right.pad <- label.pad
@@ -391,7 +394,7 @@ PictographChart <- function(x,
         legend.icon.color <- c.hex[1]
 
 
-    # Font colors!
+    # Font colors
     if (label.color.asIcon && mode == "bar")
     {
         label.left.font.color <- c.hex[,1]
@@ -406,7 +409,6 @@ PictographChart <- function(x,
         label.data.font.color <- c.hex[1,]
     }
 
-    if (label.data.align.horizontal == "default")
     if (label.data.align.horizontal == "default")
         label.data.align.horizontal <- "right"
 
