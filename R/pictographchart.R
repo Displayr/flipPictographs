@@ -10,16 +10,16 @@
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})
 #' @param fill.direction Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.
-#' @param bar.order Specify order of bars when \code{mode=="bar"}. Should be one of \code{NA, "Ascending", "Descending"}.
-#' @param column.order Specify order of bars when \code{mode=="column"}. Should be one of \code{NA, "Ascending", "Descending"}.
+#' @param row.names.to.remove List of rownames to exclude from the chart. This can be in the form of a vector or a comma-separated string. This variable is ignored if the input data has no rownames.
+#' @param column.names.to.remove List of colnames to exclude from the chart.
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
 #' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.
-#' @param ... Arguments passed to \code{PictoChart()}.
 #' @importFrom flipChartBasics AsChartMatrix
 #' @seealso PictoChart
 #' @export
+#' @inheritParams PictoChart
 #'
 PictographChart <- function(x,
                           image = "star",
@@ -36,8 +36,8 @@ PictographChart <- function(x,
                           icon.nrow = 1,
                           icon.ncol = NA,
                           table.by.row = FALSE,
-                          bar.order = NA,
-                          column.order = NA,
+                          row.names.to.remove = "",
+                          column.names.to.remove = "",
                           show.legend = FALSE,
                           legend.text = "",
                           legend.icon.color = NA,
@@ -104,6 +104,8 @@ PictographChart <- function(x,
         stop("Input data must be numeric")
 
     # Parameter substitutions for R Gui Controls
+    row.names.to.remove <- unlist(strsplit(gsub(" ", "", row.names.to.remove), ","))
+    column.names.to.remove <- unlist(strsplit(gsub(" ", "", column.names.to.remove), ","))
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     label.data.type <- tolower(label.data.type)
     image <- gsub(" ", "", tolower(image))
@@ -195,13 +197,47 @@ PictographChart <- function(x,
         err.msg <- ifelse(is.null(attr(x,"questions")), "x has too many dimensions\n", "Input table should only contain one statistic per cell\n")
         stop(err.msg)
     }
-    if (!is.atomic(x) && !is.table(x) && !is.matrix(x) && !is.data.frame(x) && !is.array(x))
-        stop(paste("x must be a vector, matrix, data.frame or array"))
+    x <- as.matrix(x)
+    #if (!is.atomic(x) && !is.table(x) && !is.matrix(x) && !is.data.frame(x) && !is.array(x))
+    #    stop(paste("x must be a vector, matrix, data.frame or array"))
 
-    if (length(dim(x)) == 1)
-        x <- matrix(x, ncol = 1, dimnames = list(names(x)))
+    # special case for 1-d arrays
+    #if (length(dim(x)) == 1)
+    #    x <- matrix(x, ncol = 1, dimnames = list(names(x)))
     if (is.na(total.icons) && is.na(total.icons.tmp))
         total.icons.tmp <- ceiling(max(x))
+
+    # Reshaping arrays/matrices and removing unwanted rows/columns
+    if (mode == "column")
+    {
+        if (is.na(icon.ncol))
+            icon.ncol <- 1
+        icon.nrow <- NA
+        if (!is.null(dim(x)) && min(dim(x)) > 1)
+            stop("Input data should be in a single row or column")
+        if (ncol(x) == 1)
+            x <- t(x)
+    }
+    if (mode == "bar")
+    {
+        if (is.na(icon.ncol))
+            icon.nrow <- 1
+        if (!is.null(dim(x)) && min(dim(x)) > 1)
+            stop("Input data should be in a single row or column")
+        if (nrow(x) == 1)
+            x <- t(x)
+    }
+
+    # Remove rows/columns by name where dimnames is defined
+    row.ind <- 1:nrow(x)
+    col.ind <- 1:ncol(x)
+    if (!is.null(rownames(x)))
+        row.ind <- which(!rownames(x) %in% row.names.to.remove)
+    if (!is.null(colnames(x)))
+        col.ind <- which(!colnames(x) %in% col.names.to.remove)
+    if (length(row.ind) == 0 || length(col.ind) == 0)
+        stop("Input data is empty\n")
+    x <- x[row.ind, col.ind, drop = FALSE]
 
     # Need to get counts before scaling (for data labels)
     count.data <- unlist(x)
@@ -237,33 +273,12 @@ PictographChart <- function(x,
         label.data.text <- sprintf("%.0f%%", round(prop.data*100))
     if (label.data.type == "proportion")
         label.data.text <- sprintf("%.2f", prop.data)
-    #if (label.data.text == "fraction")
-    #    label.data.text <- sprintf("%.0f/%d", round(prop.data*total.icons), total.icons)
     if (label.data.type != "none")
         label.data.type <- "raw"
 
-    # Restructure 2D matrices if not stacked and mode is column or bar
-
+    # Adjust labels based on chart type
     if (mode == "column")
     {
-        if (is.na(icon.ncol))
-            icon.ncol <- 1
-        icon.nrow <- NA
-
-        if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Input data should be in a single row or column")
-
-        # Also converted to a 2D matrix
-        if (is.null(ncol(x)) || is.na(ncol(x)))
-        {
-            tmpnames <- names(x)
-            x <- matrix(x, nrow = 1)
-            colnames(x) <- tmpnames
-        }
-        if (ncol(x) == 1)
-            x <- t(x)
-        if (length(grep("cending", column.order)))
-            x <- x[,order(x, decreasing=(column.order=="Descending")),drop=F]
 
         # Defaults will put labels on the top - add functionality for bottom
         if (!hide.label.bottom)
@@ -272,22 +287,6 @@ PictographChart <- function(x,
     }
     if (mode == "bar")
     {
-        if (is.na(icon.ncol))
-            icon.nrow <- 1
-        if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Input data should be in a single row or column")
-        if (is.null(nrow(x)) || is.na(nrow(x)))
-        {
-            tmpnames <- names(x)
-            x <- matrix(unlist(x), ncol = 1)
-            rownames(x) <- tmpnames
-        }
-        if (nrow(x) == 1)
-            x <- t(x)
-        if (length(grep("cending", bar.order)))
-            x <- x[order(x, decreasing=(bar.order=="Descending")),,drop=F]
-
-
         # Defaults will put labels on the left
         if (!hide.label.right)
         {
@@ -351,6 +350,8 @@ PictographChart <- function(x,
         }
     }
 
+
+
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (is.na(icon.ncol))
         icon.ncol <- unlist(total.icons)/icon.nrow
@@ -360,6 +361,8 @@ PictographChart <- function(x,
          else nrow(x)
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
+    cat("nm=", n, m, "\n")
+
     if (hide.label.left)
         label.left <- NULL
     if (hide.label.top)
@@ -386,6 +389,7 @@ PictographChart <- function(x,
             c.length <- n
 
         c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette)
+        c.hex <- c.hex[1:c.length]
         if (any(is.na(c.hex)))
             stop("Unknown color palette specified")
     }

@@ -23,7 +23,7 @@
 #' @param label.top By default, labels are read from column names of \code{x}.
 #' @param label.bottom Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.
 #' @param label.right Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.
-#' @param label.font.family Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.
+#' @param label.font.family Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.
 #' @param label.font.size Size of label text.
 #' @param label.font.color Colour of labels.
 #' @param label.top.height Height of top label row in pixels.

@@ -85,7 +85,7 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
 
-\item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font, label.top.font}, etc.}
+\item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.}
 
 \item{label.font.size}{Size of label text.}
 

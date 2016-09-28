@@ -9,9 +9,10 @@ PictographChart(x, image = "star", image.type = "url",
   hide.base.image = FALSE, total.icons = NA, scale = NA, mode = "table",
   icon.palette = "Strong colors", icon.colors = "black",
   fill.direction = "fromleft", show.lines = FALSE, layout = NA,
-  icon.nrow = 1, icon.ncol = NA, table.by.row = FALSE, bar.order = NA,
-  column.order = NA, show.legend = FALSE, legend.text = "",
-  legend.icon.color = NA, pad.legend = 40, hide.label.right = TRUE,
+  icon.nrow = 1, icon.ncol = NA, table.by.row = FALSE,
+  row.names.to.remove = "", column.names.to.remove = "",
+  show.legend = FALSE, legend.text = "", legend.icon.color = NA,
+  pad.legend = 40, hide.label.right = TRUE,
   hide.label.left = !hide.label.right, hide.label.bottom = (mode !=
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
@@ -66,9 +67,17 @@ PictoStdChart(...)
 
 \item{fill.direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
 
-\item{bar.order}{Specify order of bars when \code{mode=="bar"}. Should be one of \code{NA, "Ascending", "Descending"}.}
+\item{show.lines}{Add horizontal lines between each row}
 
-\item{column.order}{Specify order of bars when \code{mode=="column"}. Should be one of \code{NA, "Ascending", "Descending"}.}
+\item{icon.nrow}{Configuration of icons in each table cell.}
+
+\item{icon.ncol}{Configuration of icons in each table cell.}
+
+\item{row.names.to.remove}{List of rownames to exclude from the chart. This can be in the form of a vector or a comma-separated string. This variable is ignored if the input data has no rownames.}
+
+\item{column.names.to.remove}{List of colnames to exclude from the chart.}
+
+\item{show.legend}{Show legend (true or false).}
 
 \item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
 
@@ -76,7 +85,29 @@ PictoStdChart(...)
 
 \item{hide.label.top}{Suppress labels above graphics.}
 
-\item{...}{Arguments passed to \code{PictoChart()}.}
+\item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.}
+
+\item{label.top}{By default, labels are read from column names of \code{x}.}
+
+\item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
+
+\item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
+
+\item{label.left.align.horizontal}{Horizontal alignment.}
+
+\item{label.left.align.vertical}{Vertical alignment.}
+
+\item{width.height.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.}
+
+\item{label.top.height}{Height of top label row in pixels.}
+
+\item{label.left.width}{Width of left label column in pixels.}
+
+\item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.}
+
+\item{label.font.size}{Size of label text.}
+
+\item{label.font.color}{Colour of labels.}
 
 \item{data.label.position}{When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.}
 }
