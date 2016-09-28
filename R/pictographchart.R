@@ -234,7 +234,7 @@ PictographChart <- function(x,
     if (!is.null(rownames(x)))
         row.ind <- which(!rownames(x) %in% row.names.to.remove)
     if (!is.null(colnames(x)))
-        col.ind <- which(!colnames(x) %in% col.names.to.remove)
+        col.ind <- which(!colnames(x) %in% column.names.to.remove)
     if (length(row.ind) == 0 || length(col.ind) == 0)
         stop("Input data is empty\n")
     x <- x[row.ind, col.ind, drop = FALSE]
