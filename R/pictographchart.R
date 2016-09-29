@@ -361,7 +361,6 @@ PictographChart <- function(x,
          else nrow(x)
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
-    cat("nm=", n, m, "\n")
 
     if (hide.label.left)
         label.left <- NULL
