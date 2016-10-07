@@ -11,5 +11,6 @@ Suggests:
     testthat
 Imports:
     rhtmlPictographs,
-    flipChartBasics
+    flipChartBasics,
+    flipTransformations
 RoxygenNote: 5.0.1

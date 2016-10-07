@@ -17,6 +17,7 @@
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
 #' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.
 #' @importFrom flipChartBasics AsChartMatrix
+#' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso PictoChart
 #' @export
 #' @inheritParams PictoChart
@@ -104,8 +105,6 @@ PictographChart <- function(x,
         stop("Input data must be numeric")
 
     # Parameter substitutions for R Gui Controls
-    row.names.to.remove <- unlist(strsplit(gsub(" ", "", row.names.to.remove), ","))
-    column.names.to.remove <- unlist(strsplit(gsub(" ", "", column.names.to.remove), ","))
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     label.data.type <- tolower(label.data.type)
     image <- gsub(" ", "", tolower(image))
@@ -194,7 +193,8 @@ PictographChart <- function(x,
     #x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
     if (length(dim(x)) > 2)
     {
-        err.msg <- ifelse(is.null(attr(x,"questions")), "x has too many dimensions\n", "Input table should only contain one statistic per cell\n")
+        err.msg <- ifelse(is.null(attr(x,"questions")), "x has too many dimensions\n",
+                          "Input table should only contain one statistic per cell\n")
         stop(err.msg)
     }
     x <- as.matrix(x)
@@ -227,17 +227,7 @@ PictographChart <- function(x,
         if (nrow(x) == 1)
             x <- t(x)
     }
-
-    # Remove rows/columns by name where dimnames is defined
-    row.ind <- 1:nrow(x)
-    col.ind <- 1:ncol(x)
-    if (!is.null(rownames(x)))
-        row.ind <- which(!rownames(x) %in% row.names.to.remove)
-    if (!is.null(colnames(x)))
-        col.ind <- which(!colnames(x) %in% column.names.to.remove)
-    if (length(row.ind) == 0 || length(col.ind) == 0)
-        stop("Input data is empty\n")
-    x <- x[row.ind, col.ind, drop = FALSE]
+    x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
 
     # Need to get counts before scaling (for data labels)
     count.data <- unlist(x)
