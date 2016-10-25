@@ -17,6 +17,7 @@ imageWHRatio <- c(apple=0.884,baby=1.0,banana=1.124,bank=1.039,barn=1.358,book=1
                   tomato=1.004,tools=1,trafficlight=0.594,
                   train=0.792,tree=0.872,truck=1.731,tv=1,user=0.860,
                   waterdrop=0.646,weight=0.998,
+                  trump=1.167, clinton=1.00,
                   circle=1, square=1)
 
 image.names <- names(imageWHRatio)
