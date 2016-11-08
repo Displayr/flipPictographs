@@ -5,6 +5,7 @@
 #'
 #' @param x Data to plot. Can be vector, matrix or data.frame.
 #' @param image Name of icon, e.g. \code{"star", "stickman",...}.
+#' @param is.custom.url Whether the image parameter is a url supplied by the user.
 #' @param hide.base.image Turns off background image (on by default). In general, the base image should only be shown if the input data is a proportion.
 #' @param total.icons Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
@@ -24,7 +25,7 @@
 #'
 PictographChart <- function(x,
                           image = "star",
-                          image.type = "url",
+                          is.custom.url = FALSE,
                           hide.base.image = FALSE,
                           total.icons = NA,
                           scale = NA,
@@ -107,7 +108,8 @@ PictographChart <- function(x,
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     label.data.type <- tolower(label.data.type)
-    image <- gsub(" ", "", tolower(image))
+    if (!is.custom.url)
+        image <- gsub(" ", "", tolower(image))
     if (label.data.type == "none")
     {
         label.data.align.horizontal <- "center"
@@ -363,7 +365,8 @@ PictographChart <- function(x,
 
     if (image %in% c("circle", "square"))
         image.type <- image
-
+    else
+        image.type <- "url"
 
     # Icon colors
     if (icon.palette == "User-specified")
@@ -405,12 +408,13 @@ PictographChart <- function(x,
     if (label.data.align.horizontal == "default")
         label.data.align.horizontal <- "right"
 
-    base.image <- NA
-    if (!hide.base.image)
-        base.image <- imageURL[image]
+    image.url <- if (is.custom.url) image else imageURL[image]
+    base.image <- if (hide.base.image || is.custom.url) NA else imageURL[image]
+    fill.icon.color <- if (is.custom.url) "" else c.hex
+    width.height.ratio <- if (is.custom.url) NA else imageWHRatio[image]
 
-    return(PictoChart(x, fill.image = imageURL[image], fill.icon.color = c.hex, image.type = image.type,
-                      base.image = base.image, width.height.ratio = imageWHRatio[image],
+    return(PictoChart(x, fill.image = image.url, fill.icon.color = fill.icon.color, image.type = image.type,
+                      base.image = base.image, width.height.ratio = width.height.ratio,
                       total.icons = total.icons, show.lines = show.lines,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
                       #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,

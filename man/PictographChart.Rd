@@ -5,7 +5,7 @@
 \alias{PictographChart}
 \title{Create chart of pictographs}
 \usage{
-PictographChart(x, image = "star", image.type = "url",
+PictographChart(x, image = "star", is.custom.url = FALSE,
   hide.base.image = FALSE, total.icons = NA, scale = NA, mode = "table",
   icon.palette = "Strong colors", icon.colors = "black",
   fill.direction = "fromleft", show.lines = FALSE, layout = NA,
@@ -56,6 +56,8 @@ PictoStdChart(...)
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
 
 \item{image}{Name of icon, e.g. \code{"star", "stickman",...}.}
+
+\item{is.custom.url}{Whether the image parameter is a url supplied by the user.}
 
 \item{hide.base.image}{Turns off background image (on by default). In general, the base image should only be shown if the input data is a proportion.}
 
