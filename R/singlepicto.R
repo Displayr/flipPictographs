@@ -109,9 +109,9 @@ SinglePicto <- function (x,
     layout.str <- ""
 
     icon.WHratio <- if (is.custom.url)
-        imageWHRatio[image] * (1+pad.col) / (1+pad.row)
+        (1 + pad.col) / (1 + pad.row)
     else
-        (1+pad.col) / (1+pad.row)
+        imageWHRatio[image] * (1 + pad.col) / (1 + pad.row)
 
     if (!is.na(number.rows)  && is.na(number.cols))
     {
