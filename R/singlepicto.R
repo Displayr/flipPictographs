@@ -137,7 +137,10 @@ SinglePicto <- function (x,
         base.image.str <- paste(",\"baseImage\":\"", image.type, ":", base.icon.color, imageURL[image], "\"", sep="")
 
     image.url <- if (is.custom.url) image else imageURL[image]
-    variable.image <- paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
+    variable.image <- if (is.custom.url)
+        paste(image.type, ":", fill.direction, ":", image.url, sep="")
+    else
+        paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
 
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
