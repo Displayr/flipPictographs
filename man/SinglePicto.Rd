@@ -4,15 +4,15 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, total.icons = NA, image = "star", number.rows = NA,
-  number.cols = NA, width.height.ratio = 1, graphic.width = NA,
-  graphic.height = NA, layout = NA, scale = 1, hide.base.image = FALSE,
-  fill.direction = "fromleft", fill.icon.color = "black",
-  base.icon.color = "", background.color = "transparent",
-  auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
-  margin = 0, margin.top = margin, margin.right = margin,
-  margin.bottom = margin, margin.left = margin, print.config = FALSE,
-  x.limit = 1000)
+SinglePicto(x, total.icons = NA, image = "star", is.custom.url = FALSE,
+  number.rows = NA, number.cols = NA, width.height.ratio = 1,
+  graphic.width = NA, graphic.height = NA, layout = NA, scale = 1,
+  hide.base.image = FALSE, fill.direction = "fromleft",
+  fill.icon.color = "black", base.icon.color = "",
+  background.color = "transparent", auto.size = FALSE, icon.width = 50,
+  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
+  margin.right = margin, margin.bottom = margin, margin.left = margin,
+  print.config = FALSE, x.limit = 1000)
 }
 \arguments{
 \item{x}{Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
