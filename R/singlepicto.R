@@ -30,6 +30,7 @@
 SinglePicto <- function (x,
                          total.icons = NA,
                          image = "star",
+                         is.custom.url = FALSE,
                          number.rows = NA,
                          number.cols = NA,
                          width.height.ratio = 1,
@@ -60,7 +61,8 @@ SinglePicto <- function (x,
         stop("Scale must be greater than zero\n")
 
     # Some parameter substitutions for R GUI Controls
-    image <- gsub(" ", "", tolower(image))
+    if (!is.custom.url)
+        image <- gsub(" ", "", tolower(image))
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     if (auto.size)
         icon.width <- 50
@@ -105,7 +107,12 @@ SinglePicto <- function (x,
 
     # Determine layout based on which parameters are supplied
     layout.str <- ""
-    icon.WHratio <- imageWHRatio[image] * (1+pad.col) / (1+pad.row)
+
+    icon.WHratio <- if (is.custom.url)
+        imageWHRatio[image] * (1+pad.col) / (1+pad.row)
+    else
+        (1+pad.col) / (1+pad.row)
+
     if (!is.na(number.rows)  && is.na(number.cols))
     {
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
@@ -126,9 +133,11 @@ SinglePicto <- function (x,
     base.image.str <- ""
     if (!hide.base.image && nchar(base.icon.color) > 0)
         base.icon.color <- paste(base.icon.color, ":", sep="")
-    if (!hide.base.image)
+    if (!hide.base.image && !is.custom.url)
         base.image.str <- paste(",\"baseImage\":\"", image.type, ":", base.icon.color, imageURL[image], "\"", sep="")
-    variable.image <- paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", imageURL[image], sep="")
+
+    image.url <- if (is.custom.url) image else imageURL[image]
+    variable.image <- paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
 
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
