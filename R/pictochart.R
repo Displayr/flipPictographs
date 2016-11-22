@@ -148,7 +148,9 @@ PictoChart <- function(x,
     if (any(total.icons <= 0))
         stop("Parameter total.icons must be greater than zero\n")
 
-    if (any(is.na(icon.nrow)) || any(icon.nrow * icon.ncol != total.icons))
+    layout.str <- ifelse(is.na(icon.nrow), paste("\"numCols\":", icon.ncol), paste("\"numRows\":", icon.nrow))
+    if (any(is.na(icon.nrow)) ||
+        any(icon.nrow * icon.ncol != total.icons))
     {
         if (all(!is.na(icon.nrow)) && any(icon.nrow != 1))
             total.icons  =  ceiling(icon.nrow * icon.ncol)
@@ -443,10 +445,10 @@ PictoChart <- function(x,
     }
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
-                         \"variableImage\":\"%s:%s%s:%s\", %s \"numRows\":%d, %s
+                         \"variableImage\":\"%s:%s%s:%s\", %s %s, %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
                         prop, total.icons, image.type, fill.icon.color.str, fill.direction,
-                        fill.image, base.image.str, icon.nrow, label.data.str,
+                        fill.image, base.image.str, layout.str, label.data.str,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
 

@@ -224,6 +224,8 @@ PictographChart <- function(x,
     {
         if (is.na(icon.ncol))
             icon.nrow <- 1
+        else
+            icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
             stop("Input data should be in a single row or column")
         if (nrow(x) == 1)
