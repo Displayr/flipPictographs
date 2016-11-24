@@ -257,6 +257,10 @@ PictoChart <- function(x,
         label.top.font.size <- 0
     if (is.null(label.bottom))
         label.bottom.font.size <- 0
+    if (label.data.type == "none" ||
+        !(label.data.position %in% c("header","footer")))
+        label.data.font.size <- 0
+
     max.font.size <- max(label.left.font.size + sublabel.left.font.size,
                          label.right.font.size + sublabel.right.font.size, 1)
     size.warning <- 0   # tracker so we only give one size warning
@@ -286,10 +290,14 @@ PictoChart <- function(x,
 
     # Calculate size of chart - icons are adjusted to fill the space
     # described by row.height x column.width per data.cell
+    # Excludes row padding and header/footer text
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) && (is.na(column.width) || is.na(row.height)))
     {
         chart.width <- max(10, graphic.width.inch * 72 - tot.side.widths, na.rm=T)
-        chart.height <- max(10, graphic.height.inch * 72 - (label.top.height + label.bottom.height) - ((n-1)/n)*pad.row, na.rm=T)
+        chart.height <- max(10, graphic.height.inch * 72
+                                - (label.top.height + label.bottom.height)
+                                - ((n-1)/n)*pad.row
+                                - n * label.data.font.size, na.rm=T)
 
         column.width.max <- chart.width/m   # maximum column width
         icon.width <- column.width.max/max(icon.ncol) * (1 - pad.icon.col)
