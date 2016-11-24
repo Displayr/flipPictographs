@@ -142,6 +142,8 @@ PictoChart <- function(x,
          else nrow(x)
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
+    if (is.na(width.height.ratio))
+        width.height.ratio <- 1
 
     if (any(total.icons != ceiling(total.icons)))
         stop("Parameter total.icons must be a whole number\n")
@@ -282,11 +284,12 @@ PictoChart <- function(x,
     if(is.na(label.bottom.height))
         label.bottom.height <- label.bottom.font.size*1.0
 
-    # Calculate size of chart - icons are adjusted to fill the maximum space available
+    # Calculate size of chart - icons are adjusted to fill the space
+    # described by row.height x column.width per data.cell
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) && (is.na(column.width) || is.na(row.height)))
     {
         chart.width <- max(10, graphic.width.inch * 72 - tot.side.widths, na.rm=T)
-        chart.height <- max(10, graphic.height.inch * 72 - (label.top.height + label.bottom.height), na.rm=T)
+        chart.height <- max(10, graphic.height.inch * 72 - (label.top.height + label.bottom.height) - ((n-1)/n)*pad.row, na.rm=T)
 
         column.width.max <- chart.width/m   # maximum column width
         icon.width <- column.width.max/max(icon.ncol) * (1 - pad.icon.col)

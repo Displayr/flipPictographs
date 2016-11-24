@@ -264,7 +264,7 @@ PictographChart <- function(x,
     if (label.data.type == "count")
     {
         count.digits <- 0
-        if (any (floor((count.data * 10) %% 10) > 0))
+        if (any (floor((count.data * 10) %% 10) > 0)) # check for non-zeros in first two decimal places
             count.digits <- 2
         if (min(count.data) > 10)   # special case for large numbers
             count.digits <- 0
