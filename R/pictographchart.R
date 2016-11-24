@@ -262,7 +262,15 @@ PictographChart <- function(x,
     if (any(is.na(prop.data)))
         prop.data <- unlist(x)/total.icons
     if (label.data.type == "count")
-       label.data.text <- gsub(" ", "", format(count.data, big.mark=",", scientific=F, digits=0+2*(max(x)<=1)))
+    {
+        count.digits <- 0
+        if (any (floor((count.data * 10) %% 10) > 0))
+            count.digits <- 2
+        if (min(count.data) > 10)   # special case for large numbers
+            count.digits <- 0
+        label.data.text <- gsub(" ", "", format(count.data, big.mark=",",
+                            scientific=F, digits=count.digits))
+    }
     if (label.data.type == "percentage")
         label.data.text <- sprintf("%.0f%%", round(prop.data*100))
     if (label.data.type == "proportion")
