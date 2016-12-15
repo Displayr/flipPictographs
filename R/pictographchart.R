@@ -184,13 +184,6 @@ PictographChart <- function(x,
         legend.icon.color <- NA
     }
 
-    # Get maximum before any aggregating
-    total.icons.tmp <- ceiling(max(x))
-    if (is.na(total.icons) && is.numeric(x))
-        total.icons.tmp <- ceiling(max(x))
-    if (is.na(total.icons) && is.factor(x))
-        total.icons.tmp <- sum(!is.na(x))
-
     # Some basic checks on input data
     #x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
     if (length(dim(x)) > 2)
@@ -202,12 +195,6 @@ PictographChart <- function(x,
     x <- as.matrix(x)
     #if (!is.atomic(x) && !is.table(x) && !is.matrix(x) && !is.data.frame(x) && !is.array(x))
     #    stop(paste("x must be a vector, matrix, data.frame or array"))
-
-    # special case for 1-d arrays
-    #if (length(dim(x)) == 1)
-    #    x <- matrix(x, ncol = 1, dimnames = list(names(x)))
-    if (is.na(total.icons) && is.na(total.icons.tmp))
-        total.icons.tmp <- ceiling(max(x))
 
     # Reshaping arrays/matrices and removing unwanted rows/columns
     if (mode == "column")
@@ -241,14 +228,14 @@ PictographChart <- function(x,
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (is.na(scale) && max(x) > 1)
-        scale <- max(1, round(floor(total.icons.tmp/10)/5)*5)
+        scale <- max(1, round(floor(max(x)/10)/5)*5)
     if (is.na(scale) && max(x) <=  1)
         scale <- 10^{round(log10(median(x)))}
     if (scale <= 0)
         stop("Scale must be greater than zero\n")
 
     if (is.na(total.icons))
-        total.icons <- ceiling(total.icons.tmp/scale)
+        total.icons <- ceiling(max(x)/scale)
 
     if (nchar(legend.text) == 0 && scale > 0)
         legend.text  =  sprintf(paste(" =  %.", 0-min(0,floor(log10(scale))), "f", sep = ""), scale)
