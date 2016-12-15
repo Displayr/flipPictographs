@@ -440,13 +440,6 @@ PictoChart <- function(x,
     label.data.str <- ""
     if (label.data.type != "none")
     {
-        # PictoStdChart always passes in a raw text vector
-        #if (label.data.type == "count")
-        #    label.data.text <- as.character(unlist(x))
-        #
-        #if (label.data.type %in% c("proportion", "percentage"))
-        #    label.data.text <- label.data.type
-
         label.data.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                              \"font-family\":\"%s\", \"font-color\":\"%s\", \"horizontal-align\":\"%s\"},",
                             label.data.position, label.data.text,

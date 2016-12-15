@@ -92,8 +92,14 @@ PictographChart <- function(x,
                           label.right.font.weight = "normal",
                           sublabel.left.font.weight = label.left.font.weight,
                           sublabel.right.font.weight = label.right.font.weight,
+                          #show.label.data = FALSE,
                           label.data.type = "none",
-                          label.data.text = NULL,
+                          label.data.digits = 0,
+                          label.data.bigmark = ",",  # to prettify large numbers
+                          label.data.prefix = "",
+                          label.data.suffix = "",
+                          label.data.100prc = FALSE,
+                          label.data.text = NULL,   # usually not supplied directly by user
                           label.data.position = ifelse(mode=="bar", "right", "footer"),
                           label.data.font.weight = "normal",
                           label.data.font.size = 0.8*label.font.size,
@@ -132,8 +138,6 @@ PictographChart <- function(x,
         if (mode != "bar" && label.data.position %in% c("left", "right"))
             stop("label.data.position can only be \'left\' or \'right\' if mode = \'bar\'")
     }
-    if (label.data.type == "percentage" && is.na(total.icons) && max(x) > 1)
-        warning("Percentage is calculated as the proportion of icons filled out of the total icons. The value for total icons has not been supplied and is taken as the maximum of the supplied data.")
 
     if (!is.na(layout))
     {
@@ -220,11 +224,12 @@ PictographChart <- function(x,
     }
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
 
-    # Need to get counts before scaling (for data labels)
-    count.data <- unlist(x)
-    prop.data <- NA
-    if (max(x) < 1)
-        prop.data <- unlist(x)
+    # Data labels
+    label.data.values <- unlist(x)
+    label.data.text <- sprintf("%s%s%s", label.data.prefix,
+                            format(round(label.data.values * (1+(99*label.data.100prc)), digits=label.data.digits), 
+                                    scientific=F, big.mark=label.data.bigmark),
+                            label.data.suffix)
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (is.na(scale) && max(x) > 1)
@@ -244,26 +249,6 @@ PictographChart <- function(x,
     # if mode==table, and dim(x)==2 and show.legend is false, check range of data
     # if range differs by more than a range of 100 and the greatest and 2nd greatest
     # are in the same row/column then compute scale for each row/column
-
-    # Handling data labels
-    if (any(is.na(prop.data)))
-        prop.data <- unlist(x)/total.icons
-    if (label.data.type == "count")
-    {
-        count.digits <- 0
-        if (any (floor((count.data * 10) %% 10) > 0)) # check for non-zeros in first two decimal places
-            count.digits <- 2
-        if (min(count.data) > 10)   # special case for large numbers
-            count.digits <- 0
-        label.data.text <- gsub(" ", "", format(count.data, big.mark=",",
-                            scientific=F, digits=count.digits))
-    }
-    if (label.data.type == "percentage")
-        label.data.text <- sprintf("%.0f%%", round(prop.data*100))
-    if (label.data.type == "proportion")
-        label.data.text <- sprintf("%.2f", prop.data)
-    if (label.data.type != "none")
-        label.data.type <- "raw"
 
     # Adjust labels based on chart type
     if (mode == "column")
