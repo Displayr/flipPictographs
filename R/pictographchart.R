@@ -121,6 +121,10 @@ PictographChart <- function(x,
         label.data.align.horizontal <- "center"
         label.data.position <- ""
         data.above.label <- FALSE
+        label.data.prefix <- ""
+        label.data.suffix <- ""
+        label.data.100prc <- FALSE
+        label.data.digits <- 0
     }
     if (label.data.type != "none")
     {
@@ -227,7 +231,7 @@ PictographChart <- function(x,
     # Data labels
     label.data.values <- unlist(x)
     label.data.text <- sprintf("%s%s%s", label.data.prefix,
-                            format(round(label.data.values * (1+(99*label.data.100prc)), digits=label.data.digits), 
+                            format(round(label.data.values * (1+(99*label.data.100prc)), digits=label.data.digits),
                                     scientific=F, big.mark=label.data.bigmark),
                             label.data.suffix)
 
@@ -253,11 +257,9 @@ PictographChart <- function(x,
     # Adjust labels based on chart type
     if (mode == "column")
     {
-
         # Defaults will put labels on the top - add functionality for bottom
         if (!hide.label.bottom)
             label.bottom <- colnames(x)
-
     }
     if (mode == "bar")
     {
