@@ -66,8 +66,8 @@ PictoChart <- function(x,
                        label.bottom = NA,
                        sublabel.left = NA,
                        sublabel.right = NA,
-                       label.left.pad = 0,       # padding between label and icon
-                       label.right.pad = 0,
+                       label.left.pad = 2,       # padding between label and icon
+                       label.right.pad = 2,
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",

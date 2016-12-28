@@ -364,7 +364,9 @@ PictographChart <- function(x,
         if (m == 1 || table.by.row)
             c.length <- n
 
-        c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette, reverse = icon.palette %in% c("Reds","Blues","Greens","Greys"))
+        c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette,
+                                              palette.end = 1 - 0.2 * (icon.palette %in% c("Reds","Blues","Greens","Greys")),
+                                              reverse = icon.palette %in% c("Reds","Blues","Greens","Greys"))
         c.hex <- c.hex[1:c.length]
         if (any(is.na(c.hex)))
             stop("Unknown color palette specified")
