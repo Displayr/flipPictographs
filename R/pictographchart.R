@@ -16,7 +16,7 @@
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
-#' @param data.label.position When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.
+#' @param data.label.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}
 #' @importFrom flipChartBasics AsChartMatrix
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso PictoChart
@@ -92,8 +92,7 @@ PictographChart <- function(x,
                           label.right.font.weight = "normal",
                           sublabel.left.font.weight = label.left.font.weight,
                           sublabel.right.font.weight = label.right.font.weight,
-                          #show.label.data = FALSE,
-                          label.data.type = "none",
+                          show.label.data = FALSE,
                           label.data.digits = 0,
                           label.data.bigmark = ",",  # to prettify large numbers
                           label.data.prefix = "",
@@ -105,6 +104,13 @@ PictographChart <- function(x,
                           label.data.font.size = 0.8*label.font.size,
                           label.data.font.color = label.font.color,
                           label.data.align.horizontal = "default",
+                          show.label.float = FALSE,
+                          label.float.text = NULL,   # usually not supplied directly by user
+                          label.float.font.weight = label.data.font.weight,
+                          label.float.font.size = label.data.font.size,
+                          label.float.font.color = label.data.font.color,
+                          label.float.align.horizontal = "left",
+                          label.float.align.vertical = "center",
                           data.above.label = FALSE,
                           ...)
 {
@@ -113,10 +119,9 @@ PictographChart <- function(x,
 
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
-    label.data.type <- tolower(label.data.type)
     if (!is.custom.url)
         image <- gsub(" ", "", tolower(image))
-    if (label.data.type == "none")
+    if (!show.label.data)
     {
         label.data.align.horizontal <- "center"
         label.data.position <- ""
@@ -126,7 +131,7 @@ PictographChart <- function(x,
         label.data.100prc <- FALSE
         label.data.digits <- 0
     }
-    if (label.data.type != "none")
+    if (show.label.data)
     {
         if (label.data.position == "Above icons")
             label.data.position <- "header"
@@ -137,10 +142,10 @@ PictographChart <- function(x,
         if (label.data.position == "On right")
             label.data.position <- "right"
 
-        if (!(label.data.position %in% c("header", "footer", "left", "right")))
-            stop("label.data.position should be one of \'header\', \'footer\', \'left\' or \'right\'")
-        if (mode != "bar" && label.data.position %in% c("left", "right"))
-            stop("label.data.position can only be \'left\' or \'right\' if mode = \'bar\'")
+        #if (!(label.data.position %in% c("header", "footer", "left", "right")))
+        #    stop("label.data.position should be one of \'header\', \'footer\', \'left\' or \'right\'")
+        #if (mode != "bar" && label.data.position %in% c("left", "right"))
+        #    stop("label.data.position can only be \'left\' or \'right\' if mode = \'bar\'")
     }
 
     if (!is.na(layout))
@@ -272,7 +277,35 @@ PictographChart <- function(x,
         if (!hide.label.left)
             label.left.pad <- label.pad
 
-        # Allow data labels to be positioned near row labels
+
+        # Position data labels relative to fill direction
+        if (label.data.position == "Next to bar" && hide.base.image)
+        {
+            show.label.float <- TRUE
+            label.float.text <- label.data.text
+            label.float.align.horizontal <- switch(fill.direction,
+                                                   fromleft="left",
+                                                   fromright="right")
+            if (any(x >= total.icons))
+                total.icons <- total.icons + 1
+            show.label.data <- FALSE
+        } else if (label.data.position == "Next to bar" && !hide.base.image)
+        {
+            label.data.position <- switch(fill.direction,
+                                          fromleft="right",
+                                          fromright="left")
+        } else if (label.data.position == "Below row label" || label.data.position == "Above row label")
+        {
+            if (label.data.position == "Above row label")
+                data.above.label <- TRUE
+
+            label.data.position <- switch(fill.direction,
+                                          fromleft="left",
+                                          fromright="right")
+        }
+
+
+        # Position of data labels in absolute terms
         if (label.data.position == "left")
         {
             label.left.pad <- label.pad
@@ -296,7 +329,7 @@ PictographChart <- function(x,
                 sublabel.left.font.weight <- label.data.font.weight
                 sublabel.left.align.horizontal <- label.data.align.horizontal
             }
-            label.data.type <- "none"
+            show.label.data  <- FALSE
         }
         if (label.data.position == "right")
         {
@@ -322,15 +355,14 @@ PictographChart <- function(x,
                 sublabel.right.font.weight <- label.data.font.weight
                 sublabel.right.align.horizontal <- label.right.align.horizontal
             }
-            label.data.type <- "none"
+            show.label.data <- FALSE
         }
     }
 
 
-
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
     if (is.na(icon.ncol))
-        icon.ncol <- unlist(total.icons)/icon.nrow
+        icon.ncol <- unlist(total.icons)/icon.nrow + show.label.float
     icon.ncol <- min(icon.ncol, total.icons)
 
     n <- if (is.null(nrow(x))) length(x)
@@ -429,11 +461,18 @@ PictographChart <- function(x,
                       label.bottom = label.bottom,
                       fill.direction = fill.direction, pad.legend = pad.legend,
                       show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
-                      label.data.position = label.data.position, label.data.type = label.data.type,
+                      show.label.data = show.label.data,
+                      label.data.position = label.data.position,
                       label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
                       label.data.font.color = label.data.font.color,
                       label.data.align.horizontal = label.data.align.horizontal,
-                      label.left.pad = label.left.pad, label.right.pad = label.right.pad, ...))
+                      label.left.pad = label.left.pad, label.right.pad = label.right.pad,
+                      show.label.float = show.label.float, label.float.text = label.float.text,
+                      label.float.font.size = label.float.font.size,
+                      label.float.font.weight = label.float.font.weight,
+                      label.float.align.horizontal = label.float.align.horizontal,
+                      label.float.align.vertical = label.float.align.vertical,
+                      ...))
 }
 
 

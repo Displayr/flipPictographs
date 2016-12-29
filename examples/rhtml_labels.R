@@ -8,7 +8,8 @@ t1 <- rhtmlPictographs::graphic('{
   "floatingLabels": [
     {
       "position": "0:3",
-      "text": "percentage"
+      "text": "3",
+      "horizontal-align": "left"
     }
   ]
 }')

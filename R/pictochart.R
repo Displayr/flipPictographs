@@ -57,9 +57,6 @@ PictoChart <- function(x,
                        legend.text = "",
                        icon.nrow = 1,
                        icon.ncol = unlist(total.icons)/icon.nrow,
-                       #icon.fixedsize = FALSE,
-                       #icon.align.horizontal = "left",
-                       #icon.align.vertical = "center",
                        label.left = NA,
                        label.right = NA,
                        label.top = NA,
@@ -110,7 +107,7 @@ PictoChart <- function(x,
                        legend.font.weight = "normal",
                        legend.font.color = label.font.color,
                        legend.icon.color = fill.icon.color[1],
-                       label.data.type = "none",
+                       show.label.data = FALSE,
                        label.data.text = NULL,
                        label.data.position = "footer",
                        label.data.font.family = label.font.family,
@@ -118,6 +115,14 @@ PictoChart <- function(x,
                        label.data.font.weight = "normal",
                        label.data.font.color = label.font.color,
                        label.data.align.horizontal = "right",
+                       show.label.float = FALSE,
+                       label.float.text = NULL,
+                       label.float.font.family = label.font.family,
+                       label.float.font.size = 0.8*label.font.size,
+                       label.float.font.weight = "normal",
+                       label.float.font.color = label.font.color,
+                       label.float.align.horizontal = "center",
+                       label.float.align.vertical = "center",
                        row.height = NA,
                        column.width = NA,
                        width.height.ratio = NA,
@@ -231,7 +236,7 @@ PictoChart <- function(x,
 
 
     # To check: fill.direction, images, alignments,
-    # label.data.type, label.data.position, image.type
+    # label.data.position, image.type
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
     base.image.str <- ""
@@ -257,8 +262,7 @@ PictoChart <- function(x,
         label.top.font.size <- 0
     if (is.null(label.bottom))
         label.bottom.font.size <- 0
-    if (label.data.type == "none" ||
-        !(label.data.position %in% c("header","footer")))
+    if (!show.label.data || !(label.data.position %in% c("header","footer")))
         label.data.font.size <- 0
 
     max.font.size <- max(label.left.font.size + sublabel.left.font.size,
@@ -438,7 +442,7 @@ PictoChart <- function(x,
 
     # Preparing data labels
     label.data.str <- ""
-    if (label.data.type != "none")
+    if (show.label.data)
     {
         label.data.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                              \"font-family\":\"%s\", \"font-color\":\"%s\", \"horizontal-align\":\"%s\"},",
@@ -448,11 +452,29 @@ PictoChart <- function(x,
         row.height <- row.height + label.data.font.size
     }
 
+    label.float.str <- ""
+    if (show.label.float)
+    {
+        #cat("pictochart line 458\n")
+        if (any(x >= total.icons))
+            warning("Floating labels placed at invalid positions. Please increase total.icons\n")
+
+        label.float.position <- sprintf("%d:%d", floor(x/icon.ncol), x %% icon.ncol)
+        label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
+                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                            \"font-family\":\"%s\", \"font-color\":\"%s\",
+                            \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}],",
+                            label.float.position, label.float.text,
+                            label.float.font.size, label.float.font.weight, label.float.font.family,
+                            label.float.font.color, label.float.align.horizontal, label.float.align.vertical)
+        #cat("label.float.str:", label.float.str, "\n")
+    }
+
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
-                         \"variableImage\":\"%s:%s%s:%s\", %s %s, %s
+                         \"variableImage\":\"%s:%s%s:%s\", %s %s, %s %s
                         \"columnGutter\":%f, \"rowGutter\":%f, \"padding\":\"%f %f %f %f\"}}",
                         prop, total.icons, image.type, fill.icon.color.str, fill.direction,
-                        fill.image, base.image.str, layout.str, label.data.str,
+                        fill.image, base.image.str, layout.str, label.data.str, label.float.str,
                         pad.icon.col, pad.icon.row, pad.top, pad.right, pad.bottom, pad.left)
     row.str <- matrix(row.str, n, m)
 
