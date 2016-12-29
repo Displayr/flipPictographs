@@ -286,7 +286,7 @@ PictographChart <- function(x,
             label.float.align.horizontal <- switch(fill.direction,
                                                    fromleft="left",
                                                    fromright="right")
-            if (any(x >= total.icons))
+            if (any(ceiling(x) >= total.icons))
                 total.icons <- total.icons + 1
             show.label.data <- FALSE
         } else if (label.data.position == "Next to bar" && !hide.base.image)
