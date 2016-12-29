@@ -459,7 +459,7 @@ PictoChart <- function(x,
         if (any(x >= total.icons))
             warning("Floating labels placed at invalid positions. Please increase total.icons\n")
 
-        label.float.position <- sprintf("%d:%d", floor(x/icon.ncol), x %% icon.ncol)
+        label.float.position <- sprintf("%.0f:%.0f", floor(x/icon.ncol), x %% icon.ncol)
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
                             \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
