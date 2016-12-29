@@ -414,6 +414,7 @@ PictographChart <- function(x,
         label.left.font.color <- c.hex[,1]
         label.right.font.color <- c.hex[,1]
         label.data.font.color <- c.hex[,1]
+        label.float.font.color <- c.hex[,1]
     }
 
     if (label.color.asIcon && mode == "column")
@@ -421,6 +422,7 @@ PictographChart <- function(x,
         label.top.font.color <- c.hex[1,]
         label.bottom.font.color <- c.hex[1,]
         label.data.font.color <- c.hex[1,]
+        label.float.font.color <- c.hex[1,]
     }
 
     if (label.data.align.horizontal == "default")
@@ -469,6 +471,7 @@ PictographChart <- function(x,
                       label.left.pad = label.left.pad, label.right.pad = label.right.pad,
                       show.label.float = show.label.float, label.float.text = label.float.text,
                       label.float.font.size = label.float.font.size,
+                      label.float.font.color = label.float.font.color,
                       label.float.font.weight = label.float.font.weight,
                       label.float.align.horizontal = label.float.align.horizontal,
                       label.float.align.vertical = label.float.align.vertical,
