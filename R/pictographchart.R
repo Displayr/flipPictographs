@@ -111,6 +111,7 @@ PictographChart <- function(x,
                           label.float.font.color = label.data.font.color,
                           label.float.align.horizontal = "left",
                           label.float.align.vertical = "center",
+                          label.data.type = "none",   # does nothing, retained for backwards compatability
                           data.above.label = FALSE,
                           ...)
 {
