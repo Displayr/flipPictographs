@@ -111,12 +111,15 @@ PictographChart <- function(x,
                           label.float.font.color = label.data.font.color,
                           label.float.align.horizontal = "left",
                           label.float.align.vertical = "center",
-                          label.data.type = "none",   # does nothing, retained for backwards compatability
+                          label.data.type = "None",   # does nothing, retained for backwards compatability
                           data.above.label = FALSE,
                           ...)
 {
     if (!is.numeric(unlist(x)))
         stop("Input data must be numeric")
+
+    if (label.data.type != "None")
+        show.data.label <- TRUE
 
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
