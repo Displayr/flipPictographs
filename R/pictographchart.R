@@ -99,7 +99,7 @@ PictographChart <- function(x,
                           label.data.suffix = "",
                           label.data.100prc = FALSE,
                           label.data.text = NULL,   # usually not supplied directly by user
-                          label.data.position = ifelse(mode=="bar", "right", "footer"),
+                          label.data.position = ifelse(mode=="bar", "Next to bar", "footer"),
                           label.data.font.weight = "normal",
                           label.data.font.size = 0.8*label.font.size,
                           label.data.font.color = label.font.color,
@@ -283,7 +283,8 @@ PictographChart <- function(x,
 
 
         # Position data labels relative to fill direction
-        if (label.data.position == "Next to bar" && hide.base.image)
+        if (label.data.position == "Next to bar" && hide.base.image &&
+            (is.na(icon.ncol) || icon.ncol > max(ceiling(x))))
         {
             show.label.float <- TRUE
             label.float.text <- label.data.text
@@ -293,7 +294,7 @@ PictographChart <- function(x,
             if (any(ceiling(x) >= total.icons))
                 total.icons <- total.icons + 1
             show.label.data <- FALSE
-        } else if (label.data.position == "Next to bar" && !hide.base.image)
+        } else if (label.data.position == "Next to bar")
         {
             label.data.position <- switch(fill.direction,
                                           fromleft="right",
