@@ -119,7 +119,7 @@ PictographChart <- function(x,
         stop("Input data must be numeric")
 
     if (label.data.type != "None")
-        show.data.label <- TRUE
+        show.label.data <- TRUE
 
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
