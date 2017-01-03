@@ -60,7 +60,7 @@ SinglePicto <- function (x,
     if (scale <= 0)
         stop("Scale must be greater than zero\n")
 
-    if (total.icons == 1 && x > 1)
+    if (!is.na(total.icons) && total.icons == 1 && x > 1)
         stop("Input data should be a proportion between 0 and 1. To input count data select option for 'multiple icons'\n")
 
     # Some parameter substitutions for R GUI Controls
