@@ -2,7 +2,6 @@
 #' @importFrom bmp read.bmp
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
-#' @importFrom tiff readTIFF
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio
@@ -22,8 +21,6 @@ getWidthHeightRatio <- function(image.url)
             tmp.file <- readPNG(tmp.image)
         if (grepl("jpeg", tmp.type))
             tmp.file <- readJPEG(tmp.image)
-        if (grepl("tif", tmp.type))
-            tmp.file <- readTIFF(tmp.image)
         if (grepl("bmp", tmp.type))
             tmp.file <- as.raster(read.bmp(tmp.file), max=255)
 

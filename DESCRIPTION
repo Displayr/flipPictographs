@@ -16,6 +16,5 @@ Imports:
     RCurl,
     png,
     jpeg,
-    tiff,
     bmp
 RoxygenNote: 5.0.1
