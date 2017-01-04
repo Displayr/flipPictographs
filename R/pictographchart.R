@@ -449,7 +449,7 @@ PictographChart <- function(x,
         label.data.align.horizontal <- "right"
 
     image.url <- if (is.custom.url) image else imageURL[image]
-    base.image <- if (hide.base.image || nchar(base.image)==0) NA else if (is.custom.url) base.image else imageURL[image]
+    base.image <- if (hide.base.image) NA else if (is.custom.url) base.image else imageURL[image]
     fill.icon.color <- if (is.custom.url) "" else c.hex
     width.height.ratio <- if (is.custom.url) getWidthHeightRatio(image) else imageWHRatio[image]
 
