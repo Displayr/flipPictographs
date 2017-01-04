@@ -2,20 +2,21 @@
 #'
 #' Creates a single pictograph. Allows customization of the number of icons
 #' and dimensions.
-#' @seealso PictoStdChart to create a chart or table of pictographs
+#' @seealso PictographChart to create a chart or table of pictographs
 #'
 #' @param x Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
+#' @param image The name of the icon to use (e.g. \code{"star", "stickman"}) or the URL of an image when \code{is.custom.url} is true.
+#' @param base.image The URL of the base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
 #' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns", "Fill graphic"}. If not supplied, a decision will be made based on which parameters are supplied
 #' @param number.rows If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.
 #' @param width.height.ratio Width to height ratio of pictograph if \code{layout == "Width-to-height ratio"}.
-#' @param image Name of icon
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of base image.
 #' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
-#' @param fill.icon.color Color of the filled icons
-#' @param base.icon.color Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC).
+#' @param fill.icon.color Color of the filled icons. Only applicable for built-in icons.
+#' @param base.icon.color Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC). Only applicable for built-in icons.
 #' @param background.color Color of the graphic background
 #' @param auto.size Automatically sizes the plot based on the size of the window/slot.
 #' @param icon.width Width of a single icon in pixels when \code{auto.size} is \code{FALSE}.
@@ -24,12 +25,20 @@
 #' @param margin Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.
 #' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
 #' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
-#'
 #' @importFrom  rhtmlPictographs graphic
+#' @examples
+#' xx <- 4
+#' SinglePicto(xx)
+#' SinglePicto(xx, total.icons=10, image="stickman", number.cols=5,
+#'    fill.icon.color="red", base.icon.color="deepskyblue")
+#' SinglePicto(xx, 9, number.rows=3, is.custom.url=TRUE,
+#'    image="http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg",
+#'    base.image="http://wiki.q-researchsoftware.com/images/2/21/Star_unfilled.png")
 #' @export
 SinglePicto <- function (x,
                          total.icons = NA,
                          image = "star",
+                         base.image = "",
                          is.custom.url = FALSE,
                          number.rows = NA,
                          number.cols = NA,
@@ -111,10 +120,8 @@ SinglePicto <- function (x,
     # Determine layout based on which parameters are supplied
     layout.str <- ""
 
-    icon.WHratio <- if (is.custom.url)
-        (1 + pad.col) / (1 + pad.row)
-    else
-        imageWHRatio[image] * (1 + pad.col) / (1 + pad.row)
+    icon.WHratio <- if (is.custom.url) getWidthHeightRatio(image) * (1 + pad.col) / (1 + pad.row)
+                    else imageWHRatio[image] * (1 + pad.col) / (1 + pad.row)
 
     if (!is.na(number.rows)  && is.na(number.cols))
     {
@@ -134,10 +141,14 @@ SinglePicto <- function (x,
         image.type <- image
 
     base.image.str <- ""
-    if (!hide.base.image && nchar(base.icon.color) > 0)
-        base.icon.color <- paste(base.icon.color, ":", sep="")
-    if (!hide.base.image && !is.custom.url)
-        base.image.str <- paste(",\"baseImage\":\"", image.type, ":", base.icon.color, imageURL[image], "\"", sep="")
+    if (!hide.base.image)
+    {
+        if (nchar(base.icon.color) > 0)
+            base.icon.color <- paste(base.icon.color, ":", sep="")
+        base.image.url <- if (is.custom.url) base.image else imageURL[image]
+        base.image.str <- if (nchar(base.image.url) == 0) ""
+                          else paste(",\"baseImage\":\"", image.type, ":", base.icon.color, base.image.url, "\"", sep="")
+    }
 
     image.url <- if (is.custom.url) image else imageURL[image]
     variable.image <- if (is.custom.url)

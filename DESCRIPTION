@@ -12,5 +12,10 @@ Suggests:
 Imports:
     rhtmlPictographs,
     flipChartBasics,
-    flipTransformations
+    flipTransformations,
+    RCurl,
+    png,
+    jpeg,
+    tiff,
+    bmp
 RoxygenNote: 5.0.1

@@ -179,6 +179,7 @@ PictoChart <- function(x,
     if (pad.icon.col < 0 || pad.icon.col >= 1)
         stop("pad.icon.col must be smaller than 1 and greater or equal to 0\n")
 
+
     # Try column-first order first (i.e. each entry of total.icons to one row)
     byrow  =  (length(total.icons)!= n && length(unlist(total.icons)) !=  length(unlist(x)) && !is.data.frame(total.icons))
     total.icons <- matrix(unlist(total.icons), nrow = n, ncol = m, byrow = byrow)
@@ -343,7 +344,7 @@ PictoChart <- function(x,
          if (is.na(row.height))
             row.height <- max(15*max(icon.nrow), 1.2 * max.font.size)
          if (is.na(column.width))
-            column.width <- row.height[1]*max(icon.ncol)/max(icon.nrow)*max(1, width.height.ratio,na.rm=T)
+            column.width <- row.height[1]*max(icon.ncol)/max(icon.nrow)*max(0.01,width.height.ratio,na.rm=T)
                                 #font.whratio*label.top.font.size*nchar(label.top),
                                 #font.whratio*label.bottom.font.size*nchar(label.bottom))
     }

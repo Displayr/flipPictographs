@@ -4,22 +4,25 @@
 \alias{SinglePicto}
 \title{SinglePicto}
 \usage{
-SinglePicto(x, total.icons = NA, image = "star", is.custom.url = FALSE,
-  number.rows = NA, number.cols = NA, width.height.ratio = 1,
-  graphic.width = NA, graphic.height = NA, layout = NA, scale = 1,
-  hide.base.image = FALSE, fill.direction = "fromleft",
-  fill.icon.color = "black", base.icon.color = "",
-  background.color = "transparent", auto.size = FALSE, icon.width = 50,
-  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
-  margin.right = margin, margin.bottom = margin, margin.left = margin,
-  print.config = FALSE, x.limit = 1000)
+SinglePicto(x, total.icons = NA, image = "star", base.image = "",
+  is.custom.url = FALSE, number.rows = NA, number.cols = NA,
+  width.height.ratio = 1, graphic.width = NA, graphic.height = NA,
+  layout = NA, scale = 1, hide.base.image = FALSE,
+  fill.direction = "fromleft", fill.icon.color = "black",
+  base.icon.color = "", background.color = "transparent",
+  auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
+  margin = 0, margin.top = margin, margin.right = margin,
+  margin.bottom = margin, margin.left = margin, print.config = FALSE,
+  x.limit = 1000)
 }
 \arguments{
 \item{x}{Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
 
 \item{total.icons}{Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.}
 
-\item{image}{Name of icon}
+\item{image}{The name of the icon to use (e.g. \code{"star", "stickman"}) or the URL of an image when \code{is.custom.url} is true.}
+
+\item{base.image}{The URL of the base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.}
 
 \item{number.rows}{If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.}
 
@@ -35,9 +38,9 @@ SinglePicto(x, total.icons = NA, image = "star", is.custom.url = FALSE,
 
 \item{fill.direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).}
 
-\item{fill.icon.color}{Color of the filled icons}
+\item{fill.icon.color}{Color of the filled icons. Only applicable for built-in icons.}
 
-\item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC).}
+\item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC). Only applicable for built-in icons.}
 
 \item{background.color}{Color of the graphic background}
 
@@ -59,7 +62,16 @@ SinglePicto(x, total.icons = NA, image = "star", is.custom.url = FALSE,
 Creates a single pictograph. Allows customization of the number of icons
 and dimensions.
 }
+\examples{
+xx <- 4
+SinglePicto(xx)
+SinglePicto(xx, total.icons=10, image="stickman", number.cols=5,
+   fill.icon.color="red", base.icon.color="deepskyblue")
+SinglePicto(xx, 9, number.rows=3, is.custom.url=TRUE,
+   image="http://wiki.q-researchsoftware.com/images/9/91/Star_filled.svg",
+   base.image="http://wiki.q-researchsoftware.com/images/2/21/Star_unfilled.png")
+}
 \seealso{
-PictoStdChart to create a chart or table of pictographs
+PictographChart to create a chart or table of pictographs
 }
 

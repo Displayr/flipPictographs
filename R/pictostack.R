@@ -60,7 +60,7 @@ pictoStack <- function(x, image, mode, col1, col2, ...)
     return(PictoChart(x2,
                       fill.image=c.fg, base.image=c.bg, pad.col=pad.col, pad.row=pad.row,
                       total.icons=1, icon.nrow=1, icon.ncol=1, width.height.ratio=NA,
-                      label.data.type="none", ...))
+                      show.label.data = FALSE, ...))
 }
 
 

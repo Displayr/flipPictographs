@@ -4,27 +4,39 @@
 #' @aliases PictoStdChart
 #'
 #' @param x Data to plot. Can be vector, matrix or data.frame.
-#' @param image Name of icon, e.g. \code{"star", "stickman",...}.
+#' @param image Name of icon (e.g. \code{"star", "stickman",...}) or URL to icon image if \code{is.custom.url}.
+#' @param base.image URL of image to use as base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.
 #' @param is.custom.url Whether the image parameter is a url supplied by the user.
 #' @param hide.base.image Turns off background image (on by default). In general, the base image should only be shown if the input data is a proportion.
-#' @param total.icons Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.
+#' @param total.icons Maximum number of icons in each table cell. By default, it will be determine based on \code{ceiling(x)}.
+#' @param icon.palette Name of palette used to color icons. Only applicable for in-built icons
+#' @param icon.colors Vector of colors for icons. Only applicable when \code{icon.palette = "User-specified"} and in-built icons used.
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})
-#' @param fill.direction Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.
+#' @param fill.direction Direction in which icons are filled. One of \code{"From left", "From right", "From top", "From bottom"}.
 #' @param row.names.to.remove List of rownames to exclude from the chart. This can be in the form of a vector or a comma-separated string. This variable is ignored if the input data has no rownames.
 #' @param column.names.to.remove List of colnames to exclude from the chart.
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
-#' @param data.label.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}
+#' @param show.data.label Specifies whether to show data labels for each bar/column in the chart.
+#' @param data.label.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}
 #' @importFrom flipChartBasics AsChartMatrix
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso PictoChart
+#' @examples
+#' xx <- c(First = 3, Second = 6, Third=2)
+#' PictographChart(xx, image="stickman", mode="bar")
+#' PictographChart(xx, image="stickman", hide.base.image=TRUE, show.label.data=TRUE, mode="bar")
+#' PictographChart(xx, total.icons=10, mode="bar", fill.direction="fromright", is.custom.url=TRUE,
+#'    image="http://wiki.q-researchsoftware.com/images/a/a9/Stick_woman_dark_red.png",
+#'    base.image="http://wiki.q-researchsoftware.com/images/7/78/Stick_man_light_grey.png")
 #' @export
 #' @inheritParams PictoChart
 #'
 PictographChart <- function(x,
                           image = "star",
+                          base.image = "",
                           is.custom.url = FALSE,
                           hide.base.image = FALSE,
                           total.icons = NA,
@@ -120,6 +132,9 @@ PictographChart <- function(x,
 
     if (label.data.type != "None")
         show.label.data <- TRUE
+
+    if (is.custom.url && nchar(base.image) == 0)
+        hide.base.image <- TRUE
 
     # Parameter substitutions for R Gui Controls
     fill.direction <- gsub(" ", "", tolower(fill.direction))
@@ -434,9 +449,9 @@ PictographChart <- function(x,
         label.data.align.horizontal <- "right"
 
     image.url <- if (is.custom.url) image else imageURL[image]
-    base.image <- if (hide.base.image || is.custom.url) NA else imageURL[image]
+    base.image <- if (hide.base.image || nchar(base.image)==0) NA else if (is.custom.url) base.image else imageURL[image]
     fill.icon.color <- if (is.custom.url) "" else c.hex
-    width.height.ratio <- if (is.custom.url) NA else imageWHRatio[image]
+    width.height.ratio <- if (is.custom.url) getWidthHeightRatio(image) else imageWHRatio[image]
 
     return(PictoChart(x, fill.image = image.url, fill.icon.color = fill.icon.color, image.type = image.type,
                       base.image = base.image, width.height.ratio = width.height.ratio,

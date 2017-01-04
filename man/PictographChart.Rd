@@ -5,7 +5,7 @@
 \alias{PictographChart}
 \title{Create chart of pictographs}
 \usage{
-PictographChart(x, image = "star", is.custom.url = FALSE,
+PictographChart(x, image = "star", base.image = "", is.custom.url = FALSE,
   hide.base.image = FALSE, total.icons = NA, scale = NA, mode = "table",
   icon.palette = "Strong colors", icon.colors = "black",
   fill.direction = "fromleft", show.lines = FALSE, layout = NA,
@@ -17,8 +17,8 @@ PictographChart(x, image = "star", is.custom.url = FALSE,
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
   label.bottom = NA, label.right = NA, sublabel.left = NA,
-  sublabel.right = NA, label.pad = 0, label.left.pad = 0,
-  label.right.pad = 0, label.bottom.align.horizontal = "center",
+  sublabel.right = NA, label.pad = 5, label.left.pad = 5,
+  label.right.pad = 5, label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "left",
   label.right.align.horizontal = "left",
   label.top.align.horizontal = "center",
@@ -44,30 +44,45 @@ PictographChart(x, image = "star", is.custom.url = FALSE,
   label.bottom.font.weight = "normal", label.right.font.weight = "normal",
   sublabel.left.font.weight = label.left.font.weight,
   sublabel.right.font.weight = label.right.font.weight,
-  label.data.type = "none", label.data.text = NULL,
-  label.data.position = ifelse(mode == "bar", "right", "footer"),
-  label.data.font.weight = "normal", label.data.font.size = 0.8 *
-  label.font.size, label.data.font.color = label.font.color,
-  label.data.align.horizontal = "default", data.above.label = FALSE, ...)
+  show.label.data = FALSE, label.data.digits = 0,
+  label.data.bigmark = ",", label.data.prefix = "",
+  label.data.suffix = "", label.data.100prc = FALSE,
+  label.data.text = NULL, label.data.position = ifelse(mode == "bar",
+  "Next to bar", "footer"), label.data.font.weight = "normal",
+  label.data.font.size = 0.8 * label.font.size,
+  label.data.font.color = label.font.color,
+  label.data.align.horizontal = "default", show.label.float = FALSE,
+  label.float.text = NULL, label.float.font.weight = label.data.font.weight,
+  label.float.font.size = label.data.font.size,
+  label.float.font.color = label.data.font.color,
+  label.float.align.horizontal = "left",
+  label.float.align.vertical = "center", label.data.type = "None",
+  data.above.label = FALSE, ...)
 
 PictoStdChart(...)
 }
 \arguments{
 \item{x}{Data to plot. Can be vector, matrix or data.frame.}
 
-\item{image}{Name of icon, e.g. \code{"star", "stickman",...}.}
+\item{image}{Name of icon (e.g. \code{"star", "stickman",...}) or URL to icon image if \code{is.custom.url}.}
+
+\item{base.image}{URL of image to use as base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.}
 
 \item{is.custom.url}{Whether the image parameter is a url supplied by the user.}
 
 \item{hide.base.image}{Turns off background image (on by default). In general, the base image should only be shown if the input data is a proportion.}
 
-\item{total.icons}{Maximum number of icons in each table cell. By default, it will be taken to be \code{ceiling(x)} (if icon.autosize is on) or \code{ceiling(max(x))}. This variable is ignored if \code{read.KfromX} is \code{true}.}
+\item{total.icons}{Maximum number of icons in each table cell. By default, it will be determine based on \code{ceiling(x)}.}
 
 \item{scale}{Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.}
 
 \item{mode}{Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.}
 
-\item{fill.direction}{Direction in which icons are filled (\code{horizontal}(default) or \code{vertical}). When vertical is used, the icons are placed in a single column per entry.}
+\item{icon.palette}{Name of palette used to color icons. Only applicable for in-built icons}
+
+\item{icon.colors}{Vector of colors for icons. Only applicable when \code{icon.palette = "User-specified"} and in-built icons used.}
+
+\item{fill.direction}{Direction in which icons are filled. One of \code{"From left", "From right", "From top", "From bottom"}.}
 
 \item{show.lines}{Add horizontal lines between each row}
 
@@ -111,12 +126,22 @@ PictoStdChart(...)
 
 \item{label.font.color}{Colour of labels.}
 
-\item{data.label.position}{When \code{label.data.type != "none"}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"On left", "On right"} (bar mode only). Note that \code{"On left"} will overrride \code{sublabel.left} and \code{"On right"} will overrride \code{sublabel.right}.}
+\item{show.data.label}{Specifies whether to show data labels for each bar/column in the chart.}
+
+\item{data.label.position}{When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}}
 }
 \description{
 \code{PictographChart} Create a chart to visually represent the data in a table or vector using the number of icons displayed
 
 \code{PictoStdChart} Deprecated function for backwards-compatibility
+}
+\examples{
+xx <- c(First = 3, Second = 6, Third=2)
+PictographChart(xx, image="stickman", mode="bar")
+PictographChart(xx, image="stickman", hide.base.image=TRUE, show.label.data=TRUE, mode="bar")
+PictographChart(xx, total.icons=10, mode="bar", fill.direction="fromright", is.custom.url=TRUE,
+   image="http://wiki.q-researchsoftware.com/images/a/a9/Stick_woman_dark_red.png",
+   base.image="http://wiki.q-researchsoftware.com/images/7/78/Stick_man_light_grey.png")
 }
 \seealso{
 PictoChart
