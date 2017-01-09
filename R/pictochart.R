@@ -273,10 +273,10 @@ PictoChart <- function(x,
 
     # Fix minimum size of label cells
     if (is.na(label.left.width))
-        label.left.width <- font.whratio * max(0, c(label.left.font.size * nchar(label.left),
+        label.left.width <- label.left.pad + font.whratio * max(0, c(label.left.font.size * nchar(label.left),
                                                  sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
     if (is.na(label.right.width))
-        label.right.width <- font.whratio * max(0, c(label.right.font.size * nchar(label.right),
+        label.right.width <- label.right.pad + font.whratio * max(0, c(label.right.font.size * nchar(label.right),
                                                  sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
     legend.width <- 0
     if (show.legend)
