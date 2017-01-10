@@ -267,7 +267,7 @@ PictographChart <- function(x,
     if (scale <= 0)
         stop("Scale must be greater than zero\n")
 
-    if (is.na(total.icons))
+    if (all(is.na(total.icons)))
         total.icons <- ceiling(max(x)/scale)
 
     if (nchar(legend.text) == 0 && scale > 0)

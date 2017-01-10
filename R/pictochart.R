@@ -56,7 +56,7 @@ PictoChart <- function(x,
                        show.legend = FALSE,
                        legend.text = "",
                        icon.nrow = 1,
-                       icon.ncol = NA,
+                       icon.ncol = max(unlist(total.icons))/max(icon.nrow),
                        label.left = NA,
                        label.right = NA,
                        label.top = NA,
@@ -147,55 +147,55 @@ PictoChart <- function(x,
          else nrow(x)
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
-    
     if (is.na(width.height.ratio))
         width.height.ratio <- 1
+
     if (any(total.icons != ceiling(total.icons)))
         stop("Parameter total.icons must be a whole number\n")
     if (any(total.icons <= 0))
         stop("Parameter total.icons must be greater than zero\n")
-    if (length(total.icons) != 1 && length(total.icons) != length(x))
-        stop("total.icons must be either a single integer or a matrix with the same dimensions as x\n")
-    if (all(total.icons == 0))
-        stop("No non-zero entries in total.icons\n")
-    if (length(icon.nrow) != 1 && length(icon.nrow) != n)
-        stop("icon.nrow should be a single integer or a vector of length ", n, "\n")
-    if (length(icon.ncol) != 1 && length(icon.ncol) != m)
-        stop("icon.ncol should be a single integer or a vector of length ", m, "\n")
+
+    layout.str <- ifelse(is.na(icon.nrow), paste("\"numCols\":", icon.ncol), paste("\"numRows\":", icon.nrow))
+    if (any(is.na(icon.nrow)) ||
+        any(icon.nrow * icon.ncol != total.icons))
+    {
+        if (all(!is.na(icon.nrow)) && any(icon.nrow != 1))
+            total.icons  =  ceiling(icon.nrow * icon.ncol)
+        else
+            icon.nrow  =  ceiling(total.icons/icon.ncol)
+    }
+
+    if (length(total.icons) != 1 && length(unlist(total.icons)) != length(unlist(x)) &&
+        length(total.icons) != n && length(total.icons) != m)
+        stop("total.icons does not match dimensions of x\n")
+    if (length(icon.nrow) != 1 && length(unlist(icon.nrow)) !=  length(unlist(x)) &&
+        length(icon.nrow) != n && length(icon.nrow) !=  m)
+        stop("icon.nrow does not match dimensions of x\n")
+    if (length(icon.ncol) !=  1 && length(unlist(icon.ncol)) !=  length(unlist(x)) &&
+        length(icon.ncol) != n && length(icon.ncol) !=  m)
+        stop("icon.ncol does not match dimensions of x\n")
     if (pad.icon.row < 0 || pad.icon.row >= 1)
         stop("pad.icon.row must be smaller than 1 and greater or equal to 0\n")
     if (pad.icon.col < 0 || pad.icon.col >= 1)
         stop("pad.icon.col must be smaller than 1 and greater or equal to 0\n")
 
-    total.icons <- matrix(total.icons, nrow=n, ncol=m)
+
+    # Try column-first order first (i.e. each entry of total.icons to one row)
+    byrow  =  (length(total.icons)!= n && length(unlist(total.icons)) !=  length(unlist(x)) && !is.data.frame(total.icons))
+    total.icons <- matrix(unlist(total.icons), nrow = n, ncol = m, byrow = byrow)
+    icon.nrow <- matrix(icon.nrow, nrow = n, ncol = m,
+                        byrow = (length(icon.nrow) != n && length(unlist(icon.nrow)) != length(unlist(x)) &&
+                                 !is.data.frame(icon.nrow)))
+    icon.ncol <- matrix(icon.ncol, nrow = n, ncol = m,
+                        byrow = (length(icon.ncol) != n && length(unlist(icon.ncol)) != length(unlist(x)) &&
+                                 !is.data.frame(icon.ncol)))
     prop <- as.vector(unlist(x))/unlist(total.icons)
+
+    if (all(total.icons == 0))
+        stop("No non-zero entries for total.icons\n")
     prop[total.icons == 0] <- 0
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
         stop("x must be a number between 0 and total.icons\n")
-
-    # Determine layout
-    layout.str <- ""
-    if (any(!is.na(icon.nrow)))
-    {
-        if (any(!is.na(icon.ncol)))
-            warnings("icon.ncol is ignored when icon.nrow is specified\n")
-        if (length(icon.nrow) == 1)
-            icon.nrow <- rep(icon.nrow, n)
-        
-        icon.nrow.matrix <- matrix(icon.nrow, n, m)    
-        icon.ncol <- apply(total.icons/icon.nrow.matrix, 2, max)
-        layout.str <- paste("\"numRows\":", icon.nrow.matrix)
-    } else
-    {
-        if (length(icon.ncol) == 1)
-            icon.ncol <- rep(icon.ncol, m)
-        icon.ncol.matrix <- matrix(icon.ncol, n, m, byrow=T)
-        icon.nrow <- apply(total.icons/icon.ncol.matrix, 1, max)
-        layout.str <- paste("\"numCols\":", icon.ncol.matrix)
-    }
-    tot.icon.nrow <- sum(icon.nrow)
-    tot.icon.ncol <- sum(icon.ncol)
-
 
     # Fill row/column labels with defaults
     if (!is.null(label.left) && is.na(label.left) && m == 1 && is.null(row.names(x)) && !is.null(names(x)))
@@ -235,6 +235,9 @@ PictoChart <- function(x,
     if (length(column.width) !=  1 && length(column.width) != m)
         stop ("column.width must be of length 1 or ", m, "\n")
 
+
+    # To check: fill.direction, images, alignments,
+    # label.data.position, image.type
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
     base.image.str <- ""
@@ -301,29 +304,30 @@ PictoChart <- function(x,
                                 - ((n-1)/n)*pad.row
                                 - n * label.data.font.size, na.rm=T)
 
-        icon.width <- chart.width/tot.icon.ncol * (1 - pad.icon.col)
-        column.width.max <- icon.width/(1 - pad.icon.col) * icon.ncol
+        column.width.max <- chart.width/m   # maximum column width
+        icon.width <- column.width.max/max(icon.ncol) * (1 - pad.icon.col)
 
-        # h1 is the row-height if the window is filled heightwise
-        # h2 is the row-height if the window is filled lengthwise
-        h1 <- (chart.height/tot.icon.nrow) * icon.nrow
+        h1 <- chart.height/n
         h2 <- icon.width/width.height.ratio * icon.nrow/(1 - pad.icon.row)
-        if (sum(h1) < sum(h2))
+
+        if (h1 < h2)
         {
             # Height constrained
             row.height <- h1
-            icon.height <- chart.height/tot.icon.nrow * (1 - pad.icon.row)
+            icon.height <- row.height/max(icon.nrow) * (1 - pad.icon.row)
             icon.width <- width.height.ratio * icon.height
-            column.width <- icon.width * icon.ncol/(1 - pad.icon.col)
-            extra.width <- chart.width - sum(column.width)
+            column.width <- icon.width * max(icon.ncol)/(1 - pad.icon.col)
+            extra.width <- chart.width - (column.width * m)
 
             ifelse(!is.null(label.left), label.left.width <- label.left.width + extra.width,
                                          label.right.width <- label.right.width + extra.width)
+            #cat("Height constrained", column.width, row.height, "\n")
         } else
         {
             # Width constrained
             row.height <- h2
             column.width <- column.width.max
+            #cat("Width constrained", column.width, row.height, "\n")
         }
 
         # Very constrained case where icons are smaller than text (width-constrained)
@@ -331,14 +335,16 @@ PictoChart <- function(x,
         {
             row.height <- max.font.size
             column.width <- column.width.max
+
+            #cat("Very constrained case", column.width, row.height, "\n")
         }
     } else
     {
          # Default chart dimensions without graphic sizes
          if (is.na(row.height))
-            row.height <- pmax(15*icon.nrow, 1.2 * max.font.size)
+            row.height <- max(15*max(icon.nrow), 1.2 * max.font.size)
          if (is.na(column.width))
-            column.width <- sum(row.height)/tot.icon.nrow * icon.ncol *max(0.01,width.height.ratio,na.rm=T)
+            column.width <- row.height[1]*max(icon.ncol)/max(icon.nrow)*max(0.01,width.height.ratio,na.rm=T)
                                 #font.whratio*label.top.font.size*nchar(label.top),
                                 #font.whratio*label.bottom.font.size*nchar(label.bottom))
     }
