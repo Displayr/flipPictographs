@@ -326,7 +326,7 @@ PictoChart <- function(x,
         }
 
         # Very constrained case where icons are smaller than text (width-constrained)
-        if (row.height < max.font.size)
+        if (any(row.height < max.font.size))
         {
             row.height <- max.font.size
             column.width <- column.width.max
