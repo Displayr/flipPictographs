@@ -334,9 +334,9 @@ PictoChart <- function(x,
     } else
     {
          # Default chart dimensions without graphic sizes
-         if (is.na(row.height))
+         if (all(is.na(row.height)))
             row.height <- pmax(15*icon.nrow, 1.2 * max.font.size)
-         if (is.na(column.width))
+         if (all(is.na(column.width)))
             column.width <- sum(row.height)/tot.icon.nrow * icon.ncol *max(0.01,width.height.ratio,na.rm=T)
                                 #font.whratio*label.top.font.size*nchar(label.top),
                                 #font.whratio*label.bottom.font.size*nchar(label.bottom))
@@ -449,7 +449,6 @@ PictoChart <- function(x,
     label.float.str <- ""
     if (show.label.float)
     {
-        #cat("pictochart line 458\n")
         if (any(x >= total.icons))
             warning("Floating labels placed at invalid positions. Please increase total.icons\n")
 
@@ -462,7 +461,6 @@ PictoChart <- function(x,
                             label.float.position, label.float.text,
                             label.float.font.size, label.float.font.weight, label.float.font.family,
                             label.float.font.color, label.float.align.horizontal, label.float.align.vertical)
-        #cat("label.float.str:", label.float.str, "\n")
     }
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,

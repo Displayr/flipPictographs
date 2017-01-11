@@ -236,7 +236,7 @@ PictographChart <- function(x,
     # Reshaping arrays/matrices and removing unwanted rows/columns
     if (mode == "column")
     {
-        if (is.na(icon.ncol))
+        if (all(is.na(icon.ncol)))
             icon.ncol <- 1
         icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
@@ -246,7 +246,7 @@ PictographChart <- function(x,
     }
     if (mode == "bar")
     {
-        if (is.na(icon.ncol))
+        if (all(is.na(icon.ncol)))
             icon.nrow <- 1
         else
             icon.nrow <- NA
@@ -387,9 +387,10 @@ PictographChart <- function(x,
 
 
     # Fix dimensions using icon.ncol - icon.nrow will be adjusted in pictochart()
-    if (is.na(icon.ncol))
+    if (all(is.na(icon.ncol)))
         icon.ncol <- unlist(total.icons)/icon.nrow + show.label.float
-    icon.ncol <- min(icon.ncol, total.icons)
+    if (length(icon.ncol) == 1)
+        icon.ncol <- min(icon.ncol, total.icons)
 
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)
