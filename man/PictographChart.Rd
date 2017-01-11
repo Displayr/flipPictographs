@@ -9,21 +9,21 @@ PictographChart(x, image = "star", base.image = "", is.custom.url = FALSE,
   hide.base.image = FALSE, total.icons = NA, scale = NA, mode = "table",
   icon.palette = "Strong colors", icon.colors = "black",
   fill.direction = "fromleft", show.lines = FALSE, layout = NA,
-  icon.nrow = 1, icon.ncol = NA, table.by.row = FALSE,
-  row.names.to.remove = "", column.names.to.remove = "",
-  show.legend = FALSE, legend.text = "", legend.icon.color = NA,
-  pad.legend = 40, hide.label.right = TRUE,
+  icon.nrow = 1, icon.ncol = NA, fix.icon.nrow = TRUE,
+  table.by.row = FALSE, row.names.to.remove = "",
+  column.names.to.remove = "", show.legend = FALSE, legend.text = "",
+  legend.icon.color = NA, pad.legend = 40, hide.label.right = TRUE,
   hide.label.left = !hide.label.right, hide.label.bottom = (mode !=
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
   label.bottom = NA, label.right = NA, sublabel.left = NA,
-  sublabel.right = NA, label.pad = 5, label.left.pad = 5,
-  label.right.pad = 5, label.bottom.align.horizontal = "center",
+  sublabel.right = NA, label.pad = 5, label.vpad = label.pad,
+  label.left.pad = label.pad, label.right.pad = label.pad,
+  label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "left",
   label.right.align.horizontal = "left",
-  label.top.align.horizontal = "center",
-  label.left.align.vertical = "center", label.top.align.vertical = "center",
-  label.right.align.vertical = "center",
+  label.top.align.horizontal = "center", label.left.align.vertical = "top",
+  label.top.align.vertical = "center", label.right.align.vertical = "top",
   label.bottom.align.vertical = "center",
   sublabel.left.align.horizontal = "left",
   sublabel.right.align.horizontal = "left", width.height.ratio = NA,
@@ -86,9 +86,11 @@ PictoStdChart(...)
 
 \item{show.lines}{Add horizontal lines between each row}
 
-\item{icon.nrow}{Configuration of icons in each table cell.}
+\item{icon.nrow}{Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.}
 
-\item{icon.ncol}{Configuration of icons in each table cell.}
+\item{icon.ncol}{Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.}
+
+\item{fix.icon.nrow}{When \code{mode="bar" and hide.base.image=T}, set to \code{FALSE} to allow the bars to contain varying number of rows.}
 
 \item{row.names.to.remove}{List of rownames to exclude from the chart. This can be in the form of a vector or a comma-separated string. This variable is ignored if the input data has no rownames.}
 
@@ -109,6 +111,8 @@ PictoStdChart(...)
 \item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
+
+\item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can control \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.}
 
 \item{label.left.align.horizontal}{Horizontal alignment.}
 

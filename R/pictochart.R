@@ -17,8 +17,6 @@
 #' @param background.color Background colour of pictograph
 #' @param icon.nrow Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.
 #' @param icon.ncol Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.
-#' @param icon.fixedsize When \code{true}, icons will not automatically resize to fill table cell.
-#' @param icon.align.horizontal Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.
 #' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.
 #' @param label.top By default, labels are read from column names of \code{x}.
 #' @param label.bottom Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.
@@ -56,7 +54,7 @@ PictoChart <- function(x,
                        show.legend = FALSE,
                        legend.text = "",
                        icon.nrow = 1,
-                       icon.ncol = max(unlist(total.icons))/max(icon.nrow),
+                       icon.ncol = NA,
                        label.left = NA,
                        label.right = NA,
                        label.top = NA,
@@ -65,6 +63,7 @@ PictoChart <- function(x,
                        sublabel.right = NA,
                        label.left.pad = 5,       # padding between label and icon
                        label.right.pad = 5,
+                       label.vpad = 5,           # padding above/below row label
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",
@@ -147,55 +146,55 @@ PictoChart <- function(x,
          else nrow(x)
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
+
     if (is.na(width.height.ratio))
         width.height.ratio <- 1
-
     if (any(total.icons != ceiling(total.icons)))
         stop("Parameter total.icons must be a whole number\n")
     if (any(total.icons <= 0))
         stop("Parameter total.icons must be greater than zero\n")
-
-    layout.str <- ifelse(is.na(icon.nrow), paste("\"numCols\":", icon.ncol), paste("\"numRows\":", icon.nrow))
-    if (any(is.na(icon.nrow)) ||
-        any(icon.nrow * icon.ncol != total.icons))
-    {
-        if (all(!is.na(icon.nrow)) && any(icon.nrow != 1))
-            total.icons  =  ceiling(icon.nrow * icon.ncol)
-        else
-            icon.nrow  =  ceiling(total.icons/icon.ncol)
-    }
-
-    if (length(total.icons) != 1 && length(unlist(total.icons)) != length(unlist(x)) &&
-        length(total.icons) != n && length(total.icons) != m)
-        stop("total.icons does not match dimensions of x\n")
-    if (length(icon.nrow) != 1 && length(unlist(icon.nrow)) !=  length(unlist(x)) &&
-        length(icon.nrow) != n && length(icon.nrow) !=  m)
-        stop("icon.nrow does not match dimensions of x\n")
-    if (length(icon.ncol) !=  1 && length(unlist(icon.ncol)) !=  length(unlist(x)) &&
-        length(icon.ncol) != n && length(icon.ncol) !=  m)
-        stop("icon.ncol does not match dimensions of x\n")
+    if (length(total.icons) != 1 && length(total.icons) != length(x))
+        stop("total.icons must be either a single integer or a matrix with the same dimensions as x\n")
+    if (all(total.icons == 0))
+        stop("No non-zero entries in total.icons\n")
+    if (length(icon.nrow) != 1 && length(icon.nrow) != n)
+        stop("icon.nrow should be a single integer or a vector of length ", n, "\n")
+    if (length(icon.ncol) != 1 && length(icon.ncol) != m)
+        stop("icon.ncol should be a single integer or a vector of length ", m, "\n")
     if (pad.icon.row < 0 || pad.icon.row >= 1)
         stop("pad.icon.row must be smaller than 1 and greater or equal to 0\n")
     if (pad.icon.col < 0 || pad.icon.col >= 1)
         stop("pad.icon.col must be smaller than 1 and greater or equal to 0\n")
 
-
-    # Try column-first order first (i.e. each entry of total.icons to one row)
-    byrow  =  (length(total.icons)!= n && length(unlist(total.icons)) !=  length(unlist(x)) && !is.data.frame(total.icons))
-    total.icons <- matrix(unlist(total.icons), nrow = n, ncol = m, byrow = byrow)
-    icon.nrow <- matrix(icon.nrow, nrow = n, ncol = m,
-                        byrow = (length(icon.nrow) != n && length(unlist(icon.nrow)) != length(unlist(x)) &&
-                                 !is.data.frame(icon.nrow)))
-    icon.ncol <- matrix(icon.ncol, nrow = n, ncol = m,
-                        byrow = (length(icon.ncol) != n && length(unlist(icon.ncol)) != length(unlist(x)) &&
-                                 !is.data.frame(icon.ncol)))
+    total.icons <- matrix(total.icons, nrow=n, ncol=m)
     prop <- as.vector(unlist(x))/unlist(total.icons)
-
-    if (all(total.icons == 0))
-        stop("No non-zero entries for total.icons\n")
     prop[total.icons == 0] <- 0
     if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
         stop("x must be a number between 0 and total.icons\n")
+
+    # Determine layout
+    layout.str <- ""
+    if (any(!is.na(icon.nrow)))
+    {
+        if (any(!is.na(icon.ncol)))
+            warnings("icon.ncol is ignored when icon.nrow is specified\n")
+        if (length(icon.nrow) == 1)
+            icon.nrow <- rep(icon.nrow, n)
+
+        icon.nrow.matrix <- matrix(icon.nrow, n, m)
+        icon.ncol <- apply(total.icons/icon.nrow.matrix, 2, max)
+        layout.str <- paste("\"numRows\":", icon.nrow.matrix)
+    } else
+    {
+        if (length(icon.ncol) == 1)
+            icon.ncol <- rep(icon.ncol, m)
+        icon.ncol.matrix <- matrix(icon.ncol, n, m, byrow=T)
+        icon.nrow <- apply(total.icons/icon.ncol.matrix, 1, max)
+        layout.str <- paste("\"numCols\":", icon.ncol.matrix)
+    }
+    tot.icon.nrow <- sum(icon.nrow)
+    tot.icon.ncol <- sum(icon.ncol)
+
 
     # Fill row/column labels with defaults
     if (!is.null(label.left) && is.na(label.left) && m == 1 && is.null(row.names(x)) && !is.null(names(x)))
@@ -235,9 +234,6 @@ PictoChart <- function(x,
     if (length(column.width) !=  1 && length(column.width) != m)
         stop ("column.width must be of length 1 or ", m, "\n")
 
-
-    # To check: fill.direction, images, alignments,
-    # label.data.position, image.type
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")
     base.image.str <- ""
@@ -304,30 +300,29 @@ PictoChart <- function(x,
                                 - ((n-1)/n)*pad.row
                                 - n * label.data.font.size, na.rm=T)
 
-        column.width.max <- chart.width/m   # maximum column width
-        icon.width <- column.width.max/max(icon.ncol) * (1 - pad.icon.col)
+        icon.width <- chart.width/tot.icon.ncol * (1 - pad.icon.col)
+        column.width.max <- icon.width/(1 - pad.icon.col) * icon.ncol
 
-        h1 <- chart.height/n
+        # h1 is the row-height if the window is filled heightwise
+        # h2 is the row-height if the window is filled lengthwise
+        h1 <- (chart.height/tot.icon.nrow) * icon.nrow
         h2 <- icon.width/width.height.ratio * icon.nrow/(1 - pad.icon.row)
-
-        if (h1 < h2)
+        if (sum(h1) < sum(h2))
         {
             # Height constrained
             row.height <- h1
-            icon.height <- row.height/max(icon.nrow) * (1 - pad.icon.row)
+            icon.height <- chart.height/tot.icon.nrow * (1 - pad.icon.row)
             icon.width <- width.height.ratio * icon.height
-            column.width <- icon.width * max(icon.ncol)/(1 - pad.icon.col)
-            extra.width <- chart.width - (column.width * m)
+            column.width <- icon.width * icon.ncol/(1 - pad.icon.col)
+            extra.width <- chart.width - sum(column.width)
 
             ifelse(!is.null(label.left), label.left.width <- label.left.width + extra.width,
                                          label.right.width <- label.right.width + extra.width)
-            #cat("Height constrained", column.width, row.height, "\n")
         } else
         {
             # Width constrained
             row.height <- h2
             column.width <- column.width.max
-            #cat("Width constrained", column.width, row.height, "\n")
         }
 
         # Very constrained case where icons are smaller than text (width-constrained)
@@ -335,16 +330,14 @@ PictoChart <- function(x,
         {
             row.height <- max.font.size
             column.width <- column.width.max
-
-            #cat("Very constrained case", column.width, row.height, "\n")
         }
     } else
     {
          # Default chart dimensions without graphic sizes
          if (is.na(row.height))
-            row.height <- max(15*max(icon.nrow), 1.2 * max.font.size)
+            row.height <- pmax(15*icon.nrow, 1.2 * max.font.size)
          if (is.na(column.width))
-            column.width <- row.height[1]*max(icon.ncol)/max(icon.nrow)*max(0.01,width.height.ratio,na.rm=T)
+            column.width <- sum(row.height)/tot.icon.nrow * icon.ncol *max(0.01,width.height.ratio,na.rm=T)
                                 #font.whratio*label.top.font.size*nchar(label.top),
                                 #font.whratio*label.bottom.font.size*nchar(label.bottom))
     }
@@ -367,19 +360,19 @@ PictoChart <- function(x,
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
     # It also ensures that lines are visible at the top and bottom of the table
-    lab.tpad <- rep(0, n)
-    lab.bpad <- rep(0, n)
+    lab.tpad <- rep(label.vpad, n)
+    lab.bpad <- rep(label.vpad, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
     {
         pad.top[1,] <- pad.top[1,] + pad.row/2
         row.height[1] <- row.height[1] + pad.row/2
-        lab.tpad[1] <- pad.row/2
+        lab.tpad[1] <- lab.tpad[1] + pad.row/2
     }
     if (length(label.bottom)  ==  0 || all(nchar(label.bottom) == 0))
     {
         pad.bottom[n,] <- pad.bottom[n,] + pad.row/2
         row.height[n] <- row.height[n] + pad.row/2
-        lab.bpad[n] <- pad.row/2
+        lab.bpad[n] <- lab.bpad[n] + pad.row/2
     }
 
     # Preparing labels

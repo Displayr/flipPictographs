@@ -7,12 +7,12 @@
 PictoChart(x, fill.image, base.image = NA, image.type = "url",
   total.icons = max(ceiling(x)), fill.icon.color = "",
   base.icon.color = "", fill.direction = "fromleft", show.lines = FALSE,
-  show.legend = FALSE, legend.text = "", icon.nrow = 1,
-  icon.ncol = unlist(total.icons)/icon.nrow, label.left = NA,
-  label.right = NA, label.top = NA, label.bottom = NA,
+  show.legend = FALSE, legend.text = "", icon.nrow = 1, icon.ncol = NA,
+  label.left = NA, label.right = NA, label.top = NA, label.bottom = NA,
   sublabel.left = NA, sublabel.right = NA, label.left.pad = 5,
-  label.right.pad = 5, label.font.family = "arial", label.font.size = 12,
-  label.font.color = "#2C2C2C", label.top.font.family = label.font.family,
+  label.right.pad = 5, label.vpad = 5, label.font.family = "arial",
+  label.font.size = 12, label.font.color = "#2C2C2C",
+  label.top.font.family = label.font.family,
   label.top.font.size = label.font.size, label.top.font.weight = "normal",
   label.top.font.color = label.font.color, label.top.height = NA,
   label.right.font.family = label.font.family,
@@ -79,9 +79,9 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{legend.text}{Text to show beside legend icon.}
 
-\item{icon.nrow}{Configuration of icons in each table cell.}
+\item{icon.nrow}{Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.}
 
-\item{icon.ncol}{Configuration of icons in each table cell.}
+\item{icon.ncol}{Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.}
 
 \item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.}
 
@@ -132,10 +132,6 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{font.whratio}{Numeric specifying the average aspect ratio of a single character, which usually varies around 0.4 - 0.6. It is used to calculate the minimum width of the labels.}
 
 \item{legend.font.family.family}{Font of legend.}
-
-\item{icon.fixedsize}{When \code{true}, icons will not automatically resize to fill table cell.}
-
-\item{icon.align.horizontal}{Horizontal alignment of icons in cell when \code{icon.fixedsize} is \code{true}. Accepts values of left, right or center both as scalar and vectors.}
 
 \item{pad.icon.ncol}{Horizontal spacing between icons inside each table cell.}
 }

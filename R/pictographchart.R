@@ -19,8 +19,11 @@
 #' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
+#' @param fix.icon.nrow When \code{mode="bar" and hide.base.image=T}, set to \code{FALSE} to allow the bars to contain varying number of rows.
 #' @param show.data.label Specifies whether to show data labels for each bar/column in the chart.
 #' @param data.label.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}
+#' @param label.pad Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.
+#' @param ... Arguments to pass to PictoChart
 #' @importFrom flipChartBasics AsChartMatrix
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso PictoChart
@@ -49,6 +52,7 @@ PictographChart <- function(x,
                           layout = NA,
                           icon.nrow = 1,
                           icon.ncol = NA,
+                          fix.icon.nrow = TRUE,
                           table.by.row = FALSE,
                           row.names.to.remove = "",
                           column.names.to.remove = "",
@@ -67,16 +71,17 @@ PictographChart <- function(x,
                           label.right = NA,
                           sublabel.left = NA,
                           sublabel.right = NA,
-                          label.pad = 5,
-                          label.left.pad = 5,
-                          label.right.pad = 5,
+                          label.pad = 5,    # just for convenience
+                          label.vpad = label.pad, #spacing above and below row labels
+                          label.left.pad = label.pad,
+                          label.right.pad = label.pad,
                           label.bottom.align.horizontal = "center",
                           label.left.align.horizontal = "left",
                           label.right.align.horizontal = "left",
                           label.top.align.horizontal = "center",
-                          label.left.align.vertical = "center",
+                          label.left.align.vertical = "top",
                           label.top.align.vertical = "center",
-                          label.right.align.vertical = "center",
+                          label.right.align.vertical = "top",
                           label.bottom.align.vertical = "center",
                           sublabel.left.align.horizontal = "left",
                           sublabel.right.align.horizontal = "left",
@@ -290,11 +295,14 @@ PictographChart <- function(x,
         # Defaults will put labels on the left
         if (!hide.label.right)
         {
-            label.right.pad <- label.pad
             label.right <- rownames(x)
         }
-        if (!hide.label.left)
-            label.left.pad <- label.pad
+
+        if (!fix.icon.nrow && hide.base.image && !is.na(icon.ncol))
+        {
+            icon.nrow <- ceiling(x/icon.ncol)
+            total.icons <- icon.nrow * icon.ncol
+        }
 
 
         # Position data labels relative to fill direction
@@ -328,7 +336,6 @@ PictographChart <- function(x,
         # Position of data labels in absolute terms
         if (label.data.position == "left")
         {
-            label.left.pad <- label.pad
             if (label.data.align.horizontal == "default")
                 label.data.align.horizontal <- label.left.align.horizontal
             if (!hide.label.left && data.above.label)
@@ -353,7 +360,6 @@ PictographChart <- function(x,
         }
         if (label.data.position == "right")
         {
-            label.right.pad <- label.pad
             if (label.data.align.horizontal == "default")
                 label.data.align.horizontal <- label.right.align.horizontal
             if (!hide.label.right && data.above.label)
@@ -488,7 +494,7 @@ PictographChart <- function(x,
                       label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
                       label.data.font.color = label.data.font.color,
                       label.data.align.horizontal = label.data.align.horizontal,
-                      label.left.pad = label.left.pad, label.right.pad = label.right.pad,
+                      label.vpad = label.vpad, label.left.pad = label.left.pad, label.right.pad = label.right.pad,
                       show.label.float = show.label.float, label.float.text = label.float.text,
                       label.float.font.size = label.float.font.size,
                       label.float.font.color = label.float.font.color,
