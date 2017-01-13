@@ -139,6 +139,7 @@ PictoChart <- function(x,
                        #margin.left = 0,
                        graphic.width.inch = NA,
                        graphic.height.inch = NA,
+                       graphic.resolution = 72,
                        font.whratio = 0.6,
                        print.config = FALSE)
 {
@@ -278,7 +279,7 @@ PictoChart <- function(x,
     if (show.legend)
         legend.width <- pad.legend + font.whratio*legend.font.size*nchar(legend.text)
     tot.side.widths <- label.left.width + label.right.width + legend.width
-    if (!is.na(graphic.width.inch) && tot.side.widths > 72 * graphic.width.inch)
+    if (!is.na(graphic.width.inch) && tot.side.widths > graphic.resolution * graphic.width.inch)
     {
         size.warning <- 1
         warning("Pictograph is wider than the window. Consider increasing the image width, reducing label lengths, or decreasing font size\n")
@@ -294,8 +295,8 @@ PictoChart <- function(x,
     # Excludes row padding and header/footer text
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) && (is.na(column.width) || is.na(row.height)))
     {
-        chart.width <- max(10, graphic.width.inch * 72 - tot.side.widths, na.rm=T)
-        chart.height <- max(10, graphic.height.inch * 72
+        chart.width <- max(10, graphic.width.inch * graphic.resolution - tot.side.widths, na.rm=T)
+        chart.height <- max(10, graphic.height.inch * graphic.resolution
                                 - (label.top.height + label.bottom.height)
                                 - ((n-1)/n)*pad.row
                                 - n * label.data.font.size, na.rm=T)
@@ -548,13 +549,13 @@ PictoChart <- function(x,
     #cat("final:", graphic.width, graphic.height, "\n")
     if (!is.na(graphic.width.inch) && !is.na(graphic.width.inch))
     {
-        if (!size.warning && graphic.width > graphic.width.inch * 72 * 1.1)
+        if (!size.warning && graphic.width > graphic.width.inch * graphic.resolution * 1.1)
         {
             size.warning <- 1
             warning("Pictograph is wider than size of window. Consider increasing image width or reducing the number of columns\n")
         }
 
-        if (!size.warning && graphic.height > graphic.height.inch * 72 * 1.1)
+        if (!size.warning && graphic.height > graphic.height.inch * graphic.resolution * 1.1)
             warning("Pictograph is larger than the size of the window. Consider increasing the image height, reducing the number of rows or decreasing the font size\n")
     }
 
