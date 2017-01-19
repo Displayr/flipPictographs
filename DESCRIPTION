@@ -16,7 +16,8 @@ Imports:
     RCurl,
     png,
     jpeg,
-    bmp
+    bmp,
+    grDevices
 Remotes:
     NumbersInternational/flipChartBasics,
     NumbersInternational/flipTransformations,

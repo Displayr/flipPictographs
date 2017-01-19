@@ -1,3 +1,5 @@
+
+#' @importFrom  grDevices colorRamp rgb
 pictoStack <- function(x, image, mode, col1, col2, ...)
 {
     # Assume scaling and conversions performed already using PictoStdChart

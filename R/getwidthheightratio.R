@@ -2,6 +2,7 @@
 #' @importFrom bmp read.bmp
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
+#' @importFrom grDevices as.raster
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio

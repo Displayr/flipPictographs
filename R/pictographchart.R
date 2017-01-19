@@ -26,6 +26,8 @@
 #' @param ... Arguments to pass to PictoChart
 #' @importFrom flipChartBasics AsChartMatrix
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
+#' @importFrom grDevices col2rgb
+#' @importFrom stats median
 #' @seealso PictoChart
 #' @examples
 #' xx <- c(First = 3, Second = 6, Third=2)

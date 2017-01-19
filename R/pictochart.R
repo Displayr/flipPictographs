@@ -40,6 +40,7 @@
 #' @param graphic.height.inch Verical dimension of the chart output in inches.
 #' @seealso PictographChart
 #' @importFrom  rhtmlPictographs graphic
+#' @importFrom  utils tail
 #' @export
 
 PictoChart <- function(x,
