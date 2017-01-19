@@ -17,4 +17,8 @@ Imports:
     png,
     jpeg,
     bmp
+Remotes:
+    NumbersInternational/flipChartBasics,
+    NumbersInternational/flipTransformations,
+    NumbersInternational/rhtmlPictographs
 RoxygenNote: 5.0.1

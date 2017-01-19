@@ -59,8 +59,8 @@ PictoChart(x, fill.image, base.image = NA, image.type = "url",
   background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 2,
   pad.col = 2, pad.icon.row = 0, pad.icon.col = 0,
-  graphic.width.inch = NA, graphic.height.inch = NA, font.whratio = 0.6,
-  print.config = FALSE)
+  graphic.width.inch = NA, graphic.height.inch = NA,
+  graphic.resolution = 72, font.whratio = 0.6, print.config = FALSE)
 }
 \arguments{
 \item{x}{Data for charting}

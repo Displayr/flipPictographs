@@ -22,8 +22,10 @@ PictographChart(x, image = "star", base.image = "", is.custom.url = FALSE,
   label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "left",
   label.right.align.horizontal = "left",
-  label.top.align.horizontal = "center", label.left.align.vertical = "top",
-  label.top.align.vertical = "center", label.right.align.vertical = "top",
+  label.top.align.horizontal = "center",
+  label.left.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
+  label.top.align.vertical = "center",
+  label.right.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
   label.bottom.align.vertical = "center",
   sublabel.left.align.horizontal = "left",
   sublabel.right.align.horizontal = "left", width.height.ratio = NA,
@@ -112,7 +114,7 @@ PictoStdChart(...)
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
 
-\item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can control \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.}
+\item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.}
 
 \item{label.left.align.horizontal}{Horizontal alignment.}
 
@@ -129,6 +131,8 @@ PictoStdChart(...)
 \item{label.font.size}{Size of label text.}
 
 \item{label.font.color}{Colour of labels.}
+
+\item{...}{Arguments to pass to PictoChart}
 
 \item{show.data.label}{Specifies whether to show data labels for each bar/column in the chart.}
 
