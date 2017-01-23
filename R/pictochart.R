@@ -456,12 +456,12 @@ pictoChart <- function(x,
         {
             fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))) * 108/72
             fstr.space <- ceiling(min(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
-            cat(sprintf("Floating labels of length %.1f placed in space of %.1f (icon.width=%.1f)\n",
-                        fstr.width, fstr.space, icon.width))
+            #cat(sprintf("Floating labels of length %.1f placed in space of %.1f (icon.width=%.1f)\n",
+            #            fstr.width, fstr.space, icon.width))
 
             if (fstr.width > fstr.space)
             {
-                cat("Not enough space for floating labels. Retrying\n")
+                #cat("Not enough space for floating labels. Retrying\n")
                 return(NA)
             }
         }
