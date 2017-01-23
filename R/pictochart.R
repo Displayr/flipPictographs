@@ -452,11 +452,11 @@ pictoChart <- function(x,
         if (any(x >= total.icons))
             warning("Floating labels placed at invalid positions. Please increase total.icons\n")
 
-        if (!is.na(graphic.height.inch))
+        if (!is.na(graphic.height.inch) && fstr.width > fstr.space)
         {
             fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text)))
             fstr.space <- ceiling(max(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
-            cat("Not enough space for floating labels. Retrying\n")
+            cat(sprintf("Not enough space for floating labels (%.1f > %.1f). Retrying\n", fstr.width, fstr.space))
             return(NA)
         }
 
