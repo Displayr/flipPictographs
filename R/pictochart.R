@@ -138,7 +138,7 @@ pictoChart <- function(x,
                        #margin.left = 0,
                        graphic.width.inch = NA,
                        graphic.height.inch = NA,
-                       graphic.resolution = 72,
+                       graphic.resolution = 96,
                        font.whratio = 0.6,
                        print.config = FALSE)
 {
