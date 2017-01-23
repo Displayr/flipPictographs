@@ -12,11 +12,14 @@ getWidthHeightRatio <- function(image.url)
     whratio <- NA
     if (grepl("svg", tmp.type))
     {
-        tmp.w <- regmatches(tmp.image, regexpr("width=\"[0-9 .]+", tmp.image))
-        tmp.h <- regmatches(tmp.image, regexpr("height=\"[0-9 .]+", tmp.image))
-        ww <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.w)[[1]][2]))
-        hh <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.h)[[1]][2]))
-        whratio <- ww/hh
+        tmp.w <- regmatches(tmp.image, regexpr("\\swidth=\"[0-9 .]+", tmp.image))
+        tmp.h <- regmatches(tmp.image, regexpr("\\sheight=\"[0-9 .]+", tmp.image))
+        if (length(tmp.w) != 0 && length(tmp.h) != 0)
+        {
+            ww <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.w)[[1]][2]))
+            hh <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.h)[[1]][2]))
+            whratio <- ww/hh
+        }
 
         if (is.na(whratio))
         {
