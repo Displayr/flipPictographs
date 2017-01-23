@@ -151,7 +151,4 @@ PictographChart(xx, total.icons=10, mode="bar", fill.direction="fromright", is.c
    image="http://wiki.q-researchsoftware.com/images/a/a9/Stick_woman_dark_red.png",
    base.image="http://wiki.q-researchsoftware.com/images/7/78/Stick_man_light_grey.png")
 }
-\seealso{
-PictoChart
-}
 

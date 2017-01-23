@@ -28,7 +28,7 @@
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @importFrom grDevices col2rgb
 #' @importFrom stats median
-#' @seealso PictoChart
+#' @importFrom rhtmlPictographs graphic
 #' @examples
 #' xx <- c(First = 3, Second = 6, Third=2)
 #' PictographChart(xx, image="stickman", mode="bar")
@@ -37,7 +37,7 @@
 #'    image="http://wiki.q-researchsoftware.com/images/a/a9/Stick_woman_dark_red.png",
 #'    base.image="http://wiki.q-researchsoftware.com/images/7/78/Stick_man_light_grey.png")
 #' @export
-#' @inheritParams PictoChart
+#' @inheritParams pictoChart
 #'
 PictographChart <- function(x,
                           image = "star",
@@ -462,7 +462,10 @@ PictographChart <- function(x,
     fill.icon.color <- if (is.custom.url) "" else c.hex
     width.height.ratio <- if (is.custom.url) getWidthHeightRatio(image) else imageWHRatio[image]
 
-    return(PictoChart(x, fill.image = image.url, fill.icon.color = fill.icon.color, image.type = image.type,
+    json <- NA
+    while (is.na(json))
+    {
+        json <- pictoChart(x, fill.image = image.url, fill.icon.color = fill.icon.color, image.type = image.type,
                       base.image = base.image, width.height.ratio = width.height.ratio,
                       total.icons = total.icons, show.lines = show.lines,
                       icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
@@ -504,7 +507,11 @@ PictographChart <- function(x,
                       label.float.font.weight = label.float.font.weight,
                       label.float.align.horizontal = label.float.align.horizontal,
                       label.float.align.vertical = label.float.align.vertical,
-                      ...))
+                      ...)
+        if (is.na(json) && hide.base.image)
+            total.icons <- total.icons + 1
+    }
+    return(graphic(json))
 }
 
 

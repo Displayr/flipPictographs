@@ -1,7 +1,8 @@
-#' PictoChart
+#' pictoChart
 #'
-#' Function to create a chart of Pictographs. This function passes output directly to the rhtmlPictograph package and is more flexible (but less user-friendly) than the PictographChart function. In particular, it accepts any URL image as an icon, and most of the parameters will accept vectors as well scalar values.
+#' Function that computes dimensions for PictographChart.
 #'
+#' @return Either a JSON string to create the widget or NA if any of the dimensions are incompatible.
 #' @param x Data for charting
 #' @param fill.image URL of icon
 #' @param base.image Optional URL of background image
@@ -38,12 +39,9 @@
 #' @param font.whratio Numeric specifying the average aspect ratio of a single character, which usually varies around 0.4 - 0.6. It is used to calculate the minimum width of the labels.
 #' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
 #' @param graphic.height.inch Verical dimension of the chart output in inches.
-#' @seealso PictographChart
-#' @importFrom  rhtmlPictographs graphic
 #' @importFrom  utils tail
-#' @export
 
-PictoChart <- function(x,
+pictoChart <- function(x,
                        fill.image,
                        base.image = NA,
                        image.type = "url",
@@ -454,6 +452,14 @@ PictoChart <- function(x,
         if (any(x >= total.icons))
             warning("Floating labels placed at invalid positions. Please increase total.icons\n")
 
+        if (!is.na(graphic.height.inch))
+        {
+            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text)))
+            fstr.space <- ceiling(max(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
+            cat("Not enough space for floating labels. Retrying\n")
+            return(NA)
+        }
+
         x.pos <- ceiling(x)
         label.float.position <- sprintf("%d:%d", floor(x.pos/icon.ncol), x.pos %% icon.ncol)
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
@@ -579,5 +585,5 @@ PictoChart <- function(x,
 
     if (print.config)
         cat(json.str, "\n")
-    graphic(json.str)
+    return(json.str)
 }
