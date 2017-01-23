@@ -270,10 +270,10 @@ pictoChart <- function(x,
     # Fix minimum size of label cells
     if (is.na(label.left.width))
         label.left.width <- label.left.pad + font.whratio * max(0, c(label.left.font.size * nchar(label.left),
-                                                 sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
+                                                 sublabel.left.font.size * nchar(sublabel.left)), na.rm=T) * 108/72
     if (is.na(label.right.width))
         label.right.width <- label.right.pad + font.whratio * max(0, c(label.right.font.size * nchar(label.right),
-                                                 sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
+                                                 sublabel.right.font.size * nchar(sublabel.right)), na.rm=T) * 108/72
     legend.width <- 0
     if (show.legend)
         legend.width <- pad.legend + font.whratio*legend.font.size*nchar(legend.text)
@@ -454,7 +454,7 @@ pictoChart <- function(x,
 
         if (!is.na(graphic.height.inch))
         {
-            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text)))
+            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))) * 108/72
             fstr.space <- ceiling(min(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
             cat(sprintf("Floating labels of length %.1f placed in space of %.1f (icon.width=%.1f)\n",
                         fstr.width, fstr.space, icon.width))
