@@ -61,6 +61,19 @@ SinglePicto <- function (x,
                          margin.right = margin,
                          margin.bottom = margin,
                          margin.left = margin,
+                         label.data.position = c("None", "Above", "Below", "Next to icon")[1],
+                         label.data.digits = 0,
+                         label.data.bigmark = ",",  # to prettify large numbers
+                         label.data.prefix = "",
+                         label.data.suffix = "",
+                         label.data.100prc = FALSE,
+                         label.data.font.weight = "normal",
+                         label.data.font.size = 12,
+                         label.data.font.family = "arial",
+                         label.data.font.color = "#2C2C2C",
+                         label.data.align.horizontal = "center",
+                         graphic.resolution = 96,
+                         font.whratio = 0.6,
                          print.config = FALSE,
                          x.limit = 1000)
 {
@@ -87,17 +100,20 @@ SinglePicto <- function (x,
         if (layout != "Number of columns")
             number.cols = NA
     }
+    label.data.str <- ""
+    label.data.values <- x
 
+    # Determine plot values
     sc10 <- log10(x/scale)
     if (!is.na(x.limit) && x/scale > x.limit)
     {
         scale <- scale * 10^{floor(log10(x/scale)) - 1}
         warning("The input value is too large to plot, and the Scale has been set to ", scale, ". Consider entering a larger Scale value in the inputs.\n")
     }
-
     x <- x/scale
     if (is.na(total.icons))
         total.icons <- ceiling(x)
+
 
 
     if (length(total.icons) != 1 && total.icons > 0)
@@ -119,13 +135,13 @@ SinglePicto <- function (x,
 
     # Determine layout based on which parameters are supplied
     layout.str <- ""
-
     icon.WHratio <- if (is.custom.url) getWidthHeightRatio(image) * (1 + pad.col) / (1 + pad.row)
                     else imageWHRatio[image] * (1 + pad.col) / (1 + pad.row)
-
     if (!is.na(number.rows)  && is.na(number.cols))
     {
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
+        number.cols <- ceiling(total.icons/number.rows)
+
     } else if (!is.na(number.cols))
     {
         layout.str <- paste(",\"numCols\":", number.cols, sep="")
@@ -133,6 +149,7 @@ SinglePicto <- function (x,
     } else
     {
         number.rows <- round(sqrt(icon.WHratio/width.height.ratio * total.icons))
+        number.cols <- ceiling(total.icons/number.rows)
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
     }
 
@@ -146,7 +163,7 @@ SinglePicto <- function (x,
         if (nchar(base.icon.color) > 0)
             base.icon.color <- paste(base.icon.color, ":", sep="")
         base.image.url <- if (is.custom.url) base.image else imageURL[image]
-        base.image.str <- if (nchar(base.image.url) == 0) ""
+        base.image.str <- if (nchar(base.image.url) == 0 && is.custom.url) ""
                           else paste(",\"baseImage\":\"", image.type, ":", base.icon.color, base.image.url, "\"", sep="")
     }
 
@@ -158,9 +175,43 @@ SinglePicto <- function (x,
 
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
+
+    # Data labels
+    if (label.data.position != "None")
+    {
+        tmp.str <- ""
+        if (label.data.position == "Next to icons")
+        {
+            x.pos <- ceiling(label.data.values/scale)
+            label.float.position <- sprintf("%d:%d", floor(x.pos/number.cols),
+                                                     x.pos %% number.cols)
+            tmp.str <- "]"
+        }
+
+        cat("line 191\n")
+        label.data.text <- sprintf("%s%s%s", label.data.prefix,
+                                format(round(label.data.values * (1+(99*label.data.100prc)),                                  digits=label.data.digits),
+                                scientific=F, big.mark=label.data.bigmark),
+                                label.data.suffix)
+        label.pos.str <- switch(label.data.position,
+                                'Above' = "\"text-header\":{",
+                                'Below' = "\"text-footer\":{",
+                                'Next to icons' = sprintf("\"floatingLabels\":[{\"position\":\"%s\", ",
+                                                           label.float.position))
+        label.data.str <- sprintf(", %s\"text\":\"%s\", \"font-size\":\"%fpx\",
+                                 \"font-weight\":\"%s\", \"font-family\":\"%s\",
+                                 \"font-color\":\"%s\", \"horizontal-align\":\"%s\"}%s",
+                            label.pos.str, label.data.text, label.data.font.size,
+                            label.data.font.weight, label.data.font.family,
+                            label.data.font.color, label.data.align.horizontal, tmp.str)
+        cat("line 207\n")
+        cat(label.data.str, "\n")
+    }
+
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
+          label.data.str,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str,
           ",\"width\":", image.width,
           ",\"height\":", image.height,
