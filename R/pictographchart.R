@@ -21,7 +21,7 @@
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
 #' @param fix.icon.nrow When \code{mode="bar" and hide.base.image=T}, set to \code{FALSE} to allow the bars to contain varying number of rows.
 #' @param show.data.label Specifies whether to show data labels for each bar/column in the chart.
-#' @param data.label.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}
+#' @param label.data.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}
 #' @param label.pad Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.
 #' @param ... Arguments to pass to PictoChart
 #' @importFrom flipChartBasics AsChartMatrix

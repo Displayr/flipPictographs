@@ -3,11 +3,11 @@
 #' Creates a single pictograph. Allows customization of the number of icons
 #' and dimensions.
 #' @seealso PictographChart to create a chart or table of pictographs
-#'
 #' @param x Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.
 #' @param total.icons Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.
 #' @param image The name of the icon to use (e.g. \code{"star", "stickman"}) or the URL of an image when \code{is.custom.url} is true.
 #' @param base.image The URL of the base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.
+#' @param is.custom.url When set to true, image is expected to be a URL to an jpeg or png image file available from online.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
 #' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns", "Fill graphic"}. If not supplied, a decision will be made based on which parameters are supplied
 #' @param number.rows If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
@@ -24,6 +24,12 @@
 #' @param pad.col Horizontal space between icons.
 #' @param margin Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.
 #' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
+#' @param label.data.position One of \code{"None"}, \code{"Above"} or \code{"Below"}.
+#' @param label.data.digits Number of digits of the data label to show.
+#' @param label.data.bigmark Option to prettify large numbers. By default a comma is placed after a thousand.
+#' @param label.data.100prc Option to show data labels multiplied by 100. This is useful when reporting percentages.
+#' @param label.data.prefix String to prepend data label.
+#' @param label.data.suffix String to append to data label.
 #' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
 #' @importFrom  rhtmlPictographs graphic
 #' @examples
@@ -61,7 +67,7 @@ SinglePicto <- function (x,
                          margin.right = margin,
                          margin.bottom = margin,
                          margin.left = margin,
-                         label.data.position = c("None", "Above", "Below", "Next to icon")[1],
+                         label.data.position = c("None", "Above", "Below")[1],
                          label.data.digits = 0,
                          label.data.bigmark = ",",  # to prettify large numbers
                          label.data.prefix = "",
@@ -173,7 +179,8 @@ SinglePicto <- function (x,
     else
         paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
 
-    image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
+    image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom +
+                    (label.data.position %in% c("Below","Above")) * label.data.font.size
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
 
     # Data labels
@@ -188,7 +195,6 @@ SinglePicto <- function (x,
             tmp.str <- "]"
         }
 
-        cat("line 191\n")
         label.data.text <- sprintf("%s%s%s", label.data.prefix,
                                 format(round(label.data.values * (1+(99*label.data.100prc)),                                  digits=label.data.digits),
                                 scientific=F, big.mark=label.data.bigmark),
@@ -204,8 +210,6 @@ SinglePicto <- function (x,
                             label.pos.str, label.data.text, label.data.font.size,
                             label.data.font.weight, label.data.font.family,
                             label.data.font.color, label.data.align.horizontal, tmp.str)
-        cat("line 207\n")
-        cat(label.data.str, "\n")
     }
 
     json.string <- paste("{\"proportion\":", prop,

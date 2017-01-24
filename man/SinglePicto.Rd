@@ -12,8 +12,14 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
   base.icon.color = "", background.color = "transparent",
   auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
   margin = 0, margin.top = margin, margin.right = margin,
-  margin.bottom = margin, margin.left = margin, print.config = FALSE,
-  x.limit = 1000)
+  margin.bottom = margin, margin.left = margin,
+  label.data.position = c("None", "Above", "Below")[1],
+  label.data.digits = 0, label.data.bigmark = ",", label.data.prefix = "",
+  label.data.suffix = "", label.data.100prc = FALSE,
+  label.data.font.weight = "normal", label.data.font.size = 12,
+  label.data.font.family = "arial", label.data.font.color = "#2C2C2C",
+  label.data.align.horizontal = "center", graphic.resolution = 96,
+  font.whratio = 0.6, print.config = FALSE, x.limit = 1000)
 }
 \arguments{
 \item{x}{Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
@@ -23,6 +29,8 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
 \item{image}{The name of the icon to use (e.g. \code{"star", "stickman"}) or the URL of an image when \code{is.custom.url} is true.}
 
 \item{base.image}{The URL of the base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.}
+
+\item{is.custom.url}{When set to true, image is expected to be a URL to an jpeg or png image file available from online.}
 
 \item{number.rows}{If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.}
 
@@ -53,6 +61,18 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
 \item{pad.col}{Horizontal space between icons.}
 
 \item{margin}{Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.}
+
+\item{label.data.position}{One of \code{"None"}, \code{"Above"} or \code{"Below"}.}
+
+\item{label.data.digits}{Number of digits of the data label to show.}
+
+\item{label.data.bigmark}{Option to prettify large numbers. By default a comma is placed after a thousand.}
+
+\item{label.data.prefix}{String to prepend data label.}
+
+\item{label.data.suffix}{String to append to data label.}
+
+\item{label.data.100prc}{Option to show data labels multiplied by 100. This is useful when reporting percentages.}
 
 \item{print.config}{If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.}
 

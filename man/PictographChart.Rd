@@ -132,11 +132,11 @@ PictoStdChart(...)
 
 \item{label.font.color}{Colour of labels.}
 
+\item{label.data.position}{When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}}
+
 \item{...}{Arguments to pass to PictoChart}
 
 \item{show.data.label}{Specifies whether to show data labels for each bar/column in the chart.}
-
-\item{data.label.position}{When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}}
 }
 \description{
 \code{PictographChart} Create a chart to visually represent the data in a table or vector using the number of icons displayed
