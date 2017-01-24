@@ -139,7 +139,7 @@ pictoChart <- function(x,
                        graphic.width.inch = NA,
                        graphic.height.inch = NA,
                        graphic.resolution = 96,
-                       font.whratio = 0.6,
+                       font.whratio = 0.9,
                        print.config = FALSE)
 {
     n <- if (is.null(nrow(x))) length(x)
@@ -270,10 +270,10 @@ pictoChart <- function(x,
     # Fix minimum size of label cells
     if (is.na(label.left.width))
         label.left.width <- label.left.pad + font.whratio * max(0, c(label.left.font.size * nchar(label.left),
-                                                 sublabel.left.font.size * nchar(sublabel.left)), na.rm=T) * 108/72
+                                                 sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
     if (is.na(label.right.width))
         label.right.width <- label.right.pad + font.whratio * max(0, c(label.right.font.size * nchar(label.right),
-                                                 sublabel.right.font.size * nchar(sublabel.right)), na.rm=T) * 108/72
+                                                 sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
     legend.width <- 0
     if (show.legend)
         legend.width <- pad.legend + font.whratio*legend.font.size*nchar(legend.text)
@@ -454,7 +454,7 @@ pictoChart <- function(x,
 
         if (!is.na(graphic.height.inch))
         {
-            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))+2) * 108/72
+            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))+2)
             fstr.space <- ceiling(min(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
             #cat(sprintf("Floating labels of length %.1f placed in space of %.1f (icon.width=%.1f)\n",
             #            fstr.width, fstr.space, icon.width))
