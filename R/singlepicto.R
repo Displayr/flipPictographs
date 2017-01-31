@@ -196,8 +196,7 @@ SinglePicto <- function (x,
         }
 
         label.data.text <- sprintf("%s%s%s", label.data.prefix,
-                                format(round(label.data.values * (1+(99*label.data.100prc)),                                  digits=label.data.digits),
-                                scientific=F, big.mark=label.data.bigmark),
+                                formatC(label.data.values * (1+(99*label.data.100prc)),                                  digits=label.data.digits, format="f", big.mark=label.data.bigmark),
                                 label.data.suffix)
         label.pos.str <- switch(label.data.position,
                                 'Above' = "\"text-header\":{",

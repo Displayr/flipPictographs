@@ -262,9 +262,8 @@ PictographChart <- function(x,
     # Data labels
     label.data.values <- unlist(x)
     label.data.text <- sprintf("%s%s%s", label.data.prefix,
-                            format(round(label.data.values * (1+(99*label.data.100prc)), digits=label.data.digits),
-                                    scientific=F, big.mark=label.data.bigmark),
-                            label.data.suffix)
+                                formatC(label.data.values * (1+(99*label.data.100prc)),                                                              digits=label.data.digits, format="f", big.mark=label.data.bigmark),
+                                label.data.suffix)
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text
     if (is.na(scale) && max(x) > 1)
