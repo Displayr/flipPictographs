@@ -11,19 +11,31 @@
 #' @param total.icons Maximum number of icons in each table cell. By default, it will be determine based on \code{ceiling(x)}.
 #' @param icon.palette Name of palette used to color icons. Only applicable for in-built icons
 #' @param icon.colors Vector of colors for icons. Only applicable when \code{icon.palette = "User-specified"} and in-built icons used.
+#' @param layout May be one of \code{"Number of rows"} or \code{"Number of columns"}. This parameter controls how the configuration of icons is specified. If no string is supplied, it will be automatically determined depending on whether \code{icon.nrow} or \code{icon.ncol} is supplied.
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})
 #' @param fill.direction Direction in which icons are filled. One of \code{"From left", "From right", "From top", "From bottom"}.
 #' @param row.names.to.remove List of rownames to exclude from the chart. This can be in the form of a vector or a comma-separated string. This variable is ignored if the input data has no rownames.
 #' @param column.names.to.remove List of colnames to exclude from the chart.
-#' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.
+#' @param hide.label.left Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, labels are taken from the rownames of \code{x}.
 #' @param hide.label.top Suppress labels above graphics.
+#' @param hide.label.bottom Suppress labels below graphics (shown by default when \code{mode = "column"}).
+#' @param hide.label.right Suppress labels on right of graphics.
 #' @param mode Can be set to one of \code{"table", "bar", "column"}. For options \code{bar} and \code{column}, the chart is constrained to look like a bar or column chart. e.g For \code{mode  =  "column"}, 1-dimensional vectors/matrices are re-shaped to have multiple columns, labels are put below the graphis and icons are arranged vertically. Option \code{mode  =  "table"} is the most general and does not impose constraints.
 #' @param fix.icon.nrow When \code{mode="bar" and hide.base.image=T}, set to \code{FALSE} to allow the bars to contain varying number of rows.
-#' @param show.data.label Specifies whether to show data labels for each bar/column in the chart.
+#' @param table.by.row By default, when a 2-dimensional table is supplied, values in each column will be shown in the same color. Set to \code{TRUE} to color values by row.
+#' @param label.color.asIcon When set to \code{TRUE}, row and data labels are shown in the same color as the icons.
 #' @param label.data.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}
+#' @param show.label.data Boolean indicating whether or not to show data label.s
+#' @param data.above.label Set to \code{TRUE}, to place data labels above row labels.
+#' @param label.data.digits Number of digits to show after decimal place.
+#' @param label.data.bigmark Option to prettify large numbers. By default a comma is placed after a thousand.
+#' @param label.data.100prc Option to show data labels multiplied by 100. This is useful when reporting percentages.
+#' @param label.data.prefix String to prepend data label.
+#' @param label.data.suffix String to append to data label.
+#' @param label.data.type Does nothing. Retained for backwards compatibility.
 #' @param label.pad Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.
-#' @param ... Arguments to pass to PictoChart
+#' @param ... Arguments to pass to pictoChart
 #' @importFrom flipChartBasics AsChartMatrix
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @importFrom grDevices col2rgb
@@ -71,8 +83,6 @@ PictographChart <- function(x,
                           label.top = NA,
                           label.bottom = NA,
                           label.right = NA,
-                          sublabel.left = NA,
-                          sublabel.right = NA,
                           label.pad = 5,    # just for convenience
                           label.vpad = label.pad, #spacing above and below row labels
                           label.left.pad = label.pad,
@@ -85,13 +95,8 @@ PictographChart <- function(x,
                           label.top.align.vertical = "center",
                           label.right.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
                           label.bottom.align.vertical = "center",
-                          sublabel.left.align.horizontal = "left",
-                          sublabel.right.align.horizontal = "left",
                           width.height.ratio = NA,
-                          label.width = NA,
                           label.top.height = NA,
-                          label.left.width = label.width,
-                          label.right.width = label.width,
                           label.font.family = "arial",
                           label.font.size = 12,
                           label.font.color = "#2C2C2C",
@@ -103,37 +108,46 @@ PictographChart <- function(x,
                           label.top.font.size = label.font.size,
                           label.right.font.size = label.font.size,
                           label.bottom.font.size = label.font.size,
-                          sublabel.left.font.size = label.left.font.size,
-                          sublabel.right.font.size = label.right.font.size,
                           label.left.font.weight = "normal",
                           label.top.font.weight = "normal",
                           label.bottom.font.weight = "normal",
                           label.right.font.weight = "normal",
-                          sublabel.left.font.weight = label.left.font.weight,
-                          sublabel.right.font.weight = label.right.font.weight,
                           show.label.data = FALSE,
                           label.data.digits = 0,
                           label.data.bigmark = ",",  # to prettify large numbers
                           label.data.prefix = "",
                           label.data.suffix = "",
                           label.data.100prc = FALSE,
-                          label.data.text = NULL,   # usually not supplied directly by user
                           label.data.position = ifelse(mode=="bar", "Next to bar", "footer"),
                           label.data.font.weight = "normal",
                           label.data.font.size = 0.8*label.font.size,
                           label.data.font.color = label.font.color,
                           label.data.align.horizontal = "default",
-                          show.label.float = FALSE,
-                          label.float.text = NULL,   # usually not supplied directly by user
-                          label.float.font.weight = label.data.font.weight,
-                          label.float.font.size = label.data.font.size,
-                          label.float.font.color = label.data.font.color,
-                          label.float.align.horizontal = "left",
-                          label.float.align.vertical = "center",
                           label.data.type = "None",   # does nothing, retained for backwards compatability
                           data.above.label = FALSE,
                           ...)
 {
+    # Parameters not controlled by the user by passed to pictoChart
+    label.width = NA
+    label.left.width = label.width
+    label.right.width = label.width
+    label.data.text = NULL
+    sublabel.left = NA
+    sublabel.right = NA
+    sublabel.left.align.horizontal = "left"
+    sublabel.right.align.horizontal = "left"
+    sublabel.left.font.size = label.left.font.size
+    sublabel.right.font.size = label.right.font.size
+    sublabel.left.font.weight = label.left.font.weight
+    sublabel.right.font.weight = label.right.font.weight
+    show.label.float = FALSE
+    label.float.text = NULL
+    label.float.font.weight = label.data.font.weight
+    label.float.font.size = label.data.font.size
+    label.float.font.color = label.data.font.color
+    label.float.align.horizontal = "left"
+    label.float.align.vertical = "center"
+
     if (!is.numeric(unlist(x)))
         stop("Input data must be numeric")
 
@@ -262,7 +276,7 @@ PictographChart <- function(x,
     # Data labels
     label.data.values <- unlist(x)
     label.data.text <- sprintf("%s%s%s", label.data.prefix,
-                                formatC(label.data.values * (1+(99*label.data.100prc)),                                                              digits=label.data.digits, format="f", big.mark=label.data.bigmark),
+                                formatC(label.data.values * (1+(99*label.data.100prc)),                                                                                              digits=label.data.digits, format="f", big.mark=label.data.bigmark),
                                 label.data.suffix)
 
     # Prefer scale to be a multiple of 5 - avoids rounding errors in text

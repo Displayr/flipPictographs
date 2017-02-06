@@ -16,21 +16,17 @@ PictographChart(x, image = "star", base.image = "", is.custom.url = FALSE,
   hide.label.left = !hide.label.right, hide.label.bottom = (mode !=
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
-  label.bottom = NA, label.right = NA, sublabel.left = NA,
-  sublabel.right = NA, label.pad = 5, label.vpad = label.pad,
-  label.left.pad = label.pad, label.right.pad = label.pad,
-  label.bottom.align.horizontal = "center",
+  label.bottom = NA, label.right = NA, label.pad = 5,
+  label.vpad = label.pad, label.left.pad = label.pad,
+  label.right.pad = label.pad, label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "left",
   label.right.align.horizontal = "left",
   label.top.align.horizontal = "center",
   label.left.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
   label.top.align.vertical = "center",
   label.right.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
-  label.bottom.align.vertical = "center",
-  sublabel.left.align.horizontal = "left",
-  sublabel.right.align.horizontal = "left", width.height.ratio = NA,
-  label.width = NA, label.top.height = NA, label.left.width = label.width,
-  label.right.width = label.width, label.font.family = "arial",
+  label.bottom.align.vertical = "center", width.height.ratio = NA,
+  label.top.height = NA, label.font.family = "arial",
   label.font.size = 12, label.font.color = "#2C2C2C",
   label.left.font.color = label.font.color,
   label.right.font.color = label.font.color,
@@ -40,25 +36,15 @@ PictographChart(x, image = "star", base.image = "", is.custom.url = FALSE,
   label.top.font.size = label.font.size,
   label.right.font.size = label.font.size,
   label.bottom.font.size = label.font.size,
-  sublabel.left.font.size = label.left.font.size,
-  sublabel.right.font.size = label.right.font.size,
   label.left.font.weight = "normal", label.top.font.weight = "normal",
   label.bottom.font.weight = "normal", label.right.font.weight = "normal",
-  sublabel.left.font.weight = label.left.font.weight,
-  sublabel.right.font.weight = label.right.font.weight,
   show.label.data = FALSE, label.data.digits = 0,
   label.data.bigmark = ",", label.data.prefix = "",
   label.data.suffix = "", label.data.100prc = FALSE,
-  label.data.text = NULL, label.data.position = ifelse(mode == "bar",
-  "Next to bar", "footer"), label.data.font.weight = "normal",
-  label.data.font.size = 0.8 * label.font.size,
-  label.data.font.color = label.font.color,
-  label.data.align.horizontal = "default", show.label.float = FALSE,
-  label.float.text = NULL, label.float.font.weight = label.data.font.weight,
-  label.float.font.size = label.data.font.size,
-  label.float.font.color = label.data.font.color,
-  label.float.align.horizontal = "left",
-  label.float.align.vertical = "center", label.data.type = "None",
+  label.data.position = ifelse(mode == "bar", "Next to bar", "footer"),
+  label.data.font.weight = "normal", label.data.font.size = 0.8 *
+  label.font.size, label.data.font.color = label.font.color,
+  label.data.align.horizontal = "default", label.data.type = "None",
   data.above.label = FALSE, ...)
 
 PictoStdChart(...)
@@ -88,11 +74,15 @@ PictoStdChart(...)
 
 \item{show.lines}{Add horizontal lines between each row}
 
+\item{layout}{May be one of \code{"Number of rows"} or \code{"Number of columns"}. This parameter controls how the configuration of icons is specified. If no string is supplied, it will be automatically determined depending on whether \code{icon.nrow} or \code{icon.ncol} is supplied.}
+
 \item{icon.nrow}{Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.}
 
 \item{icon.ncol}{Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.}
 
 \item{fix.icon.nrow}{When \code{mode="bar" and hide.base.image=T}, set to \code{FALSE} to allow the bars to contain varying number of rows.}
+
+\item{table.by.row}{By default, when a 2-dimensional table is supplied, values in each column will be shown in the same color. Set to \code{TRUE} to color values by row.}
 
 \item{row.names.to.remove}{List of rownames to exclude from the chart. This can be in the form of a vector or a comma-separated string. This variable is ignored if the input data has no rownames.}
 
@@ -102,9 +92,19 @@ PictoStdChart(...)
 
 \item{legend.text}{Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})}
 
-\item{hide.label.left}{Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, it is taken from the rownames of \code{x}.}
+\item{legend.icon.color}{Color of icon shown in legend.}
+
+\item{pad.legend}{Horizontal spacing between the chart and the legend.}
+
+\item{hide.label.right}{Suppress labels on right of graphics.}
+
+\item{hide.label.left}{Suppress labels on left of graphics. By default, if \code{label.left} is not supplied, labels are taken from the rownames of \code{x}.}
+
+\item{hide.label.bottom}{Suppress labels below graphics (shown by default when \code{mode = "column"}).}
 
 \item{hide.label.top}{Suppress labels above graphics.}
+
+\item{label.color.asIcon}{When set to \code{TRUE}, row and data labels are shown in the same color as the icons.}
 
 \item{label.left}{Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.}
 
@@ -116,27 +116,89 @@ PictoStdChart(...)
 
 \item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.}
 
-\item{label.left.align.horizontal}{Horizontal alignment.}
+\item{label.vpad}{Vertical spacing below and above row labels.}
 
-\item{label.left.align.vertical}{Vertical alignment.}
+\item{label.left.pad}{Horizontal spacing between row labels and icons.}
+
+\item{label.right.pad}{Horizontal spacing between row labels and icons.}
+
+\item{label.bottom.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
+
+\item{label.left.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
+
+\item{label.right.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
+
+\item{label.top.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
+
+\item{label.left.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
+
+\item{label.top.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
+
+\item{label.right.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
+
+\item{label.bottom.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
 
 \item{width.height.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.}
 
 \item{label.top.height}{Height of top label row in pixels.}
 
-\item{label.left.width}{Width of left label column in pixels.}
-
 \item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.}
 
 \item{label.font.size}{Size of label text.}
 
-\item{label.font.color}{Colour of labels.}
+\item{label.font.color}{Colour of labels. This can be a string or a 6-digit hex code.}
+
+\item{label.left.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+
+\item{label.right.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+
+\item{label.top.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+
+\item{label.bottom.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+
+\item{label.left.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
+
+\item{label.top.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
+
+\item{label.right.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
+
+\item{label.bottom.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
+
+\item{label.left.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
+
+\item{label.top.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
+
+\item{label.bottom.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
+
+\item{label.right.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
+
+\item{show.label.data}{Boolean indicating whether or not to show data label.s}
+
+\item{label.data.digits}{Number of digits to show after decimal place.}
+
+\item{label.data.bigmark}{Option to prettify large numbers. By default a comma is placed after a thousand.}
+
+\item{label.data.prefix}{String to prepend data label.}
+
+\item{label.data.suffix}{String to append to data label.}
+
+\item{label.data.100prc}{Option to show data labels multiplied by 100. This is useful when reporting percentages.}
 
 \item{label.data.position}{When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}}
 
-\item{...}{Arguments to pass to PictoChart}
+\item{label.data.font.weight}{Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.}
 
-\item{show.data.label}{Specifies whether to show data labels for each bar/column in the chart.}
+\item{label.data.font.size}{Font size of data labels.}
+
+\item{label.data.font.color}{Font color of data labels.}
+
+\item{label.data.align.horizontal}{Horizontal alignment of data labels.}
+
+\item{label.data.type}{Does nothing. Retained for backwards compatibility.}
+
+\item{data.above.label}{Set to \code{TRUE}, to place data labels above row labels.}
+
+\item{...}{Arguments to pass to pictoChart}
 }
 \description{
 \code{PictographChart} Create a chart to visually represent the data in a table or vector using the number of icons displayed

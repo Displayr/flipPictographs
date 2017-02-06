@@ -91,21 +91,43 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
 
+\item{label.left.pad, label.right.pad}{Horizontal spacing between row labels and icons.}
+
+\item{label.vpad}{Vertical spacing below and above row labels.}
+
 \item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.}
 
 \item{label.font.size}{Size of label text.}
 
-\item{label.font.color}{Colour of labels.}
+\item{label.font.color}{Colour of labels. This can be a string or a 6-digit hex code.}
 
 \item{label.top.height}{Height of top label row in pixels.}
 
+\item{label.left.font.size, label.right.font.size, label.top.font.size, label.bottom.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
+
+\item{label.left.font.weight, label.right.font.weight, label.top.font.weight, label.bottom.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
+
+\item{label.left.font.color, label.right.font.color, label.top.font.color, label.bottom.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+
 \item{label.left.width}{Width of left label column in pixels.}
 
-\item{label.left.align.horizontal}{Horizontal alignment.}
+\item{label.left.align.horizontal, label.right.align.horizontal, label.top.align.horizontal, label.bottom.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
 
-\item{label.left.align.vertical}{Vertical alignment.}
+\item{label.left.align.vertical, label.right.align.vertical, label.top.align.vertical, label.bottom.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
 
 \item{legend.font.size}{Text size of legend text.}
+
+\item{legend.icon.color}{Color of icon shown in legend.}
+
+\item{label.data.font.family}{Font in which the data labels are displayed.}
+
+\item{label.data.font.size}{Font size of data labels.}
+
+\item{label.data.font.weight}{Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.}
+
+\item{label.data.font.color}{Font color of data labels.}
+
+\item{label.data.align.horizontal}{Horizontal alignment of data labels.}
 
 \item{row.height}{Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.}
 
@@ -118,6 +140,8 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{line.color}{Line colour}
 
 \item{line.width}{Width of lines}
+
+\item{pad.legend}{Horizontal spacing between the chart and the legend.}
 
 \item{pad.row}{Single numeric specifying vertical spacing between graphic cells in the table.}
 
@@ -141,4 +165,5 @@ Either a JSON string to create the widget or NA if any of the dimensions are inc
 \description{
 Function that computes dimensions for PictographChart.
 }
+\keyword{internal}
 

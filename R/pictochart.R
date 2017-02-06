@@ -15,20 +15,33 @@
 #' @param legend.text Text to show beside legend icon.
 #' @param legend.font.family.family Font of legend.
 #' @param legend.font.size Text size of legend text.
+#' @param legend.icon.color Color of icon shown in legend.
 #' @param background.color Background colour of pictograph
 #' @param icon.nrow Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.
 #' @param icon.ncol Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.
+
+#' @param label.vpad Vertical spacing below and above row labels.
+#' @param label.left.pad,label.right.pad Horizontal spacing between row labels and icons.
 #' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.
 #' @param label.top By default, labels are read from column names of \code{x}.
 #' @param label.bottom Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.
 #' @param label.right Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.
 #' @param label.font.family Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.
 #' @param label.font.size Size of label text.
-#' @param label.font.color Colour of labels.
+#' @param label.font.color Colour of labels. This can be a string or a 6-digit hex code.
 #' @param label.top.height Height of top label row in pixels.
 #' @param label.left.width Width of left label column in pixels.
-#' @param label.left.align.horizontal Horizontal alignment.
-#' @param label.left.align.vertical Vertical alignment.
+#' @param label.left.align.horizontal,label.right.align.horizontal,label.top.align.horizontal,label.bottom.align.horizontal Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.
+#' @param label.left.align.vertical,label.right.align.vertical,label.top.align.vertical,label.bottom.align.vertical Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.
+#' @param label.left.font.color,label.right.font.color,label.top.font.color,label.bottom.font.color Font color of row/column labels which overrides the global \code{label.font.color} setting.
+#' @param label.left.font.size,label.right.font.size,label.top.font.size,label.bottom.font.size Font size of row/column labels which overrides the global \code{label.font.size} setting.
+#' @param label.left.font.weight,label.right.font.weight,label.top.font.weight,label.bottom.font.weight Font weight of row/column labels which overrides the global \code{label.font.weight} setting.
+#' @param label.data.font.family Font in which the data labels are displayed.
+#' @param label.data.font.size Font size of data labels.
+#' @param label.data.font.color Font color of data labels.
+#' @param label.data.font.weight Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.
+#' @param label.data.align.horizontal Horizontal alignment of data labels.
+
 #' @param row.height Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.
 #' @param column.width Width of graphic cells.
 #' @param width.height.ratio Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.
@@ -36,9 +49,11 @@
 #' @param pad.col Vertical spacing between cells in table.
 #' @param pad.icon.row Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
 #' @param pad.icon.ncol Horizontal spacing between icons inside each table cell.
+#' @param pad.legend Horizontal spacing between the chart and the legend.
 #' @param font.whratio Numeric specifying the average aspect ratio of a single character, which usually varies around 0.4 - 0.6. It is used to calculate the minimum width of the labels.
 #' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
 #' @param graphic.height.inch Verical dimension of the chart output in inches.
+#' @keywords internal
 #' @importFrom  utils tail
 
 pictoChart <- function(x,
@@ -60,9 +75,9 @@ pictoChart <- function(x,
                        label.bottom = NA,
                        sublabel.left = NA,
                        sublabel.right = NA,
-                       label.left.pad = 5,       # padding between label and icon
+                       label.left.pad = 5,
                        label.right.pad = 5,
-                       label.vpad = 5,           # padding above/below row label
+                       label.vpad = 5,
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",

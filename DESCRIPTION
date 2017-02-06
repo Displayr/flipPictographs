@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Carmen Chan <carmen.chan@numbers.net.au>
 Maintainer: Carmen Chan <carmen.chan@numbers.net.au>
 Description: Wrappers for the rhtmlPictographs package, using the flip project conventions.
-License: Copyright Numbers International Pty Ltd 2016
+License: MIT + file LICENSE
 LazyData: TRUE
 Suggests:
     testthat

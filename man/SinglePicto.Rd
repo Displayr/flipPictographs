@@ -6,20 +6,19 @@
 \usage{
 SinglePicto(x, total.icons = NA, image = "star", base.image = "",
   is.custom.url = FALSE, number.rows = NA, number.cols = NA,
-  width.height.ratio = 1, graphic.width = NA, graphic.height = NA,
-  layout = NA, scale = 1, hide.base.image = FALSE,
-  fill.direction = "fromleft", fill.icon.color = "black",
-  base.icon.color = "", background.color = "transparent",
-  auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
-  margin = 0, margin.top = margin, margin.right = margin,
-  margin.bottom = margin, margin.left = margin,
+  width.height.ratio = 1, layout = NA, scale = 1,
+  hide.base.image = FALSE, fill.direction = "fromleft",
+  fill.icon.color = "black", base.icon.color = "",
+  background.color = "transparent", auto.size = FALSE, icon.width = 50,
+  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
+  margin.right = margin, margin.bottom = margin, margin.left = margin,
   label.data.position = c("None", "Above", "Below")[1],
   label.data.digits = 0, label.data.bigmark = ",", label.data.prefix = "",
   label.data.suffix = "", label.data.100prc = FALSE,
   label.data.font.weight = "normal", label.data.font.size = 12,
   label.data.font.family = "arial", label.data.font.color = "#2C2C2C",
-  label.data.align.horizontal = "center", graphic.resolution = 96,
-  font.whratio = 0.6, print.config = FALSE, x.limit = 1000)
+  label.data.align.horizontal = "center", print.config = FALSE,
+  x.limit = 1000)
 }
 \arguments{
 \item{x}{Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
@@ -62,9 +61,17 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
 
 \item{margin}{Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.}
 
+\item{margin.top}{Spacing on top of graphic. This value overrides \code{margin}.}
+
+\item{margin.right}{Spacing on the right of the graphic.}
+
+\item{margin.bottom}{Spacing below graphic.}
+
+\item{margin.left}{Spacing on the left of the graphic.}
+
 \item{label.data.position}{One of \code{"None"}, \code{"Above"} or \code{"Below"}.}
 
-\item{label.data.digits}{Number of digits of the data label to show.}
+\item{label.data.digits}{Number of digits to show after decimal place.}
 
 \item{label.data.bigmark}{Option to prettify large numbers. By default a comma is placed after a thousand.}
 
@@ -73,6 +80,16 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
 \item{label.data.suffix}{String to append to data label.}
 
 \item{label.data.100prc}{Option to show data labels multiplied by 100. This is useful when reporting percentages.}
+
+\item{label.data.font.weight}{Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.}
+
+\item{label.data.font.size}{Font size of data labels.}
+
+\item{label.data.font.family}{Font in which the data labels are displayed.}
+
+\item{label.data.font.color}{Font color of data labels.}
+
+\item{label.data.align.horizontal}{Horizontal alignment of data labels.}
 
 \item{print.config}{If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.}
 

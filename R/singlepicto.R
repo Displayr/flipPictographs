@@ -23,13 +23,22 @@
 #' @param pad.row Vertical space between icons. This should be a number between 0 (no space) and 1.0 (all space).
 #' @param pad.col Horizontal space between icons.
 #' @param margin Controls space on margins of the graphic. When \code{margin} is used, space on all 4 sides are adjusted simultaneously, but margins can also be adjusted separately using \code{margin.top, margin.right, margin.bottom, margin.left}.
-#' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
+#' @param margin.top Spacing on top of graphic. This value overrides \code{margin}.
+#' @param margin.right Spacing on the right of the graphic.
+#' @param margin.bottom Spacing below graphic.
+#' @param margin.left Spacing on the left of the graphic.
 #' @param label.data.position One of \code{"None"}, \code{"Above"} or \code{"Below"}.
-#' @param label.data.digits Number of digits of the data label to show.
+#' @param label.data.font.family Font in which the data labels are displayed.
+#' @param label.data.font.size Font size of data labels.
+#' @param label.data.font.color Font color of data labels.
+#' @param label.data.font.weight Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.
+#' @param label.data.align.horizontal Horizontal alignment of data labels.
+#' @param label.data.digits Number of digits to show after decimal place.
 #' @param label.data.bigmark Option to prettify large numbers. By default a comma is placed after a thousand.
 #' @param label.data.100prc Option to show data labels multiplied by 100. This is useful when reporting percentages.
 #' @param label.data.prefix String to prepend data label.
 #' @param label.data.suffix String to append to data label.
+#' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
 #' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
 #' @importFrom  rhtmlPictographs graphic
 #' @examples
@@ -49,8 +58,6 @@ SinglePicto <- function (x,
                          number.rows = NA,
                          number.cols = NA,
                          width.height.ratio = 1,
-                         graphic.width = NA,
-                         graphic.height = NA,
                          layout = NA,
                          scale = 1,
                          hide.base.image = FALSE,
@@ -78,8 +85,6 @@ SinglePicto <- function (x,
                          label.data.font.family = "arial",
                          label.data.font.color = "#2C2C2C",
                          label.data.align.horizontal = "center",
-                         graphic.resolution = 96,
-                         font.whratio = 0.6,
                          print.config = FALSE,
                          x.limit = 1000)
 {
