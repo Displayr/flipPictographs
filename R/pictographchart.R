@@ -132,21 +132,6 @@ PictographChart <- function(x,
     label.left.width = label.width
     label.right.width = label.width
     label.data.text = NULL
-    sublabel.left = NA
-    sublabel.right = NA
-    sublabel.left.align.horizontal = "left"
-    sublabel.right.align.horizontal = "left"
-    sublabel.left.font.size = label.left.font.size
-    sublabel.right.font.size = label.right.font.size
-    sublabel.left.font.weight = label.left.font.weight
-    sublabel.right.font.weight = label.right.font.weight
-    show.label.float = FALSE
-    label.float.text = NULL
-    label.float.font.weight = label.data.font.weight
-    label.float.font.size = label.data.font.size
-    label.float.font.color = label.data.font.color
-    label.float.align.horizontal = "left"
-    label.float.align.vertical = "center"
 
     if (!is.numeric(unlist(x)))
         stop("Input data must be numeric")
@@ -181,11 +166,6 @@ PictographChart <- function(x,
             label.data.position <- "left"
         if (label.data.position == "On right")
             label.data.position <- "right"
-
-        #if (!(label.data.position %in% c("header", "footer", "left", "right")))
-        #    stop("label.data.position should be one of \'header\', \'footer\', \'left\' or \'right\'")
-        #if (mode != "bar" && label.data.position %in% c("left", "right"))
-        #    stop("label.data.position can only be \'left\' or \'right\' if mode = \'bar\'")
     }
 
     if (!is.na(layout))
@@ -236,6 +216,23 @@ PictographChart <- function(x,
         pad.legend <- 0
         legend.icon.color <- NA
     }
+
+    # More parameters not controlled by the user by passed to pictoChart
+    sublabel.left = NA
+    sublabel.right = NA
+    sublabel.left.align.horizontal = "left"
+    sublabel.right.align.horizontal = "left"
+    sublabel.left.font.size = label.left.font.size
+    sublabel.right.font.size = label.right.font.size
+    sublabel.left.font.weight = label.left.font.weight
+    sublabel.right.font.weight = label.right.font.weight
+    show.label.float = FALSE
+    label.float.text = NULL
+    label.float.font.weight = label.data.font.weight
+    label.float.font.size = label.data.font.size
+    label.float.font.color = label.data.font.color
+    label.float.align.horizontal = "left"
+    label.float.align.vertical = "center"
 
     # Some basic checks on input data
     #x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
