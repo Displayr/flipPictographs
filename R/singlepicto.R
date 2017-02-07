@@ -9,6 +9,7 @@
 #' @param base.image The URL of the base image. Only used if \code{is.custom.url = TRUE} and \code{hide.base.image = FALSE}.
 #' @param is.custom.url When set to true, image is expected to be a URL to an jpeg or png image file available from online.
 #' @param scale Scaling factor for \code{x}. Defaults to 1.
+#' @param maximum.value Maximum value \code{x} is expected to take. When this is value is specified, the pictograph will display \code{x} as a proportion out of \code{maximum.value}. This value overrides scale.
 #' @param layout Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns", "Fill graphic"}. If not supplied, a decision will be made based on which parameters are supplied
 #' @param number.rows If neither \code{number.rows} and \code{number.cols} is supplied, the default behaviour is to place icons according to \code{width.height.ratio}. Note that number.rows is ignored when number.cols is non-zero.
 #' @param number.cols Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.
@@ -60,6 +61,7 @@ SinglePicto <- function (x,
                          width.height.ratio = 1,
                          layout = NA,
                          scale = 1,
+                         maximum.value = NA,
                          hide.base.image = FALSE,
                          fill.direction = "fromleft",
                          fill.icon.color = "black",
@@ -90,18 +92,37 @@ SinglePicto <- function (x,
 {
     if (!(length(x) == 1 && x >= 0))
         stop("Input data must be a single numeric value\n")
-    if (scale <= 0)
+    if (scale <= 0 && is.na(maximum.value))
         stop("Scale must be greater than zero\n")
-
-    if (!is.na(total.icons) && total.icons == 1 && x > 1 && scale == 1)
-        stop("Input data should be a proportion between 0 and 1. To input count data select option for 'multiple icons'\n")
+    if (!is.na(maximum.value) && scale != 1)
+        warning("Parameter scale overridden by maximum value\n")
+    if (!is.na(total.icons) && total.icons <= 0)
+        stop("Total icons must be greater than zero\n")
+    if (!is.na(maximum.value))
+    {
+        if (maximum.value <= 0)
+            stop("Maximum value must be greater than zero\n")
+        if (maximum.value < x)
+            stop("Input data must be smaller than maximum value\n")
+        if (is.na(total.icons))
+            total.icons <- maximum.value
+        scale <- maximum.value/total.icons
+    }
 
     # Some parameter substitutions for R GUI Controls
     if (!is.custom.url)
         image <- gsub(" ", "", tolower(image))
     fill.direction <- gsub(" ", "", tolower(fill.direction))
+    label.data.align.horizontal <- tolower(label.data.align.horizontal)
     if (auto.size)
         icon.width <- 50
+    if (!is.na(total.icons) && total.icons == 1)
+    {
+        # Parameters not supplied in Pictographs - Single
+        layout <- "Width-to-height ratio"
+        pad.row <- 0
+        pad.col <- 0
+    }
     if (!is.na(layout))
     {
         if (layout != "Width-to-height ratio")
@@ -111,6 +132,8 @@ SinglePicto <- function (x,
         if (layout != "Number of columns")
             number.cols = NA
     }
+    if (label.data.position == "None")
+        label.data.font.size <- 0
     label.data.str <- ""
     label.data.values <- x
 
@@ -124,9 +147,6 @@ SinglePicto <- function (x,
     x <- x/scale
     if (is.na(total.icons))
         total.icons <- ceiling(x)
-
-
-
     if (length(total.icons) != 1 && total.icons > 0)
         stop("total.icons must be a single numeric value and greater than zero\n")
     if (!is.na(number.rows) && (number.rows <= 0 || number.rows != ceiling(number.rows)))

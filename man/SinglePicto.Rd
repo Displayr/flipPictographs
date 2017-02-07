@@ -6,7 +6,7 @@
 \usage{
 SinglePicto(x, total.icons = NA, image = "star", base.image = "",
   is.custom.url = FALSE, number.rows = NA, number.cols = NA,
-  width.height.ratio = 1, layout = NA, scale = 1,
+  width.height.ratio = 1, layout = NA, scale = 1, maximum.value = NA,
   hide.base.image = FALSE, fill.direction = "fromleft",
   fill.icon.color = "black", base.icon.color = "",
   background.color = "transparent", auto.size = FALSE, icon.width = 50,
@@ -40,6 +40,8 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
 \item{layout}{Optional parameter to determine how the layout is specified. Can be one of \code{"Width-to-height ratio", "Number of rows", "Number of columns", "Fill graphic"}. If not supplied, a decision will be made based on which parameters are supplied}
 
 \item{scale}{Scaling factor for \code{x}. Defaults to 1.}
+
+\item{maximum.value}{Maximum value \code{x} is expected to take. When this is value is specified, the pictograph will display \code{x} as a proportion out of \code{maximum.value}. This value overrides scale.}
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of base image.}
 
