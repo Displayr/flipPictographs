@@ -33,7 +33,7 @@ getWidthHeightRatio <- function(image.url)
         tmp.file <- NULL
         if (grepl("png", tmp.type))
             tmp.file <- readPNG(tmp.image)
-        if (grepl("jpeg", tmp.type))
+        if (grepl("jpeg|jpg", tmp.type))
             tmp.file <- readJPEG(tmp.image)
         if (grepl("bmp", tmp.type))
             tmp.file <- as.raster(read.bmp(tmp.file), max=255)

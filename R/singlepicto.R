@@ -133,7 +133,10 @@ SinglePicto <- function (x,
             number.cols = NA
     }
     if (label.data.position == "None")
+    {
         label.data.font.size <- 0
+        label.data.align.horizontal <- "center"
+    }
     label.data.str <- ""
     label.data.values <- x
 
@@ -160,7 +163,7 @@ SinglePicto <- function (x,
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
-        stop("Input data/scale must be between 0 and total.icons\n")
+        stop("Input data must be between 0 and total.icons\n")
     if (round(total.icons) != total.icons)
         stop("total.icons must be an integer\n")
 
