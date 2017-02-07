@@ -91,7 +91,7 @@ SinglePicto <- function (x,
                          x.limit = 1000)
 {
     if (!(length(x) == 1 && x >= 0))
-        stop("Input data must be a single numeric value\n")
+        stop("Input data must be a single positive number\n")
     if (scale <= 0 && is.na(maximum.value))
         stop("Scale must be greater than zero\n")
     if (!is.na(maximum.value) && scale != 1)
@@ -110,10 +110,19 @@ SinglePicto <- function (x,
     }
 
     # Some parameter substitutions for R GUI Controls
-    if (!is.custom.url)
+    if (is.custom.url)
+    {
+        if ((fill.icon.color != "" && fill.icon.color != "black") || base.icon.color != "")
+            warning("Recoloring of icons not implemented for custom urls\n")
+        fill.icon.color <- ""
+        base.icon.color <- ""
+        hide.base.image <- nchar(base.image) > 0
+    } else
+    {
         image <- gsub(" ", "", tolower(image))
+    }
+
     fill.direction <- gsub(" ", "", tolower(fill.direction))
-    label.data.align.horizontal <- tolower(label.data.align.horizontal)
     if (auto.size)
         icon.width <- 50
     if (!is.na(total.icons) && total.icons == 1)
@@ -139,6 +148,7 @@ SinglePicto <- function (x,
     }
     label.data.str <- ""
     label.data.values <- x
+    label.data.align.horizontal <- tolower(label.data.align.horizontal)
 
     # Determine plot values
     sc10 <- log10(x/scale)
