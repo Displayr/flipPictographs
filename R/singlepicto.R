@@ -114,7 +114,7 @@ SinglePicto <- function (x,
     {
         fill.icon.color <- ""
         base.icon.color <- ""
-        hide.base.image <- nchar(base.image) > 0
+        hide.base.image <- nchar(base.image) == 0
     } else
     {
         image <- gsub(" ", "", tolower(image))
