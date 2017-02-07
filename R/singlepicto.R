@@ -112,8 +112,6 @@ SinglePicto <- function (x,
     # Some parameter substitutions for R GUI Controls
     if (is.custom.url)
     {
-        if ((fill.icon.color != "" && fill.icon.color != "black") || base.icon.color != "")
-            warning("Recoloring of icons not implemented for custom urls\n")
         fill.icon.color <- ""
         base.icon.color <- ""
         hide.base.image <- nchar(base.image) > 0
