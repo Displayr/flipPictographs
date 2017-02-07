@@ -246,6 +246,8 @@ SinglePicto <- function (x,
                             label.data.font.weight, label.data.font.family,
                             label.data.font.color, label.data.align.horizontal, tmp.str)
     }
+    if (!is.finite(image.width) || !is.finite(image.height))
+        stop("Dimensions of image are invalid. Try using different layout options\n")
 
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
