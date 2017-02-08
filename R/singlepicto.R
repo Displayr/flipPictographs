@@ -159,21 +159,21 @@ SinglePicto <- function (x,
     if (is.na(total.icons))
         total.icons <- ceiling(x)
     if (length(total.icons) != 1 && total.icons > 0)
-        stop("total.icons must be a single numeric value and greater than zero\n")
+        stop("The total icons must be a single numeric value and greater than zero\n")
     if (!is.na(number.rows) && (number.rows <= 0 || number.rows != ceiling(number.rows)))
-        stop("number.rows must be a positive integer\n")
+        stop("The number of rows must be a positive integer\n")
     if (!is.na(number.cols) && (number.cols <= 0 || number.cols != ceiling(number.cols)))
-        stop("number.cols must be a positive integer\n")
+        stop("The number of columns must be a positive integer\n")
     if (width.height.ratio <= 0)
-        stop("width.height.ratio must be greater than zero\n")
+        stop("The width-height ratio must be greater than zero\n")
     if (icon.width <= 0)
-        stop("icon.width must be greater than zero\n")
+        stop("icon width must be greater than zero\n")
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
-        stop("Input data must be between 0 and total.icons\n")
+        stop("Input data must be between 0 and total icons\n")
     if (round(total.icons) != total.icons)
-        stop("total.icons must be an integer\n")
+        stop("The number of total icons must be an integer\n")
 
     # Determine layout based on which parameters are supplied
     layout.str <- ""
