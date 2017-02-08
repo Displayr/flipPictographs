@@ -103,7 +103,7 @@ SinglePicto <- function (x,
         if (maximum.value <= 0)
             stop("Maximum value must be greater than zero\n")
         if (maximum.value < x)
-            stop("Input data must be smaller than maximum value\n")
+            stop("Input data must be smaller than or equal to maximum value\n")
         if (is.na(total.icons))
             total.icons <- maximum.value
         scale <- maximum.value/total.icons
