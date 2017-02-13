@@ -18,6 +18,6 @@ Imports:
     jpeg,
     bmp,
 Remotes:
-    NumbersInternational/flipChartBasics,
-    NumbersInternational/flipTransformations
+    Displayr/flipChartBasics,
+    Displayr/flipTransformations
 RoxygenNote: 5.0.1
