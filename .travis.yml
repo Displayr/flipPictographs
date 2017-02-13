@@ -2,6 +2,8 @@ language: R
 dist: trusty  # ubuntu 14.04 has additional libraries available
 sudo: required
 cache: packages
+before_cache:
+  - rm -rf $HOME/R/Library/flip*
 warnings_are_errors: false
 
 # install debian libraries to match R-servers
@@ -10,7 +12,7 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgdal-dev libproj-dev python-protobuf libprotoc-dev libprotobuf-dev libv8-dev librsvg2-dev
   # Special case for flipPictographs installation
-  - sed -i 's#NumbersInternational/flipChartBasics,#NumbersInternational/flipChartBasics,NumbersInternational/rhtmlPictographs,#g' DESCRIPTION
+  - sed -i 's#Displayr/flipChartBasics,#Displayr/flipChartBasics,Displayr/rhtmlPictographs,#g' DESCRIPTION
 
 # last stable version of devtools does not support private depositories
 r_github_packages: hadley/devtools#1263
@@ -34,4 +36,4 @@ notifications:
 # by calling R functions so they can be updated in this package without
 # committing a new change to .travis.yml in each repository
 after_success: >-
-  Rscript -e "require(devtools); install_github('NumbersInternational/travisCI'); travisCI::NotifyWarnings(); travisCI::TriggerDownstreamBuilds()"
+  Rscript -e "require(devtools); install_github('Displayr/travisCI'); travisCI::NotifyWarnings(); travisCI::TriggerDownstreamBuilds()"
