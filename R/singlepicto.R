@@ -231,6 +231,7 @@ SinglePicto <- function (x,
     if (auto.size && label.data.position %in% c("Below","Above"))
     {
         sc <- 1
+        cat("line 234", graphic.width.inch, graphic.height.inch, "\n")
         if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
         {
             h.sc <- ((graphic.height.inch * graphic.resolution) - label.data.font.size)/image.height
