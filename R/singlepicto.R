@@ -39,6 +39,9 @@
 #' @param label.data.100prc Option to show data labels multiplied by 100. This is useful when reporting percentages.
 #' @param label.data.prefix String to prepend data label.
 #' @param label.data.suffix String to append to data label.
+#' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
+#' @param graphic.height.inch Verical dimension of the chart output in inches.
+#' @param graphic.resolution Conversion from inches to pixels.
 #' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
 #' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
 #' @importFrom  rhtmlPictographs graphic
@@ -87,6 +90,9 @@ SinglePicto <- function (x,
                          label.data.font.family = "arial",
                          label.data.font.color = "#2C2C2C",
                          label.data.align.horizontal = "center",
+                         graphic.width.inch = NA,
+                         graphic.height.inch = NA,
+                         graphic.resolution = 96,
                          print.config = FALSE,
                          x.limit = 1000)
 {
@@ -215,9 +221,25 @@ SinglePicto <- function (x,
     else
         paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
 
-    image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom +
-                    (label.data.position %in% c("Below","Above")) * label.data.font.size
+
+    # Graphic dimensions WITHOUT text
+    image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
+
+    # Adding text - because font size does not change with the iframe
+    if (auto.size && label.data.position %in% c("Below","Above"))
+    {
+        sc <- 1
+        if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
+        {
+            h.sc <- ((graphic.height.inch * graphic.resolution) - label.data.font.size)/image.height
+            w.sc <- (graphic.width.inch * graphic.resolution)/image.width
+            sc <- min(h.sc, w.sc)
+        }
+        image.width <- sc * image.width
+        image.height <- (sc * image.height) + label.data.font.size
+    }
+
 
     # Data labels
     if (label.data.position != "None")
@@ -249,6 +271,8 @@ SinglePicto <- function (x,
     if (!is.finite(image.width) || !is.finite(image.height))
         stop("Dimensions of image are invalid. Try using different layout options\n")
 
+    rsz.str <- if(auto.size) ",\"resizable\":\"true\""
+               else          ",\"resizable\":\"false\""
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
@@ -260,10 +284,10 @@ SinglePicto <- function (x,
           ",\"columnGutter\":", pad.col,
           ",\"rowGutter\":", pad.row,
           ",\"padding\":\"", paste(margin.top, margin.right, margin.bottom, margin.left, sep = " "), "\"",
+          ",\"preserveAspectRatio\":\"xMidYMid\"",
+          rsz.str, "}",
           sep = "")
 
-    json.string <- if(auto.size) paste(json.string, ", \"preserveAspectRatio\":\"xMidYMid\"}", sep="")
-            else paste(json.string, ",\"resizable\":\"false\"}", sep="")
     if (print.config)
         cat(json.string)
     graphic(json.string)

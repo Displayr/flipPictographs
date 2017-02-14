@@ -17,7 +17,8 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
   label.data.suffix = "", label.data.100prc = FALSE,
   label.data.font.weight = "normal", label.data.font.size = 12,
   label.data.font.family = "arial", label.data.font.color = "#2C2C2C",
-  label.data.align.horizontal = "center", print.config = FALSE,
+  label.data.align.horizontal = "center", graphic.width.inch = NA,
+  graphic.height.inch = NA, graphic.resolution = 96, print.config = FALSE,
   x.limit = 1000)
 }
 \arguments{
@@ -92,6 +93,12 @@ SinglePicto(x, total.icons = NA, image = "star", base.image = "",
 \item{label.data.font.color}{Font color of data labels.}
 
 \item{label.data.align.horizontal}{Horizontal alignment of data labels.}
+
+\item{graphic.width.inch}{Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.}
+
+\item{graphic.height.inch}{Verical dimension of the chart output in inches.}
+
+\item{graphic.resolution}{Conversion from inches to pixels.}
 
 \item{print.config}{If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.}
 
