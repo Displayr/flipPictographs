@@ -225,6 +225,7 @@ SinglePicto <- function (x,
     # Graphic dimensions WITHOUT text
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
+    cat("Initial dimensions", image.width, image.height, "\n")
 
     # Adding text - because font size does not change with the iframe
     cat("line 230", auto.size, label.data.position, "\n")
