@@ -235,6 +235,7 @@ SinglePicto <- function (x,
             h.sc <- ((graphic.height.inch * graphic.resolution) - label.data.font.size)/image.height
             w.sc <- (graphic.width.inch * graphic.resolution)/image.width
             sc <- min(h.sc, w.sc)
+            cat("scales:", h.sc, w.sc, sc, "\n")
         }
         image.width <- sc * image.width
         image.height <- (sc * image.height) + label.data.font.size
@@ -271,8 +272,15 @@ SinglePicto <- function (x,
     if (!is.finite(image.width) || !is.finite(image.height))
         stop("Dimensions of image are invalid. Try using different layout options\n")
 
-    rsz.str <- if(auto.size) ",\"resizable\":\"true\""
-               else          ",\"resizable\":\"false\""
+    if(auto.size)
+    {
+        rsz.str <- "true"
+        asp.str <- "xMidYMid"
+    } else
+    {
+        rsz.str <- "false"
+        asp.str <- "none"
+    }
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
@@ -284,9 +292,9 @@ SinglePicto <- function (x,
           ",\"columnGutter\":", pad.col,
           ",\"rowGutter\":", pad.row,
           ",\"padding\":\"", paste(margin.top, margin.right, margin.bottom, margin.left, sep = " "), "\"",
-          ",\"preserveAspectRatio\":\"xMidYMid\"",
-          rsz.str, "}",
-          sep = "")
+          ",\"preserveAspectRatio\":\"", asp.str, "\"",
+          ",\"resizable\":\"", rsz.str, "\"",
+          "}", sep = "")
 
     if (print.config)
         cat(json.string)
