@@ -155,7 +155,6 @@ SinglePicto <- function (x,
     label.data.align.horizontal <- tolower(label.data.align.horizontal)
 
     # Determine plot values
-    sc10 <- log10(x/scale)
     if (!is.na(x.limit) && x/scale > x.limit)
     {
         scale <- scale * 10^{floor(log10(x/scale)) - 1}
@@ -197,6 +196,8 @@ SinglePicto <- function (x,
     } else
     {
         number.rows <- round(sqrt(icon.WHratio/width.height.ratio * total.icons))
+        if (number.rows > total.icons)
+            number.rows <- total.icons
         number.cols <- ceiling(total.icons/number.rows)
         layout.str <- paste(",\"numRows\":", number.rows, sep="")
     }
@@ -225,21 +226,16 @@ SinglePicto <- function (x,
     # Graphic dimensions WITHOUT text
     image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
     image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
-    cat("Initial dimensions", image.width, image.height, "\n")
-    cat("Height", icon.width, icon.WHratio, number.rows, margin.top, margin.bottom, "\n")
 
     # Adding text - because font size does not change with the iframe
-    cat("line 230", auto.size, label.data.position, "\n")
     if (auto.size && label.data.position %in% c("Below","Above"))
     {
         sc <- 1
-        cat("line 234", graphic.width.inch, graphic.height.inch, "\n")
         if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
         {
             h.sc <- ((graphic.height.inch * graphic.resolution) - label.data.font.size)/image.height
             w.sc <- (graphic.width.inch * graphic.resolution)/image.width
             sc <- min(h.sc, w.sc)
-            cat("scales:", h.sc, w.sc, sc, "\n")
         }
         image.width <- sc * image.width
         image.height <- (sc * image.height) + label.data.font.size
