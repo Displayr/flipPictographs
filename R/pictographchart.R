@@ -278,7 +278,7 @@ PictographChart <- function(x,
 
     # Automatically set scale to be nearest power of 10
     if (is.na(scale) && max(x) > 1)
-        scale <- max(1, 10^{floor(log10(max(x) - 1))})
+        scale <- max(1, 10^{round(log10(max(x)) - 1)})
     if (is.na(scale) && max(x) <=  1)
         scale <- 10^{round(log10(median(x)))}
     if (scale <= 0)
