@@ -6,7 +6,10 @@
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio
-    tmp.image <- getURLContent(image.url)
+    tmp.image <- try(getURLContent(image.url), silent=T)
+    if (inherits(tmp.image, "try-error"))
+        stop("Image not found\n")
+    print(tmp.image)
     tmp.type <- attr(tmp.image, "Content-Type")
 
     whratio <- NA

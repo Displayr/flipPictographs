@@ -276,9 +276,9 @@ PictographChart <- function(x,
                                 formatC(label.data.values * (1+(99*label.data.100prc)),                                                                                              digits=label.data.digits, format="f", big.mark=label.data.bigmark),
                                 label.data.suffix)
 
-    # Prefer scale to be a multiple of 5 - avoids rounding errors in text
+    # Automatically set scale to be nearest power of 10
     if (is.na(scale) && max(x) > 1)
-        scale <- max(1, round(floor(max(x)/10)/5)*5)
+        scale <- max(1, 10^{floor(log10(max(x) - 1))})
     if (is.na(scale) && max(x) <=  1)
         scale <- 10^{round(log10(median(x)))}
     if (scale <= 0)
