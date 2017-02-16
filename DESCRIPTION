@@ -19,5 +19,6 @@ Imports:
     bmp,
 Remotes:
     Displayr/flipChartBasics,
-    Displayr/flipTransformations
+    Displayr/flipTransformations,
+    Displayr/rhtmlPictographs
 RoxygenNote: 5.0.1

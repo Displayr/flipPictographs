@@ -43,8 +43,8 @@
 #' @importFrom rhtmlPictographs graphic
 #' @examples
 #' xx <- c(First = 3, Second = 6, Third=2)
-#' PictographChart(xx, image="stickman", mode="bar")
-#' PictographChart(xx, image="stickman", hide.base.image=TRUE, show.label.data=TRUE, mode="bar")
+#' PictographChart(xx, image="circle", mode="bar")
+#' PictographChart(xx, image="elephant", hide.base.image=TRUE, show.label.data=TRUE, mode="bar")
 #' PictographChart(xx, total.icons=10, mode="bar", fill.direction="fromright", is.custom.url=TRUE,
 #'    image="http://wiki.q-researchsoftware.com/images/a/a9/Stick_woman_dark_red.png",
 #'    base.image="http://wiki.q-researchsoftware.com/images/7/78/Stick_man_light_grey.png")
@@ -52,7 +52,7 @@
 #' @inheritParams pictoChart
 #'
 PictographChart <- function(x,
-                          image = "star",
+                          image = "stickman",
                           base.image = "",
                           is.custom.url = FALSE,
                           hide.base.image = FALSE,
