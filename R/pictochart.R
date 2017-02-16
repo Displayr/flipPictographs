@@ -470,7 +470,7 @@ pictoChart <- function(x,
         if (!is.na(graphic.height.inch))
         {
             # Space for floating labels assums each bar has only 1 single row of icons
-            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))+5)
+            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))+7)
             fstr.space <- ceiling(min(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
             cat(sprintf("Floating labels of length %.1f placed in space of %.1f (icon.width=%.1f)\n",
                         fstr.width, fstr.space, icon.width))

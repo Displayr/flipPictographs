@@ -5,11 +5,11 @@
 \alias{PictographChart}
 \title{Create chart of pictographs}
 \usage{
-PictographChart(x, image = "star", base.image = "", is.custom.url = FALSE,
-  hide.base.image = FALSE, total.icons = NA, scale = NA, mode = "table",
-  icon.palette = "Strong colors", icon.colors = "black",
-  fill.direction = "fromleft", show.lines = FALSE, layout = NA,
-  icon.nrow = 1, icon.ncol = NA, fix.icon.nrow = TRUE,
+PictographChart(x, image = "stickman", base.image = "",
+  is.custom.url = FALSE, hide.base.image = FALSE, total.icons = NA,
+  scale = NA, mode = "table", icon.palette = "Strong colors",
+  icon.colors = "black", fill.direction = "fromleft", show.lines = FALSE,
+  layout = NA, icon.nrow = 1, icon.ncol = NA, fix.icon.nrow = TRUE,
   table.by.row = FALSE, row.names.to.remove = "",
   column.names.to.remove = "", show.legend = FALSE, legend.text = "",
   legend.icon.color = NA, pad.legend = 40, hide.label.right = TRUE,
@@ -207,8 +207,8 @@ PictoStdChart(...)
 }
 \examples{
 xx <- c(First = 3, Second = 6, Third=2)
-PictographChart(xx, image="stickman", mode="bar")
-PictographChart(xx, image="stickman", hide.base.image=TRUE, show.label.data=TRUE, mode="bar")
+PictographChart(xx, image="circle", mode="bar")
+PictographChart(xx, image="elephant", hide.base.image=TRUE, show.label.data=TRUE, mode="bar")
 PictographChart(xx, total.icons=10, mode="bar", fill.direction="fromright", is.custom.url=TRUE,
    image="http://wiki.q-researchsoftware.com/images/a/a9/Stick_woman_dark_red.png",
    base.image="http://wiki.q-researchsoftware.com/images/7/78/Stick_man_light_grey.png")
