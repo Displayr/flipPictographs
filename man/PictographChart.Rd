@@ -19,8 +19,8 @@ PictographChart(x, image = "stickman", base.image = "",
   label.bottom = NA, label.right = NA, label.pad = 5,
   label.vpad = label.pad, label.left.pad = label.pad,
   label.right.pad = label.pad, label.bottom.align.horizontal = "center",
-  label.left.align.horizontal = "left",
-  label.right.align.horizontal = "left",
+  label.left.align.horizontal = "default",
+  label.right.align.horizontal = "default",
   label.top.align.horizontal = "center",
   label.left.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
   label.top.align.vertical = "center",
@@ -38,8 +38,8 @@ PictographChart(x, image = "stickman", base.image = "",
   label.bottom.font.size = label.font.size,
   label.left.font.weight = "normal", label.top.font.weight = "normal",
   label.bottom.font.weight = "normal", label.right.font.weight = "normal",
-  show.label.data = FALSE, label.data.digits = 0,
-  label.data.bigmark = ",", label.data.prefix = "",
+  show.label.data = FALSE, customize.label.data = TRUE,
+  label.data.digits = 0, label.data.bigmark = ",", label.data.prefix = "",
   label.data.suffix = "", label.data.100prc = FALSE,
   label.data.position = ifelse(mode == "bar", "Next to bar", "footer"),
   label.data.font.weight = "normal", label.data.font.size = 0.8 *
@@ -172,7 +172,9 @@ PictoStdChart(...)
 
 \item{label.right.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
 
-\item{show.label.data}{Boolean indicating whether or not to show data label.s}
+\item{show.label.data}{Boolean indicating whether or not to show data labels.}
+
+\item{customize.label.data}{Boolean indicating whether of not users want to customize data labels. By default this is on, but when set to \code{FALSE}, parameters \code{label.data.digits, label.data.100prc, label.data.prefix, label.data.suffix} is ignored.}
 
 \item{label.data.digits}{Number of digits to show after decimal place.}
 

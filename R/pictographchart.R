@@ -26,7 +26,8 @@
 #' @param table.by.row By default, when a 2-dimensional table is supplied, values in each column will be shown in the same color. Set to \code{TRUE} to color values by row.
 #' @param label.color.asIcon When set to \code{TRUE}, row and data labels are shown in the same color as the icons.
 #' @param label.data.position When \code{show.label.data}, the position of the data labels can be one of \code{"Above icons", "Below icons"} (all modes) or \code{"Next to bar", "Above row label", "Below row label"} (bar mode only). Note that the last two options will overrride \code{sublabel.left} and \code{sublabel.right}
-#' @param show.label.data Boolean indicating whether or not to show data label.s
+#' @param show.label.data Boolean indicating whether or not to show data labels.
+#' @param customize.label.data Boolean indicating whether of not users want to customize data labels. By default this is on, but when set to \code{FALSE}, parameters \code{label.data.digits, label.data.100prc, label.data.prefix, label.data.suffix} is ignored.
 #' @param data.above.label Set to \code{TRUE}, to place data labels above row labels.
 #' @param label.data.digits Number of digits to show after decimal place.
 #' @param label.data.bigmark Option to prettify large numbers. By default a comma is placed after a thousand.
@@ -88,8 +89,8 @@ PictographChart <- function(x,
                           label.left.pad = label.pad,
                           label.right.pad = label.pad,
                           label.bottom.align.horizontal = "center",
-                          label.left.align.horizontal = "left",
-                          label.right.align.horizontal = "left",
+                          label.left.align.horizontal = "default",
+                          label.right.align.horizontal = "default",
                           label.top.align.horizontal = "center",
                           label.left.align.vertical = ifelse(is.na(icon.ncol[1]), "center", "top"),
                           label.top.align.vertical = "center",
@@ -113,6 +114,7 @@ PictographChart <- function(x,
                           label.bottom.font.weight = "normal",
                           label.right.font.weight = "normal",
                           show.label.data = FALSE,
+                          customize.label.data = TRUE,
                           label.data.digits = 0,
                           label.data.bigmark = ",",  # to prettify large numbers
                           label.data.prefix = "",
@@ -146,15 +148,22 @@ PictographChart <- function(x,
     fill.direction <- gsub(" ", "", tolower(fill.direction))
     if (!is.custom.url)
         image <- gsub(" ", "", tolower(image))
-    if (!show.label.data)
+
+    # For !show.label.data, values will be ignored
+    # But for !customize.label.data, values will be overridden later
+    if (!show.label.data || !customize.label.data)
     {
-        label.data.align.horizontal <- "center"
-        label.data.position <- ""
+        if (!show.label.data)
+        {
+            label.data.align.horizontal <- "center"
+            label.data.position <- ""
+        }
         data.above.label <- FALSE
         label.data.prefix <- ""
         label.data.suffix <- ""
         label.data.100prc <- FALSE
         label.data.digits <- 0
+        label.data.font.size <- 0.8 * 12
     }
     if (show.label.data)
     {
@@ -217,6 +226,16 @@ PictographChart <- function(x,
         legend.icon.color <- NA
     }
 
+    if (show.label.data && !customize.label.data)
+    {
+        stat <- attr(x, "statistic")
+        if (!is.null(stat) && grepl("%", stat))
+        {
+            label.data.suffix  <- "%"
+            label.data.100prc <- all(x <= 1)
+        }
+    }
+
     # More parameters not controlled by the user by passed to pictoChart
     sublabel.left = NA
     sublabel.right = NA
@@ -253,7 +272,7 @@ PictographChart <- function(x,
             icon.ncol <- 1
         icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Input data should be in a single row or column")
+            stop("Input data should be a one-dimensional table or a numeric vector")
         if (ncol(x) == 1)
             x <- t(x)
     }
@@ -264,23 +283,25 @@ PictographChart <- function(x,
         else
             icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Input data should be in a single row or column")
+            stop("Input data should be a one-dimensional table or a numeric vector")
         if (nrow(x) == 1)
             x <- t(x)
     }
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
 
     # Data labels
-    label.data.values <- unlist(x)
+    label.data.values <- unlist(x) * (1+(99*label.data.100prc))
+    if (!customize.label.data && max(label.data.values <= 1))
+        label.data.digits <- 2
     label.data.text <- sprintf("%s%s%s", label.data.prefix,
-                                formatC(label.data.values * (1+(99*label.data.100prc)),                                                                                              digits=label.data.digits, format="f", big.mark=label.data.bigmark),
-                                label.data.suffix)
+        formatC(label.data.values, digits=label.data.digits, format="f", big.mark=label.data.bigmark),
+        label.data.suffix)
 
     # Automatically set scale to be nearest power of 10
-    if (is.na(scale) && max(x) > 1)
-        scale <- max(1, 10^{round(log10(max(x)) - 1)})
-    if (is.na(scale) && max(x) <=  1)
-        scale <- 10^{round(log10(median(x)))}
+    if (is.na(scale))
+        scale <- 10^{round(log10(max(x)) - 1)}
+    #if (is.na(scale) && max(x) <=  1)
+    #    scale <- 10^{round(log10(median(x)))}
     if (scale <= 0)
         stop("Scale must be greater than zero\n")
 
@@ -466,6 +487,10 @@ PictographChart <- function(x,
 
     if (label.data.align.horizontal == "default")
         label.data.align.horizontal <- "right"
+    if (label.left.align.horizontal == "default")
+        label.left.align.horizontal <- "right"
+    if (label.right.align.horizontal == "default")
+        label.right.align.horizontal <- "left"
 
     image.url <- if (is.custom.url) image else imageURL[image]
     base.image <- if (hide.base.image) NA else if (is.custom.url) base.image else imageURL[image]
@@ -476,15 +501,12 @@ PictographChart <- function(x,
     while (is.na(json))
     {
         json <- pictoChart(x, fill.image = image.url, fill.icon.color = fill.icon.color, image.type = image.type,
-                      base.image = base.image, width.height.ratio = width.height.ratio,
-                      total.icons = total.icons, show.lines = show.lines,
-                      icon.nrow = icon.nrow, icon.ncol = icon.ncol, #icon.fixedsize = 1-icon.autosize,
-                      #icon.align.horizontal = icon.align.horizontal, icon.align.vertical = icon.align.vertical,
+                      base.image = base.image, width.height.ratio = width.height.ratio, show.lines = show.lines,
+                      total.icons = total.icons, icon.nrow = icon.nrow, icon.ncol = icon.ncol,
                       label.left = label.left, label.top = label.top, label.right = label.right,
                       sublabel.left = sublabel.left, sublabel.right = sublabel.right,
-                      label.font.family = label.font.family,
+                      label.font.family = label.font.family, label.font.color = label.font.color,
                       label.left.width = label.left.width, label.right.width = label.right.width,
-                      label.font.color = label.font.color,
                       label.left.font.color = label.left.font.color, label.right.font.color = label.right.font.color,
                       label.top.font.color = label.top.font.color, label.bottom.font.color = label.bottom.font.color,
                       label.font.size = label.font.size, label.left.font.size = label.left.font.size,
@@ -497,26 +519,19 @@ PictographChart <- function(x,
                       label.left.align.horizontal = label.left.align.horizontal, label.top.align.horizontal = label.top.align.horizontal,
                       label.right.align.horizontal = label.right.align.horizontal, label.bottom.align.horizontal = label.bottom.align.horizontal,
                       sublabel.left.align.horizontal = sublabel.left.align.horizontal, sublabel.right.align.horizontal = sublabel.right.align.horizontal,
-                      label.left.align.vertical = label.left.align.vertical,
-                      label.top.height = label.top.height,
-                      label.top.align.vertical = label.top.align.vertical,
-                      label.bottom.align.vertical = label.bottom.align.vertical,
-                      label.right.align.vertical = label.right.align.vertical,
-                      label.bottom = label.bottom,
+                      label.left.align.vertical = label.left.align.vertical, label.top.align.vertical = label.top.align.vertical,
+                      label.bottom.align.vertical = label.bottom.align.vertical, label.right.align.vertical = label.right.align.vertical,
+                      label.bottom = label.bottom, label.top.height = label.top.height,
                       fill.direction = fill.direction, pad.legend = pad.legend,
                       show.legend = show.legend, legend.text = legend.text, legend.icon.color = legend.icon.color,
-                      show.label.data = show.label.data,
-                      label.data.position = label.data.position,
+                      show.label.data = show.label.data, label.data.position = label.data.position,
                       label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
-                      label.data.font.color = label.data.font.color,
+                      label.data.font.color = label.data.font.color, label.float.font.weight = label.float.font.weight,
                       label.data.align.horizontal = label.data.align.horizontal,
                       label.vpad = label.vpad, label.left.pad = label.left.pad, label.right.pad = label.right.pad,
                       show.label.float = show.label.float, label.float.text = label.float.text,
-                      label.float.font.size = label.float.font.size,
-                      label.float.font.color = label.float.font.color,
-                      label.float.font.weight = label.float.font.weight,
-                      label.float.align.horizontal = label.float.align.horizontal,
-                      label.float.align.vertical = label.float.align.vertical,
+                      label.float.font.size = label.float.font.size, label.float.font.color = label.float.font.color,
+                      label.float.align.horizontal = label.float.align.horizontal, label.float.align.vertical = label.float.align.vertical,
                       ...)
         if (is.na(json) && hide.base.image)
             total.icons <- total.icons + 1

@@ -162,12 +162,15 @@ pictoChart <- function(x,
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
 
+    # Errors that are commonly encountered by Displayr/Q users are in sentence case
+    # (e.g. total icons instead of total.icons), but parameters which are less commonly used
+    # are referred to by exact parameter name so they can be easily corrected
     if (is.na(width.height.ratio))
         width.height.ratio <- 1
     if (any(total.icons != ceiling(total.icons)))
-        stop("Parameter total.icons must be a whole number\n")
+        stop("Total icons must be a whole number\n")
     if (any(total.icons <= 0))
-        stop("Parameter total.icons must be greater than zero\n")
+        stop("Total icons must be greater than zero\n")
     if (length(total.icons) != 1 && length(total.icons) != length(x))
         stop("total.icons must be either a single integer or a matrix with the same dimensions as x\n")
     if (all(total.icons == 0))
@@ -184,8 +187,17 @@ pictoChart <- function(x,
     total.icons <- matrix(total.icons, nrow=n, ncol=m)
     prop <- as.vector(unlist(x))/unlist(total.icons)
     prop[total.icons == 0] <- 0
-    if (any(is.na(prop)) || any(prop > 1) || any(prop < 0))
-        stop("x must be a number between 0 and total.icons\n")
+    if (any(is.na(prop)))
+    {
+        warning("Non-numeric values set to zero\n")
+        prop[is.na(prop)] <- 0
+    }
+
+    # Scale has already been checked for non-negativity in pictographchart
+    if (any(prop < 0))
+        stop("Input data cannot be negative\n")
+    if (any(prop > 1))
+        stop("Input data is too large. Try increasing the scale or total icons\n")
 
     # Determine layout
     layout.str <- ""
@@ -199,6 +211,7 @@ pictoChart <- function(x,
         icon.nrow.matrix <- matrix(icon.nrow, n, m)
         icon.ncol <- apply(total.icons/icon.nrow.matrix, 2, max)
         layout.str <- paste("\"numRows\":", icon.nrow.matrix)
+
     } else
     {
         if (length(icon.ncol) == 1)
@@ -478,7 +491,7 @@ pictoChart <- function(x,
 
             if (fstr.width > fstr.space)
             {
-                cat("Not enough space for floating labels. Retrying\n")
+                #cat("Not enough space for floating labels. Retrying\n")
                 return(NA)
             }
         }
