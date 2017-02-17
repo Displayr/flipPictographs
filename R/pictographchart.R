@@ -163,7 +163,7 @@ PictographChart <- function(x,
         label.data.suffix <- ""
         label.data.100prc <- FALSE
         label.data.digits <- 0
-        label.data.font.size <- 0.8 * 12
+        label.data.font.size <- 12
     }
     if (show.label.data)
     {
@@ -218,6 +218,11 @@ PictographChart <- function(x,
     label.right.align.horizontal <- tolower(label.right.align.horizontal)
     label.right.align.vertical <- tolower(label.right.align.vertical)
     label.data.align.horizontal <- tolower(label.data.align.horizontal)
+
+    if (label.left.align.horizontal == "default")
+        label.left.align.horizontal <- "right"
+    if (label.right.align.horizontal == "default")
+        label.right.align.horizontal <- "left"
 
     if (!show.legend)
     {
@@ -291,7 +296,7 @@ PictographChart <- function(x,
 
     # Data labels
     label.data.values <- unlist(x) * (1+(99*label.data.100prc))
-    if (!customize.label.data && max(label.data.values <= 1))
+    if (!customize.label.data && max(label.data.values) <= 1)
         label.data.digits <- 2
     label.data.text <- sprintf("%s%s%s", label.data.prefix,
         formatC(label.data.values, digits=label.data.digits, format="f", big.mark=label.data.bigmark),
@@ -487,10 +492,6 @@ PictographChart <- function(x,
 
     if (label.data.align.horizontal == "default")
         label.data.align.horizontal <- "right"
-    if (label.left.align.horizontal == "default")
-        label.left.align.horizontal <- "right"
-    if (label.right.align.horizontal == "default")
-        label.right.align.horizontal <- "left"
 
     image.url <- if (is.custom.url) image else imageURL[image]
     base.image <- if (hide.base.image) NA else if (is.custom.url) base.image else imageURL[image]
