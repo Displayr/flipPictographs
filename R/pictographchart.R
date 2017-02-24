@@ -241,7 +241,7 @@ PictographChart <- function(x,
         }
     }
 
-    # More parameters not controlled by the user by passed to pictoChart
+    # More parameters not controlled by the user but passed to pictoChart
     sublabel.left = NA
     sublabel.right = NA
     sublabel.left.align.horizontal = "left"
@@ -278,7 +278,9 @@ PictographChart <- function(x,
         icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
             stop("Input data should be a one-dimensional table or a numeric vector")
-        if (ncol(x) == 1)
+        if (is.null(rownames(x)) && is.null(colnames(x)))
+            stop("Input data should have row or column names")
+        if (is.null(colnames(x)))
             x <- t(x)
     }
     if (mode == "bar")
@@ -289,7 +291,9 @@ PictographChart <- function(x,
             icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
             stop("Input data should be a one-dimensional table or a numeric vector")
-        if (nrow(x) == 1)
+        if (is.null(rownames(x)) && is.null(colnames(x)))
+            stop("Input data should have row or column names")
+        if (is.null(rownames(x)))
             x <- t(x)
     }
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
@@ -336,30 +340,40 @@ PictographChart <- function(x,
             label.right <- rownames(x)
         }
 
+
+
         if (!fix.icon.nrow && hide.base.image && !is.na(icon.ncol))
         {
             icon.nrow <- ceiling(x/icon.ncol)
             total.icons <- icon.nrow * icon.ncol
+            icon.nrow <- NA  # needed so that icon.ncol is used
         }
 
 
         # Position data labels relative to fill direction
-        if (label.data.position == "Next to bar" && hide.base.image &&
-            (is.na(icon.ncol) || icon.ncol > max(ceiling(x))))
+        if (label.data.position == "Next to bar" && hide.base.image)
         {
             show.label.float <- TRUE
             label.float.text <- label.data.text
             label.float.align.horizontal <- switch(fill.direction,
                                                    fromleft="left",
                                                    fromright="right")
-            if (any(ceiling(x) >= total.icons))
+            # Ignore icon.ncol if its too large
+            if (all(!is.na(icon.ncol)) && all(icon.ncol >= total.icons))
+            {
+                icon.ncol <- NA
+                icon.nrow <- 1
+            }
+            if (any(ceiling(x) >= total.icons) && !is.na(icon.nrow) && all(icon.nrow == 1))
                 total.icons <- total.icons + 1
             show.label.data <- FALSE
+
         } else if (label.data.position == "Next to bar")
         {
             label.data.position <- switch(fill.direction,
                                           fromleft="right",
                                           fromright="left")
+
         } else if (label.data.position == "Below row label" || label.data.position == "Above row label")
         {
             if (label.data.position == "Above row label")
@@ -499,9 +513,11 @@ PictographChart <- function(x,
     width.height.ratio <- if (is.custom.url) getWidthHeightRatio(image) else imageWHRatio[image]
 
     json <- NA
-    while (is.na(json))
+    f.mspace <- 0 # space in margin for floating labels
+    while (is.na(json) || is.numeric(json))
     {
         json <- pictoChart(x, fill.image = image.url, fill.icon.color = fill.icon.color, image.type = image.type,
+                      f.mspace = f.mspace,
                       base.image = base.image, width.height.ratio = width.height.ratio, show.lines = show.lines,
                       total.icons = total.icons, icon.nrow = icon.nrow, icon.ncol = icon.ncol,
                       label.left = label.left, label.top = label.top, label.right = label.right,
@@ -536,6 +552,8 @@ PictographChart <- function(x,
                       ...)
         if (is.na(json) && hide.base.image)
             total.icons <- total.icons + 1
+        if(is.numeric(json))
+            f.mspace <- f.mspace + json
     }
     return(graphic(json))
 }

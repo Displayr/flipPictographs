@@ -1,8 +1,9 @@
 #' pictoChart
 #'
-#' Function that computes dimensions for PictographChart.
+#' Function that computes dimensions for PictographChart. It should not be called directly.
+#' The output is a JSON string for creating the widget
 #'
-#' @return Either a JSON string to create the widget or NA if any of the dimensions are incompatible.
+#' @return Either a JSON string to create the widget or NA or a numeric value (see parameter \code{f.mspace}) if adjustment of dimensions is required to fit the floating labels in properly. The iterative adjustment is performed only when \code{graphic.width.inch} and \code{graphic.height.inch} is provided.
 #' @param x Data for charting
 #' @param fill.image URL of icon
 #' @param base.image Optional URL of background image
@@ -19,7 +20,6 @@
 #' @param background.color Background colour of pictograph
 #' @param icon.nrow Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.
 #' @param icon.ncol Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.
-
 #' @param label.vpad Vertical spacing below and above row labels.
 #' @param label.left.pad,label.right.pad Horizontal spacing between row labels and icons.
 #' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.
@@ -50,6 +50,7 @@
 #' @param pad.icon.row Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.
 #' @param pad.icon.ncol Horizontal spacing between icons inside each table cell.
 #' @param pad.legend Horizontal spacing between the chart and the legend.
+#' @param f.mspace Space in left/right margin left for floating labels. This parameter is adjusted iteratively by \code{PictographChart} when floating labels are used in bar pictographs.
 #' @param font.whratio Numeric specifying the average aspect ratio of a single character, which usually varies around 0.4 - 0.6. It is used to calculate the minimum width of the labels.
 #' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
 #' @param graphic.height.inch Verical dimension of the chart output in inches.
@@ -147,13 +148,14 @@ pictoChart <- function(x,
                        pad.col = 2,
                        pad.icon.row = 0.0,
                        pad.icon.col = 0.0,
+                       f.mspace = 0,
                        #margin.top = 0,
                        #margin.right = 0,
                        #margin.bottom = 0,
                        #margin.left = 0,
                        graphic.width.inch = NA,
                        graphic.height.inch = NA,
-                       graphic.resolution = 96,
+                       graphic.resolution = 72,
                        font.whratio = 0.9,
                        print.config = FALSE)
 {
@@ -217,12 +219,11 @@ pictoChart <- function(x,
         if (length(icon.ncol) == 1)
             icon.ncol <- rep(icon.ncol, m)
         icon.ncol.matrix <- matrix(icon.ncol, n, m, byrow=T)
-        icon.nrow <- apply(total.icons/icon.ncol.matrix, 1, max)
+        icon.nrow <- apply(total.icons/icon.ncol.matrix, 1, function(x){ceiling(max(x))})
         layout.str <- paste("\"numCols\":", icon.ncol.matrix)
     }
     tot.icon.nrow <- sum(icon.nrow)
     tot.icon.ncol <- sum(icon.ncol)
-
 
     # Fill row/column labels with defaults
     if (!is.null(label.left) && is.na(label.left) && m == 1 && is.null(row.names(x)) && !is.null(names(x)))
@@ -269,6 +270,37 @@ pictoChart <- function(x,
     {
         base.icon.color.str <- ifelse(nchar(base.icon.color) > 0, paste(base.icon.color, ":", sep = ""), "")
         base.image.str <- ifelse(!is.na(base.image), paste("\"baseImage\":\"", image.type, ":", base.icon.color.str, base.image, "\",", sep = ""), "")
+    }
+
+    # Calculate floating labels
+    # We need to do this first in case we need to leave extra space in the margin
+    label.float.str <- ""
+    if (show.label.float)
+    {
+        #if (any(x >= total.icons))
+        #    warning("Floating labels placed at invalid positions. Please increase total.icons\n")
+
+        i.pos <- floor(x/icon.ncol)
+        j.pos <- x %% icon.ncol
+        ind.outside <- which(j.pos == 0)
+        i.pos <- ifelse(j.pos == 0, i.pos - 1, i.pos) + 0.5
+        j.pos <- ifelse(j.pos == 0, icon.ncol, j.pos) + 0.2
+
+        # extra space in margin
+        fstr.width <- font.whratio * (label.float.font.size * nchar(label.float.text))
+        f.mspace <- max(f.mspace, fstr.width[ind.outside])
+
+        #if (length(ind.outside) > 0)
+        #    cat("f.mspace increased to", f.mspace, "to fit labels of length", fstr.width[ind.outside], "\n")
+
+        label.float.position <- sprintf("%.2f:%.2f", i.pos, j.pos)
+        label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
+                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
+                            \"font-family\":\"%s\", \"font-color\":\"%s\",
+                            \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}],",
+                            label.float.position, label.float.text,
+                            label.float.font.size, label.float.font.weight, label.float.font.family,
+                            label.float.font.color, label.float.align.horizontal, label.float.align.vertical)
     }
 
     # Calculate size of table cells
@@ -384,6 +416,37 @@ pictoChart <- function(x,
     pad.top <- matrix(0, n, m)
     pad.bottom <- matrix(0, n, m)
 
+    if (fill.direction != "fromright")
+        pad.right[,m] <- f.mspace
+    if (fill.direction == "fromright")
+        pad.left[,1] <- f.mspace
+    column.width <- column.width + pad.left[1,] + pad.right[1,]
+
+    if (show.label.float && !is.na(graphic.height.inch))
+    {
+        # We can only check the space left for data labels when graphic.width.inch and graphic.height.inch
+        # is supplied - otherwise the size of the icons can vary relative to the font size.
+        fstr.width <- max(fstr.width)
+        fstr.space <- if (all(icon.nrow==1))(min(total.icons * (1 - prop)) - 0.2) * icon.width/(1 - pad.icon.col)
+                      else min(column.width[1] - (j.pos * icon.width/(1 - pad.icon.col)))
+        #cat(sprintf("Floating labels of length %.1f placed in space of %.1f/%.1f (icon.width=%.1f)\n",
+        #            fstr.width, fstr.space, column.width[1], icon.width))
+        if (fstr.width > fstr.space)
+        {
+            if (all(icon.nrow == 1))
+            {
+                #cat("Incrementing total.icons\n")
+                return(NA)
+
+            }else
+            {
+                #cat("Adding", fstr.width - fstr.space, "to margins\n")
+                return(fstr.width - fstr.space)
+            }
+        }
+    }
+
+
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
@@ -474,38 +537,6 @@ pictoChart <- function(x,
         row.height <- row.height + label.data.font.size
     }
 
-    label.float.str <- ""
-    if (show.label.float)
-    {
-        if (any(x >= total.icons))
-            warning("Floating labels placed at invalid positions. Please increase total.icons\n")
-
-        if (!is.na(graphic.height.inch))
-        {
-            # Space for floating labels assums each bar has only 1 single row of icons
-            # Floor function is needed because labels start at empty icons
-            fstr.width <- font.whratio * max(0, c(label.float.font.size * nchar(label.float.text))+5)
-            fstr.space <- floor(min(total.icons * (1 - prop))) * icon.width/(1 - pad.icon.col)
-            #cat(sprintf("Floating labels of length %.1f placed in space of %.1f (icon.width=%.1f)\n",
-#                        fstr.width, fstr.space, icon.width))
-
-            if (fstr.width > fstr.space)
-            {
-                #cat("Not enough space for floating labels. Retrying\n")
-                return(NA)
-            }
-        }
-
-        x.pos <- ceiling(x)
-        label.float.position <- sprintf("%d:%d", floor(x.pos/icon.ncol), x.pos %% icon.ncol)
-        label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
-                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
-                            \"font-family\":\"%s\", \"font-color\":\"%s\",
-                            \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}],",
-                            label.float.position, label.float.text,
-                            label.float.font.size, label.float.font.weight, label.float.font.family,
-                            label.float.font.color, label.float.align.horizontal, label.float.align.vertical)
-    }
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
                          \"variableImage\":\"%s:%s%s:%s\", %s %s, %s %s
@@ -572,6 +603,7 @@ pictoChart <- function(x,
         if (show.legend)
             legendgap.str <- paste("\"padding-right\":", 3*pad.col+leg.rpad, ",")
         lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>0), collapse = ","), "],",
+                           "\"vertical\":[0,1,2],",
                            legendgap.str,
                            "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep = "")
     }

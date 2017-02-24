@@ -58,9 +58,9 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
   column.width = NA, width.height.ratio = NA,
   background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 2,
-  pad.col = 2, pad.icon.row = 0, pad.icon.col = 0,
+  pad.col = 2, pad.icon.row = 0, pad.icon.col = 0, f.mspace = 0,
   graphic.width.inch = NA, graphic.height.inch = NA,
-  graphic.resolution = 96, font.whratio = 0.9, print.config = FALSE)
+  graphic.resolution = 72, font.whratio = 0.9, print.config = FALSE)
 }
 \arguments{
 \item{x}{Data for charting}
@@ -149,6 +149,8 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{pad.icon.row}{Numeric specifying vertical spacing between icons inside each table cell. May be a single value or a numeric matrix of the same dimensions as \code{x}.}
 
+\item{f.mspace}{Space in left/right margin left for floating labels. This parameter is adjusted iteratively by \code{PictographChart} when floating labels are used in bar pictographs.}
+
 \item{graphic.width.inch}{Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.}
 
 \item{graphic.height.inch}{Verical dimension of the chart output in inches.}
@@ -160,10 +162,11 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{pad.icon.ncol}{Horizontal spacing between icons inside each table cell.}
 }
 \value{
-Either a JSON string to create the widget or NA if any of the dimensions are incompatible.
+Either a JSON string to create the widget or NA or a numeric value (see parameter \code{f.mspace}) if adjustment of dimensions is required to fit the floating labels in properly. The iterative adjustment is performed only when \code{graphic.width.inch} and \code{graphic.height.inch} is provided.
 }
 \description{
-Function that computes dimensions for PictographChart.
+Function that computes dimensions for PictographChart. It should not be called directly.
+The output is a JSON string for creating the widget
 }
 \keyword{internal}
 
