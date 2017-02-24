@@ -282,6 +282,8 @@ PictographChart <- function(x,
             stop("Input data should have row or column names")
         if (ncol(x) == 1 && (nrow(x) > 1 || is.null(colnames(x))))
             x <- t(x)
+        if (nrow(x) > 1)
+            stop("Input data should be a one-dimensional table or a numeric vector")
     }
     if (mode == "bar")
     {
@@ -295,6 +297,8 @@ PictographChart <- function(x,
             stop("Input data should have row or column names")
         if (nrow(x) == 1 && (ncol(x) > 1 || is.null(rownames(x))))
             x <- t(x)
+        if (ncol(x) > 1)
+            stop("Input data should be a one-dimensional table or a numeric vector")
     }
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
 
