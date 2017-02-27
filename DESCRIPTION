@@ -1,10 +1,10 @@
 Package: flipPictographs
 Type: Package
-Title: Create Pictographs
+Title: Pictograph htmlwidgets
 Version: 0.1.0
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
-Description: Wrappers for the rhtmlPictographs package, using the flip project conventions
+Description: Wrappers for the rhtmlPictographs package, using the flip project conventions.
 License: GPL-3
 LazyData: TRUE
 Suggests:
