@@ -455,7 +455,9 @@ pictoChart <- function(x,
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
     # It also ensures that lines are visible at the top and bottom of the table
-    label.vpad <- icon.height/2
+    label.vpad <- 0
+    if (icon.nrow > 1)
+        label.vpad <- icon.height/2
     lab.tpad <- rep(label.vpad, n)
     lab.bpad <- rep(label.vpad, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
