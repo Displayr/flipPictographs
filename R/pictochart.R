@@ -456,7 +456,7 @@ pictoChart <- function(x,
     # rowlabels on the top and bottom of the table remain vertically centered
     # It also ensures that lines are visible at the top and bottom of the table
     label.vpad <- 0
-    if (icon.nrow > 1)
+    if (all(icon.nrow > 1))
         label.vpad <- icon.height/2
     lab.tpad <- rep(label.vpad, n)
     lab.bpad <- rep(label.vpad, n)
