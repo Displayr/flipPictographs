@@ -78,7 +78,7 @@ pictoChart <- function(x,
                        sublabel.right = NA,
                        label.left.pad = 5,
                        label.right.pad = 5,
-                       label.vpad = 5,
+                       label.vpad = 0,
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",
@@ -282,11 +282,19 @@ pictoChart <- function(x,
 
         i.pos <- floor(x/icon.ncol)
         j.pos <- x %% icon.ncol
-        ind.outside <- which(j.pos == 0)
-        i.pos <- ifelse(j.pos == 0, i.pos - 1, i.pos) + 0.5
-        j.pos <- ifelse(j.pos == 0, icon.ncol, j.pos) + 0.2
+        ind.outside <- which(x >= icon.ncol)
+        if (length(ind.outside) > 0)
+        {
+            i.pos[ind.outside] <- 0
+            j.pos[ind.outside] <- icon.ncol
+        }
 
         # extra space in margin
+        if (label.float.align.vertical == "center")
+            i.pos <- i.pos + 0.5
+        if (label.float.align.vertical == "top")  # only works when label.vpad = 0
+            i.pos <- i.pos + 0.05
+        j.pos <- j.pos + 0.2
         fstr.width <- font.whratio * (label.float.font.size * nchar(label.float.text))
         f.mspace <- max(f.mspace, fstr.width[ind.outside])
 
@@ -297,10 +305,10 @@ pictoChart <- function(x,
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
                             \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
-                            \"horizontal-align\":\"%s\", \"vertical-align\":\"%s\"}],",
+                            \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
                             label.float.position, label.float.text,
                             label.float.font.size, label.float.font.weight, label.float.font.family,
-                            label.float.font.color, label.float.align.horizontal, label.float.align.vertical)
+                            label.float.font.color, label.float.align.horizontal) #, label.float.align.vertical)
     }
 
     # Calculate size of table cells

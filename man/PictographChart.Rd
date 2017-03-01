@@ -16,7 +16,7 @@ PictographChart(x, image = "stickman", base.image = "",
   hide.label.left = !hide.label.right, hide.label.bottom = (mode !=
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
-  label.bottom = NA, label.right = NA, label.pad = 5,
+  label.bottom = NA, label.right = NA, label.pad = 0,
   label.vpad = label.pad, label.left.pad = label.pad,
   label.right.pad = label.pad, label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "default",

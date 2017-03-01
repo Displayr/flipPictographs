@@ -84,7 +84,7 @@ PictographChart <- function(x,
                           label.top = NA,
                           label.bottom = NA,
                           label.right = NA,
-                          label.pad = 5,    # just for convenience
+                          label.pad = 0,    # just for convenience
                           label.vpad = label.pad, #spacing above and below row labels
                           label.left.pad = label.pad,
                           label.right.pad = label.pad,
@@ -257,6 +257,10 @@ PictographChart <- function(x,
     label.float.font.color = label.data.font.color
     label.float.align.horizontal = "left"
     label.float.align.vertical = "center"
+    if (mode == "bar" && !hide.label.right)
+        label.float.align.vertical <- label.right.align.vertical
+    if (mode == "bar" && !hide.label.left)
+        label.float.align.vertical <- label.left.align.vertical
 
     # Some basic checks on input data
     #x <- AsChartMatrix(y = x, x = by, transpose = (transpose), aggregate.period = aggregate.period)
