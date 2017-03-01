@@ -458,6 +458,9 @@ pictoChart <- function(x,
     label.vpad <- 0
     if (all(icon.nrow > 1))
         label.vpad <- icon.height/2
+    if (any(icon.nrow > 1) && is.null(sublabel.left) && is.null(sublabel.right))
+        label.vpad <- icon.height/2
+
     lab.tpad <- rep(label.vpad, n)
     lab.bpad <- rep(label.vpad, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
