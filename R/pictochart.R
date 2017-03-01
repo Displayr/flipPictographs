@@ -20,7 +20,6 @@
 #' @param background.color Background colour of pictograph
 #' @param icon.nrow Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of rows.
 #' @param icon.ncol Configuration of icons in each table cell. Can be a single value or a vector with length equal to the number of columns.
-#' @param label.vpad Vertical spacing below and above row labels.
 #' @param label.left.pad,label.right.pad Horizontal spacing between row labels and icons.
 #' @param label.left Length must be equal to length (if \code{x} is a vector) or number of rows (if \code{x} is matrix or data.frame) as x. If no value is supplied, labels will be read from names/rowname of \code{x}. To suppress labels, use \code{label.left  =  NULL}.
 #' @param label.top By default, labels are read from column names of \code{x}.
@@ -78,7 +77,6 @@ pictoChart <- function(x,
                        sublabel.right = NA,
                        label.left.pad = 5,
                        label.right.pad = 5,
-                       label.vpad = 0,
                        label.font.family = "arial",
                        label.font.size = 12,
                        label.font.color = "#2C2C2C",
@@ -290,10 +288,7 @@ pictoChart <- function(x,
         }
 
         # extra space in margin
-        if (label.float.align.vertical == "center")
-            i.pos <- i.pos + 0.5
-        if (label.float.align.vertical == "top")  # only works when label.vpad = 0
-            i.pos <- i.pos + 0.05
+        i.pos <- i.pos + 0.5
         j.pos <- j.pos + 0.2
         fstr.width <- font.whratio * (label.float.font.size * nchar(label.float.text))
         f.mspace <- max(f.mspace, fstr.width[ind.outside])
@@ -417,6 +412,7 @@ pictoChart <- function(x,
     icon.height <- min(row.height)/max(icon.nrow) * (1 - pad.icon.row)
     if (!is.na(width.height.ratio))
         icon.height <- icon.width/width.height.ratio
+    #cat("icon dim:", icon.width, icon.height, "\n")
 
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)
@@ -459,6 +455,7 @@ pictoChart <- function(x,
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
     # It also ensures that lines are visible at the top and bottom of the table
+    label.vpad <- icon.height/2
     lab.tpad <- rep(label.vpad, n)
     lab.bpad <- rep(label.vpad, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))

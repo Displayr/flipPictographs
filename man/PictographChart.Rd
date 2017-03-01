@@ -17,8 +17,8 @@ PictographChart(x, image = "stickman", base.image = "",
   "column"), hide.label.top = (mode == "column"),
   label.color.asIcon = FALSE, label.left = NA, label.top = NA,
   label.bottom = NA, label.right = NA, label.pad = 0,
-  label.vpad = label.pad, label.left.pad = label.pad,
-  label.right.pad = label.pad, label.bottom.align.horizontal = "center",
+  label.left.pad = label.pad, label.right.pad = label.pad,
+  label.bottom.align.horizontal = "center",
   label.left.align.horizontal = "default",
   label.right.align.horizontal = "default",
   label.top.align.horizontal = "center",
@@ -114,9 +114,7 @@ PictoStdChart(...)
 
 \item{label.right}{Optional labels to the right of graphic cells. The length of the labels must be the same as the number of rows in \code{x}.}
 
-\item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.}
-
-\item{label.vpad}{Vertical spacing below and above row labels.}
+\item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons).}
 
 \item{label.left.pad}{Horizontal spacing between row labels and icons.}
 

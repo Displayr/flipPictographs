@@ -10,9 +10,8 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
   show.legend = FALSE, legend.text = "", icon.nrow = 1, icon.ncol = NA,
   label.left = NA, label.right = NA, label.top = NA, label.bottom = NA,
   sublabel.left = NA, sublabel.right = NA, label.left.pad = 5,
-  label.right.pad = 5, label.vpad = 0, label.font.family = "arial",
-  label.font.size = 12, label.font.color = "#2C2C2C",
-  label.top.font.family = label.font.family,
+  label.right.pad = 5, label.font.family = "arial", label.font.size = 12,
+  label.font.color = "#2C2C2C", label.top.font.family = label.font.family,
   label.top.font.size = label.font.size, label.top.font.weight = "normal",
   label.top.font.color = label.font.color, label.top.height = NA,
   label.right.font.family = label.font.family,
@@ -92,8 +91,6 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
 \item{label.bottom}{Optional labels below graphic cells. The length of the labels must be the same as the number of columns in \code{x}.}
 
 \item{label.left.pad, label.right.pad}{Horizontal spacing between row labels and icons.}
-
-\item{label.vpad}{Vertical spacing below and above row labels.}
 
 \item{label.font.family}{Controls font-family of all labels. To modify only the font of one label use \code{label.left.font.family, label.top.font.family}, etc.}
 

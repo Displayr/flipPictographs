@@ -35,7 +35,7 @@
 #' @param label.data.prefix String to prepend data label.
 #' @param label.data.suffix String to append to data label.
 #' @param label.data.type Does nothing. Retained for backwards compatibility.
-#' @param label.pad Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons) and \code{label.vpad} (vertical space above and below the row labels.
+#' @param label.pad Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons).
 #' @param ... Arguments to pass to pictoChart
 #' @importFrom flipChartBasics AsChartMatrix
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
@@ -85,7 +85,6 @@ PictographChart <- function(x,
                           label.bottom = NA,
                           label.right = NA,
                           label.pad = 0,    # just for convenience
-                          label.vpad = label.pad, #spacing above and below row labels
                           label.left.pad = label.pad,
                           label.right.pad = label.pad,
                           label.bottom.align.horizontal = "center",
@@ -553,7 +552,7 @@ PictographChart <- function(x,
                       label.data.text = label.data.text, label.data.font.weight = label.data.font.weight,
                       label.data.font.color = label.data.font.color, label.float.font.weight = label.float.font.weight,
                       label.data.align.horizontal = label.data.align.horizontal,
-                      label.vpad = label.vpad, label.left.pad = label.left.pad, label.right.pad = label.right.pad,
+                      label.left.pad = label.left.pad, label.right.pad = label.right.pad,
                       show.label.float = show.label.float, label.float.text = label.float.text,
                       label.float.font.size = label.float.font.size, label.float.font.color = label.float.font.color,
                       label.float.align.horizontal = label.float.align.horizontal, label.float.align.vertical = label.float.align.vertical,
