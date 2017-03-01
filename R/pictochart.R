@@ -300,7 +300,7 @@ pictoChart <- function(x,
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
                             \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
-                            \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}],",
+                            \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
                             label.float.position, label.float.text,
                             label.float.font.size, label.float.font.weight, label.float.font.family,
                             label.float.font.color, label.float.align.horizontal) #, label.float.align.vertical)
@@ -352,9 +352,12 @@ pictoChart <- function(x,
     if(is.na(label.bottom.height))
         label.bottom.height <- label.bottom.font.size*1.0
 
+
+
     # Calculate size of chart - icons are adjusted to fill the space
     # described by row.height x column.width per data.cell
     # Excludes row padding and header/footer text
+    icon.vpad <- 0
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) && (is.na(column.width) || is.na(row.height)))
     {
         chart.width <- max(10, graphic.width.inch * graphic.resolution - tot.side.widths, na.rm=T)
@@ -393,32 +396,41 @@ pictoChart <- function(x,
         {
             row.height <- max.font.size
             column.width <- column.width.max
+
+            cat("Row heights constrained by font size!!\n")
+            icon.vpad <- -1
         }
     } else
     {
          # Default chart dimensions without graphic sizes
+         # Do not use font sizes in constraints because we do not know the size of the graphic
          if (all(is.na(row.height)))
-            row.height <- pmax(15*icon.nrow, 1.2 * max.font.size)
+            row.height <- 15*icon.nrow
          if (all(is.na(column.width)))
             column.width <- sum(row.height)/tot.icon.nrow * icon.ncol *max(0.01,width.height.ratio,na.rm=T)
-                                #font.whratio*label.top.font.size*nchar(label.top),
-                                #font.whratio*label.bottom.font.size*nchar(label.bottom))
     }
+    cat("row-height:", row.height, " max.font.size:", max.font.size, "\n")
     if (length(row.height) == 1)
         row.height <- rep(row.height, n)
     if (length(column.width) == 1)
         column.width <- rep(column.width, m)
-    icon.width <- min(column.width)/max(icon.ncol) * (1 - pad.icon.col)
-    icon.height <- min(row.height)/max(icon.nrow) * (1 - pad.icon.row)
+    icon.width <- min(column.width/icon.ncol) * (1 - pad.icon.col)
+    icon.height <- min(row.height/icon.nrow) * (1 - pad.icon.row)
     if (!is.na(width.height.ratio))
         icon.height <- icon.width/width.height.ratio
-    #cat("icon dim:", icon.width, icon.height, "\n")
+    cat("icon dim:", icon.width, icon.height, "\n")
+
+    if (icon.vpad == -1)
+    {
+        row.mheight <- icon.height * icon.nrow
+        icon.vpad <- row.height - row.mheight/2
+    }
 
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)
     pad.right <- matrix(0, n, m)
-    pad.top <- matrix(0, n, m)
-    pad.bottom <- matrix(0, n, m)
+    pad.top <- matrix(icon.vpad, n, m)
+    pad.bottom <- matrix(icon.vpad, n, m)
 
     if (fill.direction != "fromright")
         pad.right[,m] <- f.mspace
