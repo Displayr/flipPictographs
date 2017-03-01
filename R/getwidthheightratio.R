@@ -9,26 +9,32 @@ getWidthHeightRatio <- function(image.url)
     tmp.image <- try(getURLContent(image.url), silent=T)
     if (inherits(tmp.image, "try-error"))
         stop("Image not found\n")
-    print(tmp.image)
     tmp.type <- attr(tmp.image, "Content-Type")
 
     whratio <- NA
     if (grepl("svg", tmp.type))
     {
-        tmp.w <- regmatches(tmp.image, regexpr("\\swidth=\"[0-9 .]+", tmp.image))
-        tmp.h <- regmatches(tmp.image, regexpr("\\sheight=\"[0-9 .]+", tmp.image))
-        if (length(tmp.w) != 0 && length(tmp.h) != 0)
-        {
-            ww <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.w)[[1]][2]))
-            hh <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.h)[[1]][2]))
-            whratio <- ww/hh
-        }
+
+        # No warning is given because recoloring option is not available for pngs or jpegs
+        # if (!any(grepl("fill", tmp.image)))
+        #    warning("SVG image is missing fill attribute. Icon cannot be recolored\n")
+
+        tmp.image <- unlist(strsplit(split="<", tmp.image))[1:5]
+        tmp.str <- regmatches(tmp.image, regexpr("viewBox=\"[0-9 .-]+", tmp.image))
+        tmp.dim <- suppressWarnings(as.numeric(unlist(strsplit(split=" ", tmp.str))))
+        whratio <- tmp.dim[3]/tmp.dim[4]
 
         if (is.na(whratio))
         {
-            tmp.str <- regmatches(tmp.image, regexpr("viewBox=\"[0-9 .]+", tmp.image))
-            tmp.dim <- suppressWarnings(as.numeric(unlist(strsplit(split=" ", tmp.str))))
-            whratio <- tmp.dim[3]/tmp.dim[4]
+            warning("SVG image is missing viewBox attribute. Aspect ratio may not be preserved.")
+            tmp.w <- regmatches(tmp.image, regexpr("\\swidth=\"[0-9 .]+", tmp.image))
+            tmp.h <- regmatches(tmp.image, regexpr("\\sheight=\"[0-9 .]+", tmp.image))
+            if (length(tmp.w) != 0 && length(tmp.h) != 0)
+            {
+                ww <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.w)[[1]][2]))
+                hh <- as.numeric(gsub("\"", "", strsplit(split="=", tmp.h)[[1]][2]))
+                whratio <- ww/hh
+            }
         }
 
     } else
