@@ -300,7 +300,7 @@ pictoChart <- function(x,
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
                             \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
-                            \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
+                            \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}],",
                             label.float.position, label.float.text,
                             label.float.font.size, label.float.font.weight, label.float.font.family,
                             label.float.font.color, label.float.align.horizontal) #, label.float.align.vertical)
@@ -457,9 +457,9 @@ pictoChart <- function(x,
     # It also ensures that lines are visible at the top and bottom of the table
     label.vpad <- 0
     if (all(icon.nrow > 1))
-        label.vpad <- icon.height/2
+        label.vpad <- 0.5 * icon.height  # this padding should actually decrease with font size
     if (any(icon.nrow > 1) && is.null(sublabel.left) && is.null(sublabel.right))
-        label.vpad <- icon.height/2
+        label.vpad <- 0.5 * icon.height
 
     lab.tpad <- rep(label.vpad, n)
     lab.bpad <- rep(label.vpad, n)

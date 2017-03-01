@@ -414,6 +414,9 @@ PictographChart <- function(x,
                 sublabel.left.font.size <- label.data.font.size
                 sublabel.left.font.weight <- label.data.font.weight
                 sublabel.left.align.horizontal <- label.data.align.horizontal
+
+                if (!hide.label.right)
+                    label.left.align.vertical <- label.right.align.vertical
             }
             show.label.data  <- FALSE
         }
@@ -439,6 +442,9 @@ PictographChart <- function(x,
                 sublabel.right.font.size <- label.data.font.size
                 sublabel.right.font.weight <- label.data.font.weight
                 sublabel.right.align.horizontal <- label.right.align.horizontal
+
+                if (!hide.label.left)
+                    label.right.align.vertical <- label.left.align.vertical
             }
             show.label.data <- FALSE
         }
