@@ -357,7 +357,6 @@ pictoChart <- function(x,
     # Calculate size of chart - icons are adjusted to fill the space
     # described by row.height x column.width per data.cell
     # Excludes row padding and header/footer text
-    icon.vpad <- 0
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) && (is.na(column.width) || is.na(row.height)))
     {
         chart.width <- max(10, graphic.width.inch * graphic.resolution - tot.side.widths, na.rm=T)
@@ -396,9 +395,7 @@ pictoChart <- function(x,
         {
             row.height <- pmax(row.height, max.font.size)
             column.width <- column.width.max
-
             cat("Row heights constrained by font size!!\n")
-            icon.vpad <- -1
         }
     } else
     {
@@ -420,19 +417,11 @@ pictoChart <- function(x,
         icon.height <- icon.width/width.height.ratio
     cat("icon dim:", icon.width, icon.height, "\n")
 
-    if (icon.vpad == -1)
-    {
-        row.mheight <- icon.height * icon.nrow
-        icon.vpad <- row.height - row.mheight/2
-        icon.vpad <- 0
-        cat("icon.vpad:", icon.vpad, "\n")
-    }
-
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)
     pad.right <- matrix(0, n, m)
-    pad.top <- matrix(icon.vpad, n, m)
-    pad.bottom <- matrix(icon.vpad, n, m)
+    pad.top <- matrix(0, n, m)
+    pad.bottom <- matrix(0, n, m)
 
     if (fill.direction != "fromright")
         pad.right[,m] <- f.mspace
@@ -464,17 +453,18 @@ pictoChart <- function(x,
         }
     }
 
+    label.vpad <- 0
+    if (is.na(graphic.height.inch))
+        max.font.size <- 0
+    if (all(icon.nrow > 1))
+        label.vpad <- (icon.height - max.font.size)/2
+    if (any(icon.nrow > 1) && is.null(sublabel.left) && is.null(sublabel.right))
+        label.vpad <- (icon.height - max.font.size)/2
 
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
     # It also ensures that lines are visible at the top and bottom of the table
-    label.vpad <- 0
-    if (all(icon.nrow > 1))
-        label.vpad <- 0.5 * icon.height  # this padding should actually decrease with font size
-    if (any(icon.nrow > 1) && is.null(sublabel.left) && is.null(sublabel.right))
-        label.vpad <- 0.5 * icon.height
-
     lab.tpad <- rep(label.vpad, n)
     lab.bpad <- rep(label.vpad, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
