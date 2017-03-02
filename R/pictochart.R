@@ -424,6 +424,8 @@ pictoChart <- function(x,
     {
         row.mheight <- icon.height * icon.nrow
         icon.vpad <- row.height - row.mheight/2
+        icon.vpad <- 0
+        cat("icon.vpad:", icon.vpad, "\n")
     }
 
     # Calculating padding/alignment
