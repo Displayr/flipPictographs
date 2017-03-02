@@ -344,7 +344,7 @@ pictoChart <- function(x,
     if (!is.na(graphic.width.inch) && tot.side.widths > graphic.resolution * graphic.width.inch)
     {
         size.warning <- 1
-        warning("Pictograph is wider than the window. Consider increasing the image width, reducing label lengths, or decreasing font size\n")
+        warning("Pictograph is too large. Try increasing the ROutput window or decreasing font size\n")
     }
 
     if(is.na(label.top.height))
@@ -395,7 +395,6 @@ pictoChart <- function(x,
         {
             row.height <- pmax(row.height, max.font.size)
             column.width <- column.width.max
-            cat("Row heights constrained by font size!!\n")
         }
     } else
     {
@@ -406,7 +405,7 @@ pictoChart <- function(x,
          if (all(is.na(column.width)))
             column.width <- sum(row.height)/tot.icon.nrow * icon.ncol *max(0.01,width.height.ratio,na.rm=T)
     }
-    cat("row-height:", row.height, " max.font.size:", max.font.size, "\n")
+    #cat("row-height:", row.height, " max.font.size:", max.font.size, "\n")
     if (length(row.height) == 1)
         row.height <- rep(row.height, n)
     if (length(column.width) == 1)
@@ -415,7 +414,7 @@ pictoChart <- function(x,
     icon.height <- min(row.height/icon.nrow) * (1 - pad.icon.row)
     if (!is.na(width.height.ratio))
         icon.height <- icon.width/width.height.ratio
-    cat("icon dim:", icon.width, icon.height, "\n")
+    #cat("icon dim:", icon.width, icon.height, "\n")
 
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)
@@ -641,11 +640,11 @@ pictoChart <- function(x,
         if (!size.warning && graphic.width > graphic.width.inch * graphic.resolution * 1.1)
         {
             size.warning <- 1
-            warning("Pictograph is wider than size of window. Consider increasing image width or reducing the number of columns\n")
+            warning("Pictograph is too large. Try increasing the ROutput window or reducing the font size\n")
         }
 
         if (!size.warning && graphic.height > graphic.height.inch * graphic.resolution * 1.1)
-            warning("Pictograph is larger than the size of the window. Consider increasing the image height, reducing the number of rows or decreasing the font size\n")
+            warning("Pictograph is too large. Try increasing the ROutput window or reducing the font size\n")
     }
 
     json.str <- paste("{\"width\":", graphic.width, ", \"height\":", graphic.height, ",",
