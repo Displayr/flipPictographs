@@ -461,6 +461,9 @@ pictoChart <- function(x,
         label.vpad <- (icon.height - max.font.size)/2
     if (any(icon.nrow > 1) && is.null(sublabel.left) && is.null(sublabel.right))
         label.vpad <- (icon.height - max.font.size)/2
+    if (label.vpad < 0)
+        label.vpad <- 0
+    #cat("label.vpad:", label.vpad, "\n")
 
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
