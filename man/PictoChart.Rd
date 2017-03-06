@@ -57,8 +57,8 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
   column.width = NA, width.height.ratio = NA,
   background.color = "transparent", line.color = "#A8A8A8",
   line.width = 0.5, pad.legend = 0.5 * column.width[1], pad.row = 2,
-  pad.col = 2, pad.icon.row = 0, pad.icon.col = 0, f.mspace = 0,
-  graphic.width.inch = NA, graphic.height.inch = NA,
+  pad.col = 2, pad.icon.row = 0, pad.icon.col = 0, label.vpad = 0,
+  f.mspace = 0, graphic.width.inch = NA, graphic.height.inch = NA,
   graphic.resolution = 72, font.whratio = 0.9, print.config = FALSE)
 }
 \arguments{
@@ -166,4 +166,3 @@ Function that computes dimensions for PictographChart. It should not be called d
 The output is a JSON string for creating the widget
 }
 \keyword{internal}
-

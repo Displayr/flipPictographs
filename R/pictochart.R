@@ -146,6 +146,7 @@ pictoChart <- function(x,
                        pad.col = 2,
                        pad.icon.row = 0.0,
                        pad.icon.col = 0.0,
+                       label.vpad = 0, # deprecated - is ignored
                        f.mspace = 0,
                        #margin.top = 0,
                        #margin.right = 0,
@@ -155,7 +156,8 @@ pictoChart <- function(x,
                        graphic.height.inch = NA,
                        graphic.resolution = 72,
                        font.whratio = 0.9,
-                       print.config = FALSE)
+                       print.config = FALSE
+                       )
 {
     n <- if (is.null(nrow(x))) length(x)
          else nrow(x)

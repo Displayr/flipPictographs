@@ -120,4 +120,3 @@ SinglePicto(xx, 9, number.rows=3, is.custom.url=TRUE,
 \seealso{
 PictographChart to create a chart or table of pictographs
 }
-
