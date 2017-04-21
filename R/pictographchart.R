@@ -140,6 +140,15 @@ PictographChart <- function(x,
     if (label.data.type != "None")
         show.label.data <- TRUE
 
+    if (is.custom.url)
+    {
+        hide.base.image <- FALSE                # overwritten in next block
+        icon.palette <- "User-specified"        # ignored anyway - but must be defined
+        icon.colors <- "black"
+        base.icon.color <- ""
+        label.color.asIcon <- FALSE
+    }
+
     if (is.custom.url && nchar(base.image) == 0)
         hide.base.image <- TRUE
 
