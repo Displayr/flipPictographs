@@ -437,10 +437,12 @@ pictoChart <- function(x,
         fstr.width <- max(fstr.width)
         fstr.space <- if (all(icon.nrow==1))(min(total.icons * (1 - prop)) - 0.2) * icon.width/(1 - pad.icon.col)
                       else min(column.width[1] - (j.pos * icon.width/(1 - pad.icon.col)))
-        #cat(sprintf("Floating labels of length %.1f placed in space of %.1f/%.1f (icon.width=%.1f)\n",
-        #            fstr.width, fstr.space, column.width[1], icon.width))
         if (fstr.width > fstr.space)
         {
+            #cat("fstr.width:", fstr.width, ", fstr.space:", fstr.space, "\n")
+            if (fstr.space < 1.3)
+                stop("Window is too narrow. Try widening the size of the pictograph or removing data labels.")
+
             if (all(icon.nrow == 1))
             {
                 #cat("Incrementing total.icons\n")
