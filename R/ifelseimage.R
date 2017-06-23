@@ -19,5 +19,5 @@ IfElseImage <- function(condition,
         stop("Parameter 'condition' should be TRUE or FALSE.")
 
     image <- if (condition) true.image else false.image
-    SinglePicto(1, 1, is.custom.url=T, image=image)
+    SinglePicto(1, 1, is.custom.url=T, image=image, auto.size = TRUE)
 }
