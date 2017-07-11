@@ -10,7 +10,11 @@
 #' @param hide.base.image Turns off background image (on by default). In general, the base image should only be shown if the input data is a proportion.
 #' @param total.icons Maximum number of icons in each table cell. By default, it will be determine based on \code{ceiling(x)}.
 #' @param icon.palette Name of palette used to color icons. Only applicable for in-built icons
-#' @param icon.colors Vector of colors for icons. Only applicable when \code{icon.palette = "User-specified"} and in-built icons used.
+#' @param icon.colors Vector of colors for icons. Only applicable when \code{icon.palette = "Custom color"} or {"Custom palette"} and in-built icons used (Deprecated).
+#' @param icon.custom.color A single color which is used if \code{icon.palette} is set to \code{"Custom color"}.
+#' @param icon.custom.gradient.start Character; starting color of gradient if \code{icon.palette} is set to \code{"Custom gradient"}.
+#' @param icon.custom.gradient.end Character; last color of gradient if \code{icon.palette} is set to \code{"Custom gradient"}.
+#' @param icon.custom.palette Character; comma separated list of colors to be used if \code{icon.palette} is set to \code{"Custom palette"}.
 #' @param layout May be one of \code{"Number of rows"} or \code{"Number of columns"}. This parameter controls how the configuration of icons is specified. If no string is supplied, it will be automatically determined depending on whether \code{icon.nrow} or \code{icon.ncol} is supplied.
 #' @param scale Value of one icon. If \code{scale  =  0}, the value is automatically determined from the data so that the largest entry is represented by 10 icons.
 #' @param legend.text Text shown with legend. If this string is empty, it will be automatically filled in using \code{scale}. (To hide text completely, use \code{legend.text  =  " "})
@@ -41,6 +45,7 @@
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @importFrom grDevices col2rgb
 #' @importFrom stats median
+#' @importFrom flipChartBasics ChartColors
 #' @importFrom rhtmlPictographs graphic
 #' @examples
 #' xx <- c(First = 3, Second = 6, Third=2)
@@ -61,7 +66,11 @@ PictographChart <- function(x,
                           scale = NA,
                           mode = "table",
                           icon.palette = "Strong colors",
-                          icon.colors = "black",
+                          icon.colors = "black",    # for backwards compatibility
+                          icon.custom.color = NA,
+                          icon.custom.gradient.start = NA,
+                          icon.custom.gradient.end = NA,
+                          icon.custom.palette = NA,
                           fill.direction = "fromleft",
                           show.lines = FALSE,
                           layout = NA,
@@ -143,8 +152,7 @@ PictographChart <- function(x,
     if (is.custom.url)
     {
         hide.base.image <- FALSE                # overwritten in next block
-        icon.palette <- "User-specified"        # ignored anyway - but must be defined
-        icon.colors <- "black"
+        icon.palette <- "Default colors"        # ignored anyway - but must be defined
         base.icon.color <- ""
         label.color.asIcon <- FALSE
     }
@@ -488,6 +496,7 @@ PictographChart <- function(x,
     # Icon colors
     if (icon.palette == "User-specified")
     {
+        # Old approach - only for supporting old R outputs
         c.hex <- unlist(strsplit(split=",", icon.colors))
         tryCatch(tmp.col <- col2rgb(c.hex),
                  error = function(cond){cat("Invalid color specified\n"); c.hex <- "black"})
@@ -497,9 +506,18 @@ PictographChart <- function(x,
         if (m == 1 || table.by.row)
             c.length <- n
 
-        c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette,
-                                              palette.end = 1 - 0.2 * (icon.palette %in% c("Reds","Blues","Greens","Greys")),
-                                              reverse = icon.palette %in% c("Reds","Blues","Greens","Greys"))
+        c.hex <- ChartColors(c.length, 
+                             given.colors = icon.palette,
+                             custom.color = icon.custom.color,
+                             custom.gradient.start = icon.custom.gradient.start,
+                             custom.gradient.end = icon.custom.gradient.end,
+                             custom.palette = icon.custom.palette,
+                             reverse = icon.palette %in% c("Reds", "Blues", "Greens", "Greys"),
+                             trim.light.colors = T)
+
+       # c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette,
+       #                                       palette.end = 1 - 0.2 * (icon.palette %in% c("Reds","Blues","Greens","Greys")),
+       #                                       reverse = icon.palette %in% c("Reds","Blues","Greens","Greys"))
         c.hex <- c.hex[1:c.length]
         if (any(is.na(c.hex)))
             stop("Unknown color palette specified")

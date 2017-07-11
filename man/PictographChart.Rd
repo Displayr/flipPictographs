@@ -9,9 +9,11 @@
 PictographChart(x, image = "stickman", base.image = "",
   is.custom.url = FALSE, hide.base.image = FALSE, total.icons = NA,
   scale = NA, mode = "table", icon.palette = "Strong colors",
-  icon.colors = "black", fill.direction = "fromleft", show.lines = FALSE,
-  layout = NA, icon.nrow = 1, icon.ncol = NA, fix.icon.nrow = TRUE,
-  table.by.row = FALSE, row.names.to.remove = "",
+  icon.colors = "black", icon.custom.color = NA,
+  icon.custom.gradient.start = NA, icon.custom.gradient.end = NA,
+  icon.custom.palette = NA, fill.direction = "fromleft",
+  show.lines = FALSE, layout = NA, icon.nrow = 1, icon.ncol = NA,
+  fix.icon.nrow = TRUE, table.by.row = FALSE, row.names.to.remove = "",
   column.names.to.remove = "", show.legend = FALSE, legend.text = "",
   legend.icon.color = NA, pad.legend = 40, hide.label.right = TRUE,
   hide.label.left = !hide.label.right, hide.label.bottom = (mode !=
@@ -69,7 +71,15 @@ PictoStdChart(...)
 
 \item{icon.palette}{Name of palette used to color icons. Only applicable for in-built icons}
 
-\item{icon.colors}{Vector of colors for icons. Only applicable when \code{icon.palette = "User-specified"} and in-built icons used.}
+\item{icon.colors}{Vector of colors for icons. Only applicable when \code{icon.palette = "Custom color"} or {"Custom palette"} and in-built icons used (Deprecated).}
+
+\item{icon.custom.color}{A single color which is used if \code{icon.palette} is set to \code{"Custom color"}.}
+
+\item{icon.custom.gradient.start}{Character; starting color of gradient if \code{icon.palette} is set to \code{"Custom gradient"}.}
+
+\item{icon.custom.gradient.end}{Character; last color of gradient if \code{icon.palette} is set to \code{"Custom gradient"}.}
+
+\item{icon.custom.palette}{Character; comma separated list of colors to be used if \code{icon.palette} is set to \code{"Custom palette"}.}
 
 \item{fill.direction}{Direction in which icons are filled. One of \code{"From left", "From right", "From top", "From bottom"}.}
 
