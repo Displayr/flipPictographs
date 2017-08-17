@@ -4,11 +4,19 @@
 \alias{Circle}
 \title{Circle}
 \usage{
-Circle(color = "red")
+Circle(color = "red", opacity = 0.9, print.config = FALSE)
 }
 \arguments{
-\item{color}{One of 'red', 'green' or 'yellow'.}
+\item{color}{One of 'red', 'green' or 'yellow' or a hex color code.}
+
+\item{opacity}{A numeric value between 0 and 1.}
+
+\item{print.config}{If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.}
 }
 \description{
 Draws a circle
+}
+\examples{
+Circle("red")
+Circle("#000000", opacity=0.2)
 }
