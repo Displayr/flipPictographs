@@ -338,7 +338,7 @@ pictoChart <- function(x,
         label.bottom.height <- label.bottom.font.size*1.0
 
     if (any(is.na(row.height)))
-        row.height <- rep(paste0("\"proportion:", 1/n, "\""), n)
+        row.height <- rep(paste0("\"proportion:", floor(1/n*1000)/1000, "\""), n)
     if (any(is.na(column.width)))
         column.width <- rep("\"flexible:graphic\"", m)
 
@@ -453,14 +453,14 @@ pictoChart <- function(x,
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
-        column.width <- c("flexible:label", column.width)
+        column.width <- c("\"flexible:label\"", column.width)
     }
     if (length(label.right) > 0 || length(sublabel.right) > 0)
     {
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
-        column.width <- c(column.width, "flexible:label")
+        column.width <- c(column.width, "\"flexible:label\"")
     }
 
 
