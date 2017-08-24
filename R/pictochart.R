@@ -332,23 +332,6 @@ pictoChart <- function(x,
     size.warning <- 0   # tracker so we only give one size warning
 
 
-    # Fix minimum size of label cells
-    if (is.na(label.left.width))
-        label.left.width <- label.left.pad + font.whratio * max(0, c(label.left.font.size * nchar(label.left),
-                                                 sublabel.left.font.size * nchar(sublabel.left)), na.rm=T)
-    if (is.na(label.right.width))
-        label.right.width <- label.right.pad + font.whratio * max(0, c(label.right.font.size * nchar(label.right),
-                                                 sublabel.right.font.size * nchar(sublabel.right)), na.rm=T)
-    legend.width <- 0
-    if (show.legend)
-        legend.width <- pad.legend + font.whratio*legend.font.size*nchar(legend.text)
-    tot.side.widths <- label.left.width + label.right.width + legend.width
-    if (!is.na(graphic.width.inch) && tot.side.widths > graphic.resolution * graphic.width.inch)
-    {
-        size.warning <- 1
-        warning("Pictograph is too large. Try increasing the ROutput window or decreasing font size\n")
-    }
-
     if(is.na(label.top.height))
         label.top.height <- label.top.font.size*1.0
     if(is.na(label.bottom.height))
@@ -470,14 +453,14 @@ pictoChart <- function(x,
         row.str <- cbind(label.left.str, row.str)
         corner.tl <- empty.str
         corner.bl <- empty.str
-        column.width <- c(label.left.width, column.width)
+        column.width <- c("flexible:label", column.width)
     }
     if (length(label.right) > 0 || length(sublabel.right) > 0)
     {
         row.str <- cbind(row.str, label.right.str)
         corner.tr <- empty.str
         corner.br <- empty.str
-        column.width <- c(column.width, label.right.width)
+        column.width <- c(column.width, "flexible:label")
     }
 
 
