@@ -41,7 +41,7 @@
 #' @param label.data.font.weight Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.
 #' @param label.data.align.horizontal Horizontal alignment of data labels.
 
-#' @param row.height Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.
+#' @param row.height Height of graphic cells. Can be a single value or a character or numeric vector the same length as the number of rows in \code{x}.
 #' @param column.width Width of graphic cells.
 #' @param width.height.ratio Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.
 #' @param pad.row Single numeric specifying vertical spacing between graphic cells in the table.
@@ -292,8 +292,8 @@ pictoChart <- function(x,
         # extra space in margin
         i.pos <- i.pos + 0.5
         j.pos <- j.pos + 0.2
-        fstr.width <- font.whratio * (label.float.font.size * nchar(label.float.text))
-        f.mspace <- max(f.mspace, fstr.width[ind.outside])
+        #fstr.width <- font.whratio * (label.float.font.size * nchar(label.float.text))
+        #f.mspace <- max(f.mspace, fstr.width[ind.outside])
 
         #if (length(ind.outside) > 0)
         #    cat("f.mspace increased to", f.mspace, "to fit labels of length", fstr.width[ind.outside], "\n")
@@ -354,69 +354,10 @@ pictoChart <- function(x,
     if(is.na(label.bottom.height))
         label.bottom.height <- label.bottom.font.size*1.0
 
-
-
-    # Calculate size of chart - icons are adjusted to fill the space
-    # described by row.height x column.width per data.cell
-    # Excludes row padding and header/footer text
-    if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) && (is.na(column.width) || is.na(row.height)))
-    {
-        chart.width <- max(10, graphic.width.inch * graphic.resolution - tot.side.widths, na.rm=T)
-        chart.height <- max(10, graphic.height.inch * graphic.resolution
-                                - (label.top.height + label.bottom.height)
-                                - ((n-1)/n)*pad.row
-                                - n * label.data.font.size, na.rm=T)
-
-        icon.width <- chart.width/tot.icon.ncol * (1 - pad.icon.col)
-        column.width.max <- icon.width/(1 - pad.icon.col) * icon.ncol
-
-        # h1 is the row-height if the window is filled heightwise
-        # h2 is the row-height if the window is filled lengthwise
-        h1 <- (chart.height/tot.icon.nrow) * icon.nrow
-        h2 <- icon.width/width.height.ratio * icon.nrow/(1 - pad.icon.row)
-        if (sum(h1) < sum(h2))
-        {
-            # Height constrained
-            row.height <- h1
-            icon.height <- chart.height/tot.icon.nrow * (1 - pad.icon.row)
-            icon.width <- width.height.ratio * icon.height
-            column.width <- icon.width * icon.ncol/(1 - pad.icon.col)
-            extra.width <- chart.width - sum(column.width)
-
-            ifelse(!is.null(label.left), label.left.width <- label.left.width + extra.width,
-                                         label.right.width <- label.right.width + extra.width)
-        } else
-        {
-            # Width constrained
-            row.height <- h2
-            column.width <- column.width.max
-        }
-
-        # Very constrained case where icons are smaller than text (width-constrained)
-        if (any(row.height < max.font.size))
-        {
-            row.height <- pmax(row.height, max.font.size)
-            column.width <- column.width.max
-        }
-    } else
-    {
-         # Default chart dimensions without graphic sizes
-         # Do not use font sizes in constraints because we do not know the size of the graphic
-         if (all(is.na(row.height)))
-            row.height <- 15*icon.nrow
-         if (all(is.na(column.width)))
-            column.width <- sum(row.height)/tot.icon.nrow * icon.ncol *max(0.01,width.height.ratio,na.rm=T)
-    }
-    #cat("row-height:", row.height, " max.font.size:", max.font.size, "\n")
-    if (length(row.height) == 1)
-        row.height <- rep(row.height, n)
-    if (length(column.width) == 1)
-        column.width <- rep(column.width, m)
-    icon.width <- min(column.width/icon.ncol) * (1 - pad.icon.col)
-    icon.height <- min(row.height/icon.nrow) * (1 - pad.icon.row)
-    if (!is.na(width.height.ratio))
-        icon.height <- icon.width/width.height.ratio
-    #cat("icon dim:", icon.width, icon.height, "\n")
+    if (any(is.na(row.height)))
+        row.height <- rep(paste0("\"proportion:", 1/n, "\""), n)
+    if (any(is.na(column.width)))
+        column.width <- rep("\"flexible:graphic\"", m)
 
     # Calculating padding/alignment
     pad.left <- matrix(0, n, m)
@@ -424,65 +365,20 @@ pictoChart <- function(x,
     pad.top <- matrix(0, n, m)
     pad.bottom <- matrix(0, n, m)
 
-    if (fill.direction != "fromright")
-        pad.right[,m] <- f.mspace
-    if (fill.direction == "fromright")
-        pad.left[,1] <- f.mspace
-    column.width <- column.width + pad.left[1,] + pad.right[1,]
-
-    if (show.label.float && !is.na(graphic.height.inch))
-    {
-        # We can only check the space left for data labels when graphic.width.inch and graphic.height.inch
-        # is supplied - otherwise the size of the icons can vary relative to the font size.
-        fstr.width <- max(fstr.width)
-        fstr.space <- if (all(icon.nrow==1))(min(total.icons * (1 - prop)) - 0.2) * icon.width/(1 - pad.icon.col)
-                      else min(column.width[1] - (j.pos * icon.width/(1 - pad.icon.col)))
-        if (fstr.width > fstr.space)
-        {
-            #cat("fstr.width:", fstr.width, ", fstr.space:", fstr.space, "\n")
-            if (fstr.space < 1.3)
-                stop("Window is too narrow. Try widening the size of the pictograph or removing data labels.")
-
-            if (all(icon.nrow == 1))
-            {
-                #cat("Incrementing total.icons\n")
-                return(NA)
-
-            }else
-            {
-                #cat("Adding", fstr.width - fstr.space, "to margins\n")
-                return(fstr.width - fstr.space)
-            }
-        }
-    }
-
-    label.vpad <- 0
-    if (is.na(graphic.height.inch))
-        max.font.size <- 0
-    if (all(icon.nrow > 1))
-        label.vpad <- (icon.height - max.font.size)/2
-    if (any(icon.nrow > 1) && is.null(sublabel.left) && is.null(sublabel.right))
-        label.vpad <- (icon.height - max.font.size)/2
-    if (label.vpad < 0)
-        label.vpad <- 0
-    #cat("label.vpad:", label.vpad, "\n")
-
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
     # rowlabels on the top and bottom of the table remain vertically centered
     # It also ensures that lines are visible at the top and bottom of the table
-    lab.tpad <- rep(label.vpad, n)
-    lab.bpad <- rep(label.vpad, n)
+    lab.tpad <- rep(0, n)
+    lab.bpad <- rep(0, n)
     if (length(label.top) == 0 || all(nchar(label.top) == 0))
     {
         pad.top[1,] <- pad.top[1,] + pad.row/2
-        row.height[1] <- row.height[1] + pad.row/2
         lab.tpad[1] <- lab.tpad[1] + pad.row/2
     }
     if (length(label.bottom)  ==  0 || all(nchar(label.bottom) == 0))
     {
         pad.bottom[n,] <- pad.bottom[n,] + pad.row/2
-        row.height[n] <- row.height[n] + pad.row/2
         lab.bpad[n] <- lab.bpad[n] + pad.row/2
     }
 
@@ -548,15 +444,11 @@ pictoChart <- function(x,
     # Preparing data labels
     label.data.str <- ""
     if (show.label.data)
-    {
         label.data.str <- sprintf("\"text-%s\":{\"text\":\"%s\", \"font-size\":\"%fpx\",\"font-weight\":\"%s\",
                              \"font-family\":\"%s\", \"font-color\":\"%s\", \"horizontal-align\":\"%s\"},",
                             label.data.position, label.data.text,
                             label.data.font.size, label.data.font.weight, label.data.font.family,
                             label.data.font.color, label.data.align.horizontal)
-        row.height <- row.height + label.data.font.size
-    }
-
 
     row.str <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":%f,\"numImages\":%d,
                          \"variableImage\":\"%s:%s%s:%s\", %s %s, %s %s
@@ -590,41 +482,44 @@ pictoChart <- function(x,
 
 
     # Adding legend
-    leg.rpad <- 0
-    if (nchar(legend.text) == 0)
-        legend.text <- " "
-    if (show.legend)
-    {
-        row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
-        leg.row <- ceiling(nrow(row.str)/2)
-        leg.col <- ncol(row.str)
-        legend.col.str <- ""
-        if (nchar(legend.icon.color) > 0)
-            legend.col.str <- paste(legend.icon.color[1], ":", sep="")
-
-        leg.vpad <- (row.height[leg.row]-icon.height)/2
-        row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
-                                                \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
-                                                \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
-                                                legend.text, legend.font.family, legend.font.size, legend.font.weight, legend.font.color)
-        row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
-                         \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
-                                               image.type, legend.col.str, fill.direction[1], fill.image[1],
-                                               leg.vpad, 0, leg.vpad, 0)
-        column.width <- c(column.width, pad.legend, icon.width, font.whratio*legend.font.size*nchar(legend.text))
-        leg.rpad <- sum(tail(column.width, 3))
-    }
+    # Does not work because we need to calculate leg.vpad (based on icon.height)
+    # Ask Kyle about aligning within a table cell
+    # Or maybe play around with hidden base image + floating labels?
+    #leg.rpad <- 0
+    #if (nchar(legend.text) == 0)
+    #    legend.text <- " "
+    #if (show.legend)
+    #{
+    #    row.str <- cbind(row.str, matrix(empty.str, nrow(row.str), 3))
+    #    leg.row <- ceiling(nrow(row.str)/2)
+    #    leg.col <- ncol(row.str)
+    #    legend.col.str <- ""
+    #    if (nchar(legend.icon.color) > 0)
+    #        legend.col.str <- paste(legend.icon.color[1], ":", sep="")
+    #
+    #    leg.vpad <- (row.height[leg.row]-icon.height)/2
+    #    row.str[leg.row, leg.col] <-  sprintf("{\"type\":\"label\", \"value\":{\"text\":\"%s\",\"font-family\":\"%s\",
+    #                                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\",\"font-color\":\"%s\",
+    #                                            \"horizontal-align\":\"left\", \"vertical-align\":\"center\"}}",
+    #                                            legend.text, legend.font.family, legend.font.size, legend.font.weight, legend.font.color)
+    #    row.str[leg.row, leg.col-1] <- sprintf("{\"type\":\"graphic\", \"value\":{\"proportion\":1,\"numImages\":1,
+    #                     \"variableImage\":\"%s:%s:%s%s\", \"padding\":\"%f %f %f %f\"}}",
+    #                                           image.type, legend.col.str, fill.direction[1], fill.image[1],
+    #                                           leg.vpad, 0, leg.vpad, 0)
+    #    column.width <- c(column.width, pad.legend, icon.width, font.whratio*legend.font.size*nchar(legend.text))
+    #    leg.rpad <- sum(tail(column.width, 3))
+    #}
 
     # Adding lines to make table
     lines.str <- ""
-    legendgap.str <- ""
+   # legendgap.str <- ""
     if (show.lines)
     {
-        if (show.legend)
-            legendgap.str <- paste("\"padding-right\":", 3*pad.col+leg.rpad, ",")
+       # if (show.legend)
+       #     legendgap.str <- paste("\"padding-right\":", 3*pad.col+leg.rpad, ",")
         lines.str <- paste("\"lines\":{\"horizontal\":[", paste((0:n)+any(nchar(label.top)>0), collapse = ","), "],",
                            "\"vertical\":[0,1,2],",
-                           legendgap.str,
+       #                    legendgap.str,
                            "\"style\": \"stroke:", line.color, ";stroke-width:", line.width, "\"}, ", sep = "")
     }
 
@@ -634,32 +529,15 @@ pictoChart <- function(x,
         row.height <- c(label.top.height, row.height)
     if (any(nchar(label.bottom) > 0))
         row.height <- c(row.height, label.bottom.height)
-    row.height <- pmax(1, row.height)
-    column.width <- pmax(1, column.width)
     row.str <- apply(row.str, 1, paste, collapse = ",")
-    graphic.width <- sum(column.width+pad.col) - pad.col
-    graphic.height <- sum(row.height+pad.row) - pad.row
 
-    # Check if pictograph output fits within graphic dimensions
-    #cat("final:", graphic.width, graphic.height, "\n")
-    if (!is.na(graphic.width.inch) && !is.na(graphic.width.inch))
-    {
-        if (!size.warning && graphic.width > graphic.width.inch * graphic.resolution * 1.1)
-        {
-            size.warning <- 1
-            warning("Pictograph is too large. Try increasing the ROutput window or reducing the font size\n")
-        }
-
-        if (!size.warning && graphic.height > graphic.height.inch * graphic.resolution * 1.1)
-            warning("Pictograph is too large. Try increasing the ROutput window or reducing the font size\n")
-    }
-
-    json.str <- paste("{\"width\":", graphic.width, ", \"height\":", graphic.height, ",",
+    # Exact dimensions should not matter as long as aspect ratio is correct 
+    dim.str <- ""
+    if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
+        dim.str <- paste0("\"width\":", graphic.width.inch, ", \"height\":", graphic.height.inch, ",")
+    json.str <- paste("{", dim.str, 
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
-             #"\"padding-top\":", margin.top, ",\"padding-right\":", margin.right, ",",
-             #"\"padding-bottom\":", margin.bottom, ",\"padding-left\":", margin.left, ",",
-             #"\"padding\":\"", paste(margin.top, margin.right, margin.bottom, margin.left, sep = " "), "\",",
              "\"rowGutterLength\":", pad.row, ",\"columnGutterLength\":", pad.col, ",",
              "\"colWidths\":[", paste(column.width, collapse = ","), "],",
              sep = "")

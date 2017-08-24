@@ -515,9 +515,6 @@ PictographChart <- function(x,
                              reverse = icon.palette %in% c("Reds", "Blues", "Greens", "Greys"),
                              trim.light.colors = T)
 
-       # c.hex <- flipChartBasics::ChartColors(c.length, given.colors = icon.palette,
-       #                                       palette.end = 1 - 0.2 * (icon.palette %in% c("Reds","Blues","Greens","Greys")),
-       #                                       reverse = icon.palette %in% c("Reds","Blues","Greens","Greys"))
         c.hex <- c.hex[1:c.length]
         if (any(is.na(c.hex)))
             stop("Unknown color palette specified")

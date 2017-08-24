@@ -126,7 +126,7 @@ pictoChart(x, fill.image, base.image = NA, image.type = "url",
 
 \item{label.data.align.horizontal}{Horizontal alignment of data labels.}
 
-\item{row.height}{Height of graphic cells. Can be a single value or a numeric vector the same length as the number of rows in \code{x}.}
+\item{row.height}{Height of graphic cells. Can be a single value or a character or numeric vector the same length as the number of rows in \code{x}.}
 
 \item{column.width}{Width of graphic cells.}
 
