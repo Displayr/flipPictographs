@@ -164,6 +164,10 @@ pictoChart <- function(x,
     m <- if (is.null(ncol(x)) || is.na(ncol(x))) 1
          else ncol(x)
 
+    # Ignore padding because it currently is not supported
+    pad.row <- 0
+    pad.col <- 0
+
     # Errors that are commonly encountered by Displayr/Q users are in sentence case
     # (e.g. total icons instead of total.icons), but parameters which are less commonly used
     # are referred to by exact parameter name so they can be easily corrected
