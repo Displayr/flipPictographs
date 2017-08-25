@@ -521,7 +521,8 @@ pictoChart <- function(x,
     # Exact dimensions should not matter as long as aspect ratio is correct 
     dim.str <- ""
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
-        dim.str <- paste0("\"width\":", graphic.width.inch, ", \"height\":", graphic.height.inch, ",")
+        dim.str <- paste0("\"width\":", graphic.width.inch * graphic.resolution, 
+                          ", \"height\":", graphic.height.inch * graphic.resolution, ",")
     json.str <- paste("{", dim.str, 
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
