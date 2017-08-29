@@ -338,7 +338,7 @@ pictoChart <- function(x,
         label.bottom.height <- label.bottom.font.size*1.0
 
     if (any(is.na(row.height)))
-        row.height <- rep(paste0("\"proportion:", floor(1/n*1000)/1000, "\""), n)
+        row.height <- paste0("\"proportion:", floor(icon.nrow/tot.icon.nrow*1000)/1000, "\"")
     if (any(is.na(column.width)))
         column.width <- rep("\"flexible:graphic\"", m)
 
