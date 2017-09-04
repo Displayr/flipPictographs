@@ -7,13 +7,13 @@
 #' @examples
 #' IfElseImage(TRUE)
 #' IfElseImage(3 < 2,
-#'             "https://dl.dropboxusercontent.com/u/539177224/thumbsup_grey.svg",
-#'             "https://dl.dropboxusercontent.com/u/539177224/thumbsdown_grey.svg")
+#'             "https://displayrcors.azureedge.net/images/thumbsup_grey.svg",
+#'             "https://displayrcors.azureedge.net/images/thumbsdown_grey.svg")
 #' @export
 
 IfElseImage <- function(condition,
-            true.image  = "https://dl.dropboxusercontent.com/u/539177224/uparrow_grey.svg",
-            false.image = "https://dl.dropboxusercontent.com/u/539177224/downarrow_grey.svg")
+            true.image  = "https://displayrcors.azureedge.net/images/uparrow_grey.svg",
+            false.image = "https://displayrcors.azureedge.net/images/downarrow_grey.svg")
 {
     if (is.na(condition) || !is.logical(condition))
         stop("Parameter 'condition' should be TRUE or FALSE.")
