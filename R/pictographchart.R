@@ -506,14 +506,13 @@ PictographChart <- function(x,
         if (m == 1 || table.by.row)
             c.length <- n
 
-        c.hex <- ChartColors(c.length, 
+        c.hex <- ChartColors(c.length,
                              given.colors = icon.palette,
                              custom.color = icon.custom.color,
                              custom.gradient.start = icon.custom.gradient.start,
                              custom.gradient.end = icon.custom.gradient.end,
                              custom.palette = icon.custom.palette,
-                             reverse = icon.palette %in% c("Reds", "Blues", "Greens", "Greys"),
-                             trim.light.colors = T)
+                             reverse = icon.palette %in% c("Reds", "Blues", "Greens", "Greys"))
 
         c.hex <- c.hex[1:c.length]
         if (any(is.na(c.hex)))
