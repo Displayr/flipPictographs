@@ -293,7 +293,7 @@ pictoChart <- function(x,
         pad.dir <- ifelse(fill.direction == "fromright", "padding-right", "padding-left")
         label.float.align.horizontal <- ifelse(fill.direction == "fromright", "right", "left")
         i.pos <- i.pos + 0.5
-        j.pos <- j.pos 
+        j.pos <- j.pos + 0.2
         #fstr.width <- font.whratio * (label.float.font.size * nchar(label.float.text))
         #f.mspace <- max(f.mspace, fstr.width[ind.outside])
 
@@ -302,13 +302,12 @@ pictoChart <- function(x,
 
         label.float.position <- sprintf("%.2f:%.2f", i.pos, j.pos)
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
-                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\":40,
+                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", 
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
                             \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
                             label.float.position, label.float.text,
-                            label.float.font.size, label.float.font.weight, 
-                            pad.dir, label.float.font.family,
-                            label.float.font.color, label.float.align.horizontal) 
+                            label.float.font.size, label.float.font.weight, #pad.dir, 
+                            label.float.font.family, label.float.font.color, label.float.align.horizontal) 
     }
 
     # Calculate size of table cells
