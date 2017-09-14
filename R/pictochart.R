@@ -302,13 +302,13 @@ pictoChart <- function(x,
 
         label.float.position <- sprintf("%.2f:%.2f", i.pos, j.pos)
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
-                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\":5,
+                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\":20,
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
                             \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
                             label.float.position, label.float.text,
                             label.float.font.size, label.float.font.weight, 
                             pad.dir, label.float.font.family,
-                            label.float.font.color, label.float.align.horizontal) #, label.float.align.vertical)
+                            label.float.font.color, label.float.align.horizontal) 
     }
 
     # Calculate size of table cells
@@ -350,6 +350,7 @@ pictoChart <- function(x,
     pad.right <- matrix(0, n, m)
     pad.top <- matrix(0, n, m)
     pad.bottom <- matrix(0, n, m)
+    #pad.right[,m] <- f.mspace
 
     # Compensating for rowGutters/pad.row
     # This additional padding is required to ensure that all rowheights are the same and
