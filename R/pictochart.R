@@ -302,7 +302,7 @@ pictoChart <- function(x,
 
         label.float.position <- sprintf("%.2f:%.2f", i.pos, j.pos)
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
-                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\":20,
+                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\":40,
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
                             \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
                             label.float.position, label.float.text,
