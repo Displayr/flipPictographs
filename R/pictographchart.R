@@ -388,8 +388,8 @@ PictographChart <- function(x,
                 icon.ncol <- NA
                 icon.nrow <- 1
             }
-            if (any(ceiling(x) >= total.icons) && !is.na(icon.nrow) && all(icon.nrow == 1))
-                total.icons <- total.icons + 1
+            #if (any(ceiling(x) >= total.icons) && !is.na(icon.nrow) && all(icon.nrow == 1))
+            #    total.icons <- total.icons + 1
             show.label.data <- FALSE
 
         } else if (label.data.position == "Next to bar")
