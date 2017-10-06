@@ -289,7 +289,7 @@ SinglePicto <- function (x,
         asp.str <- "none"
     }
    
-    rsz.str <- "false" 
+    rsz.str <- "true" 
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
