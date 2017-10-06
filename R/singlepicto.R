@@ -245,7 +245,7 @@ SinglePicto <- function (x,
         }
         margin.left <- ((graphic.width.inch * graphic.resolution) - sc * image.width)/2
         margin.right <- margin.left
-        margin.top <- ((graphic.width.inch * graphic.resolution) - sc * image.height - label.data.font.size)/2
+        margin.top <- ((graphic.height.inch * graphic.resolution) - sc * image.height - label.data.font.size)/2
         margin.bottom <- margin.top
     } 
     
