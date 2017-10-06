@@ -222,26 +222,33 @@ SinglePicto <- function (x,
     else
         paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
 
+    # total size of pictograph output
+    dim.str <- ""
+    if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
+        dim.str <- paste0(",\"width\":", graphic.width.inch * graphic.resolution,
+                          ",\"height\":", graphic.height.inch * graphic.resolution)
 
-    # Graphic dimensions WITHOUT text
-    image.height <- (icon.width/icon.WHratio * number.rows) + margin.top + margin.bottom
-    image.width <- (icon.width * ceiling(total.icons/number.rows)) + margin.left + margin.right
-
-    # Adding text - because font size does not change with the iframe
-    if (auto.size && label.data.position %in% c("Below","Above"))
+    # Use padding to make spacing correct
+    if (total.icons > 1 && !is.na(graphic.width.inch) && !is.na(graphic.height.inch) &&
+        sum(c(margin.top, margin.right, margin.bottom, margin.left)) == 0)
     {
+        # Graphic dimensions WITHOUT text
+        image.width <- (icon.width * ceiling(total.icons/number.rows))
+        image.height <- (icon.width/icon.WHratio * number.rows)
+    
         sc <- 1
-        if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
+        if (auto.size && !is.na(graphic.width.inch) && !is.na(graphic.height.inch))
         {
             h.sc <- ((graphic.height.inch * graphic.resolution) - label.data.font.size)/image.height
             w.sc <- (graphic.width.inch * graphic.resolution)/image.width
             sc <- min(h.sc, w.sc)
         }
-        image.width <- sc * image.width
-        image.height <- (sc * image.height) + label.data.font.size
-    }
-
-
+        margin.left <- ((graphic.width.inch * graphic.resolution) - sc * image.width)/2
+        margin.right <- margin.left
+        margin.top <- ((graphic.width.inch * graphic.resolution) - sc * image.height - label.data.font.size)/2
+        margin.bottom <- margin.top
+    } 
+    
     # Data labels
     if (label.data.position != "None")
     {
@@ -258,8 +265,8 @@ SinglePicto <- function (x,
                                 formatC(label.data.values * (1+(99*label.data.100prc)),                                  digits=label.data.digits, format="f", big.mark=label.data.bigmark),
                                 label.data.suffix)
         label.pos.str <- switch(label.data.position,
-                                'Above' = "\"text-header\":{",
-                                'Below' = "\"text-footer\":{",
+                                'Above' = "\"table-header\":{",
+                                'Below' = "\"table-footer\":{",
                                 'Next to icons' = sprintf("\"floatingLabels\":[{\"position\":\"%s\", ",
                                                            label.float.position))
         label.data.str <- sprintf(", %s\"text\":\"%s\", \"font-size\":\"%fpx\",
@@ -269,8 +276,8 @@ SinglePicto <- function (x,
                             label.data.font.weight, label.data.font.family,
                             label.data.font.color, label.data.align.horizontal, tmp.str)
     }
-    if (!is.finite(image.width) || !is.finite(image.height))
-        stop("Dimensions of image are invalid. Try using different layout options\n")
+    #if (!is.finite(image.width) || !is.finite(image.height))
+    #    stop("Dimensions of image are invalid. Try using different layout options\n")
 
     if(auto.size)
     {
@@ -281,13 +288,14 @@ SinglePicto <- function (x,
         rsz.str <- "false"
         asp.str <- "none"
     }
+   
+    rsz.str <- "false" 
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
+          dim.str,
           label.data.str,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str,
-          ",\"width\":", image.width,
-          ",\"height\":", image.height,
           ",\"background-color\":\"", background.color, "\"",
           ",\"columnGutter\":", pad.col,
           ",\"rowGutter\":", pad.row,
