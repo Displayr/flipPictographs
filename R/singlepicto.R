@@ -116,7 +116,7 @@ SinglePicto <- function (x,
     }
     if (is.na(graphic.width.inch) || is.na(graphic.height.inch))
     {
-        warning("Dimensions of graphic not specified. Spacing may be incorrect."
+        warning("Dimensions of graphic not specified. Spacing may be incorrect.")
         graphic.width.inch <- 5
         graphic.height.inch <- 5
     }
