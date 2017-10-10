@@ -114,6 +114,13 @@ SinglePicto <- function (x,
             total.icons <- maximum.value
         scale <- maximum.value/total.icons
     }
+    if (is.na(graphic.width.inch) || is.na(graphic.height.inch))
+    {
+        warning("Dimensions of graphic not specified. Spacing may be incorrect."
+        graphic.width.inch <- 5
+        graphic.height.inch <- 5
+    }
+
 
     # Some parameter substitutions for R GUI Controls
     if (is.custom.url)
@@ -229,7 +236,7 @@ SinglePicto <- function (x,
                           ",\"height\":", graphic.height.inch * graphic.resolution)
 
     # Use padding to make spacing correct
-    if (total.icons > 1 && !is.na(graphic.width.inch) && !is.na(graphic.height.inch) &&
+    if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) &&
         sum(c(margin.top, margin.right, margin.bottom, margin.left)) == 0)
     {
         # Graphic dimensions WITHOUT text
