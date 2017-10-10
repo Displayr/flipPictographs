@@ -1,27 +1,27 @@
 context("SinglePicto")
 
 test_that("SinglePicto runs (simple example)", {
-    expect_error( SinglePicto(2.5, 5), NA )
+    expect_warning( SinglePicto(2.5, 5))
 })
 
 test_that("SinglePicto accepts width parameter", {
-    expect_error( SinglePicto(2.5, 5, icon.width=10), NA )
+    expect_warning( SinglePicto(2.5, 5, icon.width=10))
 })
 
 
 test_that("SinglePicto accepts direction parameter", {
-    expect_error( SinglePicto(4.5, 6, number.rows=2, fill.direction="fromright"), NA )
+    expect_warning( SinglePicto(4.5, 6, number.rows=2, fill.direction="fromright"))
 })
 
 test_that("SinglePicto accepts image parameter", {
-    expect_error( SinglePicto(2.5, 5, image="stickman"), NA )
+    expect_warning( SinglePicto(2.5, 5, image="stickman"))
 })
 
 
 test_that("SinglePicto accepts background parameter", {
-    expect_error( SinglePicto(2.5, 5, 5, image="stickman", background.color="red"), NA )
+    expect_warning( SinglePicto(2.5, 5, 5, image="stickman", background.color="red") )
 })
 
 test_that("SinglePicto accepts autosize parameter", {
-    expect_error( SinglePicto(2.5, 5, 3, image="stickman", background.color="red", auto.size = T), NA )
+    expect_warning( SinglePicto(2.5, 5, 3, image="stickman", background.color="red", auto.size = T) )
 })
