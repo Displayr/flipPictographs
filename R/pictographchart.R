@@ -42,7 +42,7 @@
 #' @param label.pad Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons).
 #' @param ... Arguments to pass to pictoChart
 #' @importFrom flipChartBasics AsChartMatrix
-#' @importFrom flipTransformations RemoveRowsAndOrColumns
+#' @importFrom flipTables RemoveRowsAndOrColumns
 #' @importFrom grDevices col2rgb
 #' @importFrom stats median
 #' @importFrom flipChartBasics ChartColors
