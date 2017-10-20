@@ -16,7 +16,7 @@ Imports:
     RCurl,
     png,
     jpeg,
-    bmp,
+    bmp
 Remotes:
     Displayr/flipChartBasics,
     Displayr/flipTransformations,
