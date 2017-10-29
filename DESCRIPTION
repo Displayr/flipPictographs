@@ -12,7 +12,7 @@ Suggests:
 Imports:
     rhtmlPictographs,
     flipChartBasics,
-    flipTables (>= 2.1.0),
+    flipTables (>= 2.2.2),
     RCurl,
     png,
     jpeg,
