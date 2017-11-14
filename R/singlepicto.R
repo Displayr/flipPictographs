@@ -114,7 +114,7 @@ SinglePicto <- function (x,
             total.icons <- maximum.value
         scale <- maximum.value/total.icons
     }
-    if (is.na(graphic.width.inch) || is.na(graphic.height.inch))
+    if (!is.na(total.icons) && total.icons > 1 && (is.na(graphic.width.inch) || is.na(graphic.height.inch)))
     {
         warning("Dimensions of graphic not specified. Spacing may be incorrect.")
         graphic.width.inch <- 5
@@ -242,7 +242,7 @@ SinglePicto <- function (x,
         # Graphic dimensions WITHOUT text
         image.width <- (icon.width * ceiling(total.icons/number.rows))
         image.height <- (icon.width/icon.WHratio * number.rows)
-    
+
         sc <- 1
         if (auto.size && !is.na(graphic.width.inch) && !is.na(graphic.height.inch))
         {
@@ -254,8 +254,8 @@ SinglePicto <- function (x,
         margin.right <- margin.left
         margin.top <- max(0, ((graphic.height.inch * graphic.resolution) - sc * image.height - label.data.font.size)/2)
         margin.bottom <- margin.top
-    } 
-    
+    }
+
     # Data labels
     if (label.data.position != "None")
     {
@@ -295,8 +295,8 @@ SinglePicto <- function (x,
         rsz.str <- "false"
         asp.str <- "none"
     }
-   
-    rsz.str <- "true" 
+
+    rsz.str <- "true"
     json.string <- paste("{\"proportion\":", prop,
           ",\"numImages\":", total.icons,
           layout.str,
