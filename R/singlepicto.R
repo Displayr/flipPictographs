@@ -267,6 +267,8 @@ SinglePicto <- function (x,
           ",\"numImages\":", total.icons,
           icon.size.str,
           layout.str,
+          ",\"rowGutter\":", pad.row, 
+          ",\"columnGutter\":", pad.col, 
           ",\"variableImage\":\"", variable.image, "\"", base.image.str, "}}]]}",
           label.data.str,
           ",\"background-color\":\"", background.color, "\"}")
