@@ -127,6 +127,8 @@ SinglePicto <- function (x,
     }
 
     fill.direction <- gsub(" ", "", tolower(fill.direction))
+    if (auto.size)
+        icon.width <- 50
     if (!is.na(total.icons) && total.icons == 1)
     {
         # Parameters not supplied in Pictographs - Single
