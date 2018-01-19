@@ -39,9 +39,9 @@
 #' @param label.data.100prc Option to show data labels multiplied by 100. This is useful when reporting percentages.
 #' @param label.data.prefix String to prepend data label.
 #' @param label.data.suffix String to append to data label.
-#' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
-#' @param graphic.height.inch Verical dimension of the chart output in inches.
-#' @param graphic.resolution Conversion from inches to pixels.
+#' @param graphic.width.inch (deprecated) Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
+#' @param graphic.height.inch (deprecated) Verical dimension of the chart output in inches.
+#' @param graphic.resolution (deprecated) Conversion from inches to pixels.
 #' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
 #' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
 #' @importFrom  rhtmlPictographs graphic
@@ -114,13 +114,6 @@ SinglePicto <- function (x,
             total.icons <- maximum.value
         scale <- maximum.value/total.icons
     }
-    if (!is.na(total.icons) && total.icons > 1 && (is.na(graphic.width.inch) || is.na(graphic.height.inch)))
-    {
-        warning("Dimensions of graphic not specified. Spacing may be incorrect.")
-        graphic.width.inch <- 5
-        graphic.height.inch <- 5
-    }
-
 
     # Some parameter substitutions for R GUI Controls
     if (is.custom.url)
@@ -229,31 +222,15 @@ SinglePicto <- function (x,
     else
         paste(image.type, ":", fill.direction, ":", fill.icon.color, ":", image.url, sep="")
 
-    # total size of pictograph output
+    # size of pictograph output
     dim.str <- ""
-    if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
-        dim.str <- paste0(",\"width\":", graphic.width.inch * graphic.resolution,
-                          ",\"height\":", graphic.height.inch * graphic.resolution)
-
-    # Use padding to make spacing correct
-    if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch) &&
-        sum(c(margin.top, margin.right, margin.bottom, margin.left)) == 0)
+    icon.size.str <- ""
+    if (auto.size)
+        dim.str <- "\"rowHeights\":[\"proportion:1\"], \"colWidths\":[\"flexible:graphic\"]"
+    else
     {
-        # Graphic dimensions WITHOUT text
-        image.width <- (icon.width * ceiling(total.icons/number.rows))
-        image.height <- (icon.width/icon.WHratio * number.rows)
-
-        sc <- 1
-        if (auto.size && !is.na(graphic.width.inch) && !is.na(graphic.height.inch))
-        {
-            h.sc <- ((graphic.height.inch * graphic.resolution) - label.data.font.size)/image.height
-            w.sc <- (graphic.width.inch * graphic.resolution)/image.width
-            sc <- min(h.sc, w.sc)
-        }
-        margin.left <- max(0, ((graphic.width.inch * graphic.resolution) - sc * image.width)/2)
-        margin.right <- margin.left
-        margin.top <- max(0, ((graphic.height.inch * graphic.resolution) - sc * image.height - label.data.font.size)/2)
-        margin.bottom <- margin.top
+        dim.str <- "\"rowHeights\":[\"fixedsize:graphic\"], \"colWidths\":[\"fixedsize:graphic\"]"
+        icon.size.str <- paste0(",\"imageWidth\":", icon.width)
     }
 
     # Data labels
@@ -283,33 +260,18 @@ SinglePicto <- function (x,
                             label.data.font.weight, label.data.font.family,
                             label.data.font.color, label.data.align.horizontal, tmp.str)
     }
-    #if (!is.finite(image.width) || !is.finite(image.height))
-    #    stop("Dimensions of image are invalid. Try using different layout options\n")
 
-    if(auto.size)
-    {
-        rsz.str <- "true"
-        asp.str <- "xMidYMid"
-    } else
-    {
-        rsz.str <- "false"
-        asp.str <- "none"
-    }
-
-    rsz.str <- "true"
-    json.string <- paste("{\"proportion\":", prop,
+    json.string <- paste0("{\"table\": {", dim.str, 
+          ",\"rows\":[[{\"type\":\"graphic\", \"value\":{",
+          "\"proportion\":", prop,
           ",\"numImages\":", total.icons,
+          icon.size.str,
           layout.str,
-          dim.str,
+          ",\"rowGutter\":", pad.row, 
+          ",\"columnGutter\":", pad.col, 
+          ",\"variableImage\":\"", variable.image, "\"", base.image.str, "}}]]}",
           label.data.str,
-          ",\"variableImage\":\"", variable.image, "\"", base.image.str,
-          ",\"background-color\":\"", background.color, "\"",
-          ",\"columnGutter\":", pad.col,
-          ",\"rowGutter\":", pad.row,
-          ",\"padding\":\"", paste(margin.top, margin.right, margin.bottom, margin.left, sep = " "), "\"",
-          ",\"preserveAspectRatio\":\"", asp.str, "\"",
-          ",\"resizable\":\"", rsz.str, "\"",
-          "}", sep = "")
+          ",\"background-color\":\"", background.color, "\"}")
 
     if (print.config)
         cat(json.string)
