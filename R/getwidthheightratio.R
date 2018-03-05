@@ -11,6 +11,9 @@ getWidthHeightRatio <- function(image.url)
         stop("Image not found\n")
     tmp.type <- attr(tmp.image, "Content-Type")
 
+    if ("text/html" %in% tmp.type)
+        stop("Image type is text/html. Ensure the image url is correct and not redirected.")
+
     whratio <- NA
     if (grepl("svg", tmp.type))
     {

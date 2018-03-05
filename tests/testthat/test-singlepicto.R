@@ -25,3 +25,23 @@ test_that("SinglePicto accepts background parameter", {
 test_that("SinglePicto accepts autosize parameter", {
     expect_error( SinglePicto(2.5, 5, 3, image="stickman", background.color="red", auto.size = T) , NA)
 })
+
+test_that("SinglePicto custom icon", {
+    expect_error( SinglePicto(48,
+                              total.icons = 1,
+                              maximum.value = 100,
+                              width.height.ratio = 1.125,
+                              image = "https://docs.displayr.com/images/5/51/Female_Blue.svg",
+                              base.image = "https://docs.displayr.com/images/7/70/Female_Grey.svg",
+                              is.custom.url = TRUE) , NA)
+})
+
+test_that("SinglePicto redirected custom icon", {
+    expect_error( SinglePicto(48,
+                              total.icons = 1,
+                              maximum.value = 100,
+                              width.height.ratio = 1.125,
+                              image = "http://docs.displayr.com/images/5/51/Female_Blue.svg",
+                              base.image = "http://docs.displayr.com/images/7/70/Female_Grey.svg",
+                              is.custom.url = TRUE) , "Image type is text/html. Ensure the image url is correct and not redirected.")
+})
