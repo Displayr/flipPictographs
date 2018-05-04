@@ -249,8 +249,8 @@ SinglePicto <- function (x,
                                 formatC(label.data.values * (1+(99*label.data.100prc)),                                  digits=label.data.digits, format="f", big.mark=label.data.bigmark),
                                 label.data.suffix)
         label.pos.str <- switch(label.data.position,
-                                'Above' = "\"table-header\":{\"padding\": \"5 1 1 1\",",
-                                'Below' = "\"table-footer\":{\"padding\": \"5 1 1 1\",",
+                                'Above' = "\"table-header\":{\"padding\": \"10 1 1 1\",",
+                                'Below' = "\"table-footer\":{\"padding\": \"10 1 1 1\",",
                                 'Next to icons' = sprintf("\"floatingLabels\":[{\"position\":\"%s\", ",
                                                            label.float.position))
         label.data.str <- sprintf(", %s\"text\":\"%s\", \"font-size\":\"%fpx\",
