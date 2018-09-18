@@ -195,7 +195,7 @@ SinglePicto <- function (x,
         number.rows <- ceiling(total.icons/number.cols)
     } else
     {
-        number.rows <- round(sqrt(icon.WHratio/width.height.ratio * total.icons))
+        number.rows <- max(1, round(sqrt(icon.WHratio/width.height.ratio * total.icons)))
         if (number.rows > total.icons)
             number.rows <- total.icons
         number.cols <- ceiling(total.icons/number.rows)
