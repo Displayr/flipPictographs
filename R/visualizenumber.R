@@ -115,8 +115,9 @@ VisualizeNumber <- function(x,
             digits = label.data.decimals, big.mark = label.data.1000.separator),
         tmp.percent, label.data.suffix)
 
-    if (display == "Plain icon")
+    if (display %in% c("Icon", "Pictograph"))
     {
+        value <- if (display == "Icon") 1.0 else x
         if (label.data.position %in% c("Above icons", "Below icons"))
         {
             text.above <- label.str
@@ -130,7 +131,7 @@ VisualizeNumber <- function(x,
         }
         if (label.data.position == "None")
             label.str <- ""
-        return(iconsWithText(1.0, auto.size = TRUE, fill.icon.color = fill.color, ..., # other icon parameters?
+        return(iconsWithText(value, auto.size = TRUE, fill.icon.color = fill.color, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = label.data.halign,
             text.overlay.valign = label.data.valign, text.overlay.pad = label.data.pad,
             text.overlay.font.family = label.data.font.family, text.overlay.font.color = label.data.font.color,
