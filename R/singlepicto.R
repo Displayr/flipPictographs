@@ -250,9 +250,7 @@ SinglePicto <- function (x,
                                 label.data.suffix)
         label.pos.str <- switch(label.data.position,
                                 'Above' = "\"table-header\":{\"padding\": \"10 1 1 1\",",
-                                'Below' = "\"table-footer\":{\"padding\": \"10 1 1 1\",",
-                                'Next to icons' = sprintf("\"floatingLabels\":[{\"position\":\"%s\", ",
-                                                           label.float.position))
+                                'Below' = "\"table-footer\":{\"padding\": \"10 1 1 1\",")
         label.data.str <- sprintf(", %s\"text\":\"%s\", \"font-size\":\"%fpx\",
                                  \"font-weight\":\"%s\", \"font-family\":\"%s\",
                                  \"font-color\":\"%s\", \"horizontal-align\":\"%s\"}%s",

@@ -13,6 +13,7 @@ Imports:
     rhtmlPictographs,
     flipChartBasics,
     flipTables (>= 2.2.2),
+    plotly,
     RCurl,
     png,
     jpeg,
@@ -21,4 +22,5 @@ Remotes:
     Displayr/flipChartBasics,
     Displayr/flipTables,
     Displayr/rhtmlPictographs
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
+Encoding: UTF-8

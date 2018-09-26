@@ -12,12 +12,12 @@
 #' @export
 
 IfElseImage <- function(condition,
-            true.image  = "https://displayrcors.azureedge.net/images/uparrow_grey.svg",
-            false.image = "https://displayrcors.azureedge.net/images/downarrow_grey.svg")
+                    true.image  = "https://displayrcors.azureedge.net/images/uparrow_grey.svg",
+                    false.image = "https://displayrcors.azureedge.net/images/downarrow_grey.svg")
 {
     if (is.na(condition) || !is.logical(condition))
         stop("Parameter 'condition' should be TRUE or FALSE.")
 
     image <- if (condition) true.image else false.image
-    SinglePicto(1, 1, is.custom.url=T, image=image, auto.size = TRUE)
+    SinglePicto(1, 1, is.custom.url = TRUE, image = image, auto.size = TRUE)
 }

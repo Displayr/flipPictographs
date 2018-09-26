@@ -6,20 +6,22 @@
 \usage{
 SinglePicto(x, total.icons = NA, image = "star", base.image = "",
   is.custom.url = FALSE, number.rows = NA, number.cols = NA,
-  width.height.ratio = 1, layout = NA, scale = 1, maximum.value = NA,
-  hide.base.image = FALSE, fill.direction = "fromleft",
-  fill.icon.color = "black", base.icon.color = "",
-  background.color = "transparent", auto.size = FALSE, icon.width = 50,
-  pad.row = 0, pad.col = 0, margin = 0, margin.top = margin,
-  margin.right = margin, margin.bottom = margin, margin.left = margin,
+  width.height.ratio = 1, layout = NA, scale = 1,
+  maximum.value = NA, hide.base.image = FALSE,
+  fill.direction = "fromleft", fill.icon.color = "black",
+  base.icon.color = "", background.color = "transparent",
+  auto.size = FALSE, icon.width = 50, pad.row = 0, pad.col = 0,
+  margin = 0, margin.top = margin, margin.right = margin,
+  margin.bottom = margin, margin.left = margin,
   label.data.position = c("None", "Above", "Below")[1],
-  label.data.digits = 0, label.data.bigmark = ",", label.data.prefix = "",
-  label.data.suffix = "", label.data.100prc = FALSE,
-  label.data.font.weight = "normal", label.data.font.size = 12,
-  label.data.font.family = "arial", label.data.font.color = "#2C2C2C",
+  label.data.digits = 0, label.data.bigmark = ",",
+  label.data.prefix = "", label.data.suffix = "",
+  label.data.100prc = FALSE, label.data.font.weight = "normal",
+  label.data.font.size = 12, label.data.font.family = "arial",
+  label.data.font.color = "#2C2C2C",
   label.data.align.horizontal = "center", graphic.width.inch = NA,
-  graphic.height.inch = NA, graphic.resolution = 96, print.config = FALSE,
-  x.limit = 1000)
+  graphic.height.inch = NA, graphic.resolution = 96,
+  print.config = FALSE, x.limit = 1000)
 }
 \arguments{
 \item{x}{Input data which determines the number of icons (\code{x/scale}) filled in the pictograph.}
