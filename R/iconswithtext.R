@@ -189,7 +189,7 @@ iconsWithText <- function (x,
     if (sum(nchar(text.above), na.rm = TRUE) > 0)
         label.above.str <- sprintf(", \"table-header\":{\"padding\": \"10 1 %f 1\",
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
-            \"font-color\":\"%s\", \"font-weight\":\"normal\",
+            \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
             text.above.pad, text.above, text.above.font.size, text.above.font.family, 
             text.above.font.color, text.above.font.weight, text.above.halign)

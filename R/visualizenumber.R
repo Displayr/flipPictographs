@@ -156,7 +156,7 @@ VisualizeNumber <- function(x,
     p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE, 
             cliponaxis = FALSE, hoverinfo = "skip")
 
-    data.yanchor <- "middle"
+    data.yanchor <- NA
     if (isTextInside(text.above, text.above.outside) && isTextInside(text.below, text.below.outside))
         data.yanchor <- "middle"
     else if (isTextInside(text.above, text.above.outside))
@@ -207,18 +207,20 @@ VisualizeNumber <- function(x,
 }
 
 setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
-    outside = FALSE, yshift = 0, xshift = 0, yanchor = NA)
+    outside = NA, yshift = 0, xshift = 0, yanchor = NA)
 {
     if (sum(nchar(text), na.rm = TRUE) == 0)
         return (NULL)
 
     xpos <- switch(xalign, left = 0.0, center = 0.5, right = 1.0)
-    if (!outside)
+    if (!is.na(outside) && !outside)
         ypos <- 0.5
     else
         ypos <- switch(yalign, bottom = 0.0, middle = 0.5, top = 1.0)
-    
-    if (is.na(yanchor))
+   
+    if (is.na(outside))         # aligning text inside the shape
+        yanchor <- yalign 
+    else if (is.na(yanchor))    # aligning text outside the shape
         yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
 
     if (yanchor == "middle") # which direction??
