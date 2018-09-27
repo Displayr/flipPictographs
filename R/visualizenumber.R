@@ -218,9 +218,9 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
     else
         ypos <- switch(yalign, bottom = 0.0, middle = 0.5, top = 1.0)
    
-    if (is.na(outside))         # aligning text inside the shape
+    if (is.na(outside) && is.na(yanchor))                       # aligning text inside the shape
         yanchor <- yalign 
-    else if (is.na(yanchor))    # aligning text outside the shape
+    else if (is.na(yanchor))                                    # aligning text outside the shape
         yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
 
     if (yanchor == "middle") # which direction??
