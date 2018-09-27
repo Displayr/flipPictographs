@@ -28,6 +28,7 @@
 #' with override the \code{text.above} parameters. If set to "Below", it will override \code{text.below}.
 #' @param label.data.halign Horizontal alignment of data label. One of "left", "center or "right".
 #' @param label.data.valign Vertical alignment of data label. One of "top", "middle", "bottom".
+#' This is ignored if \code{text.above.outside} or \code{text.below.outside} is false.
 #' @param label.data.pad Space between data label and the edge of the shape/icon in pixels.
 #' @param text.below Text to show below the Oval/Rectangle/Icon/Pictograph. For Oval and Rectangle
 #' add "<br>" to add new lines to the text.
@@ -39,6 +40,7 @@
 #' @param text.below.font.family Font family of \code{text.below}.
 #' @param text.below.font.color Font color of \code{text.below}.
 #' @param text.below.font.size Font size of \code{text.below}.
+#' @param text.below.font.weight Weight of \code{text.below}, i.e. one of "bold" or "normal".
 #' @param text.above Text to show above the Oval/Rectangle/Icon/Pictograph.
 #' @param text.above.outside Whether \code{text.above} should be shown outside the Oval/Rectangle.
 #' For Icon/Pictograph, this is always true.
@@ -48,6 +50,7 @@
 #' @param text.above.font.family Font family of \code{text.above}.
 #' @param text.above.font.color Font color of \code{text.above}.
 #' @param text.above.font.size Font size of \code{text.above}.
+#' @param text.above.font.weight Weight of \code{text.above}, i.e. one of "bold" or "normal".
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config
 #' @export
@@ -80,6 +83,7 @@ VisualizeNumber <- function(x,
                          label.data.font.family = global.font.family,
                          label.data.font.color = global.font.color,
                          label.data.font.size = 10,
+                         label.data.font.weight = "normal",
                          text.below = "",
                          text.below.outside = TRUE,
                          text.below.halign = "center",
@@ -87,6 +91,7 @@ VisualizeNumber <- function(x,
                          text.below.font.family = global.font.family,
                          text.below.font.color = global.font.color,
                          text.below.font.size = 10,
+                         text.below.font.weight = "normal",
                          text.above = "",
                          text.above.outside = TRUE,
                          text.above.halign = "center",
@@ -94,6 +99,7 @@ VisualizeNumber <- function(x,
                          text.above.font.family = global.font.family,
                          text.above.font.color = global.font.color,
                          text.above.font.size = 10,
+                         text.above.font.weight = "normal",
                          border.color = rgb(0.5, 0.5, 0.5),
                          border.opacity = 0.5,
                          border.width = 5,
@@ -127,6 +133,7 @@ VisualizeNumber <- function(x,
             assign(paste0("text.", pos, ".font.family"), label.data.font.family)
             assign(paste0("text.", pos, ".font.color"), label.data.font.color)
             assign(paste0("text.", pos, ".font.size"), label.data.font.size)
+            assign(paste0("text.", pos, ".font.weight"), label.data.font.weight)
             label.str <- ""
         }
         if (label.data.position == "None")
@@ -135,64 +142,71 @@ VisualizeNumber <- function(x,
             text.overlay = label.str, text.overlay.halign = label.data.halign,
             text.overlay.valign = label.data.valign, text.overlay.pad = label.data.pad,
             text.overlay.font.family = label.data.font.family, text.overlay.font.color = label.data.font.color,
-            text.overlay.font.size = label.data.font.size, text.below = text.below,
+            text.overlay.font.size = label.data.font.size, text.overlay.font.weight = label.data.font.weight,
+            text.below = text.below, text.below.font.weight = text.below.font.weight,
             text.below.halign = text.below.halign, text.below.pad = text.below.pad,
             text.below.font.family = text.below.font.family, text.below.font.color = text.below.font.color,
             text.below.font.size = text.below.font.size, text.above = text.above,
             text.above.halign = text.above.halign, text.above.pad = text.above.pad,
             text.above.font.family = text.above.font.family, text.above.font.color = text.above.font.color,
-            text.above.font.size = text.above.font.size,
+            text.above.font.size = text.above.font.size, text.above.font.weight = text.above.font.weight,
             background.color = if (background.opacity > 0) background.color else "transparent"))
     }
 
-    p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "markers", visible = FALSE)
-    # adjust annot.data position if overlap with annot.above/below??)
-    annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
+    p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE, 
+            cliponaxis = FALSE, hoverinfo = "skip")
+    annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign), FALSE,
                            xshift = label.data.pad, yshift = label.data.pad,
                            font = list(family = label.data.font.family, color = label.data.font.color,
-                           size = label.data.font.size))
-    annot.above <- setText(text.above, "top", tolower(text.above.halign), text.above.outside, text.above.pad,
+                           size = label.data.font.size), label.data.font.weight)
+    annot.above <- setText(text.above, "top", tolower(text.above.halign), text.above.outside, 
+                           text.above.pad, 0,
                            font = list(family = text.above.font.family, color = text.above.font.color,
-                           size = text.above.font.size))
-    annot.below <- setText(text.below, "bottom", tolower(text.below.halign), text.below.outside, text.below.pad,
+                           size = text.above.font.size), text.above.font.weight)
+    annot.below <- setText(text.below, "bottom", tolower(text.below.halign), text.below.outside, 
+                           text.below.pad, 0,
                            font = list(family = text.below.font.family, color = text.below.font.color,
-                           size = text.below.font.size))
+                           size = text.below.font.size), text.below.font.weight)
 
     margin.top <- text.above.outside * getVerticalSpace(annot.above)
     margin.bottom <- text.below.outside * getVerticalSpace(annot.below)
+    cpad <- border.width/1000
     p <- layout(p, margin = list(l = 0, r = 0, t = margin.top, b = margin.bottom, pad = 0, autoexpand = FALSE),
-                 xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
-                 yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
+                 xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
+                 yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
-                 shapes = list(type = shape, x0 = 0, x1 = 1, y0 = 0, y1 = 1,
-                             fillcolor = fill.color, opacity = fill.opacity,
+                 shapes = list(type = shape, x0 = 0, x1 = 1, y0 = 0, y1 = 1, yref = "y", xref = "x",
+                             fillcolor = fill.color, opacity = fill.opacity, layer = "above",
                              line = list(color = toRGB(border.color, alpha = border.opacity),
                                          width = border.width)),
-                 annotations = list(annot.data, annot.above, annot.below))
+                 annotations = list(annot.data, annot.above, annot.below),
+                 hovermode = FALSE)
+
     p <- config(p, displayModeBar = FALSE)
     p$sizingPolicy$browser$padding <- 0
     p
 }
 
-setText <- function(text, yalign, xalign, outside = FALSE, yshift = 0, xshift = 0, font = font)
+setText <- function(text, yalign, xalign, outside = FALSE, yshift = 0, xshift = 0, font = font, font.weight = "normal")
 {
     if (sum(nchar(text), na.rm = TRUE) == 0)
         return (NULL)
 
     xpos <- switch(xalign, left = 0.0, center = 0.5, right = 1.0)
-    ypos <- switch(yalign, bottom = 0.0, middle = 0.5, top = 1.0)
-    yanchor <- yalign
-    if (outside && (yalign == "top"))
-        yanchor <- "bottom"
-    if (outside && (yalign == "bottom"))
-        yanchor <- "top"
+    if (!outside)
+        ypos <- 0.5
+    else
+        ypos <- switch(yalign, bottom = 0.0, middle = 0.5, top = 1.0)
+    yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
 
     if (yanchor == "top")
         yshift <- -1 * yshift
     if (xalign == "right")
         xshift <- -1 * xshift
 
+    if (tolower(font.weight) == "bold")
+        text <- paste0("<b>", text, "</b>")
     return(list(text = text, font = font, x = xpos, y = ypos,
                 showarrow = FALSE, xshift = xshift, yshift = yshift,
                 xanchor = xalign, yanchor = yanchor))
@@ -204,5 +218,14 @@ getVerticalSpace <- function(annot)
         return(0.0)
     nline <- sum(gregexpr("<br>", annot$text)[[1]] > -1) + 1
     return (abs(annot$yshift) + (annot$font$size * nline) + 5)
+}
+
+isTextInside <- function(text, outside)
+{
+    if (outside)
+        return(FALSE)
+    if (sum(nchar(text), na.rm = TRUE) == 0)
+        return(FALSE)
+    return(TRUE)
 }
 

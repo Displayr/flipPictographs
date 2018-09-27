@@ -14,17 +14,17 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   label.data.valign = "middle", label.data.halign = "center",
   label.data.pad = 0, label.data.font.family = global.font.family,
   label.data.font.color = global.font.color, label.data.font.size = 10,
-  text.below = "", text.below.outside = TRUE,
-  text.below.halign = "center", text.below.pad = 0,
-  text.below.font.family = global.font.family,
+  label.data.font.weight = "normal", text.below = "",
+  text.below.outside = TRUE, text.below.halign = "center",
+  text.below.pad = 0, text.below.font.family = global.font.family,
   text.below.font.color = global.font.color, text.below.font.size = 10,
-  text.above = "", text.above.outside = TRUE,
-  text.above.halign = "center", text.above.pad = 0,
-  text.above.font.family = global.font.family,
+  text.below.font.weight = "normal", text.above = "",
+  text.above.outside = TRUE, text.above.halign = "center",
+  text.above.pad = 0, text.above.font.family = global.font.family,
   text.above.font.color = global.font.color, text.above.font.size = 10,
-  border.color = rgb(0.5, 0.5, 0.5), border.opacity = 0.5,
-  border.width = 5, background.color = rgb(1, 1, 1),
-  background.opacity = 0, ...)
+  text.above.font.weight = "normal", border.color = rgb(0.5, 0.5, 0.5),
+  border.opacity = 0.5, border.width = 5, background.color = rgb(1,
+  1, 1), background.opacity = 0, ...)
 }
 \arguments{
 \item{x}{The number to display}
@@ -60,7 +60,8 @@ with override the \code{text.above} parameters. If set to "Below", it will overr
 
 \item{label.data.suffix}{String to append to data label.}
 
-\item{label.data.valign}{Vertical alignment of data label. One of "top", "middle", "bottom".}
+\item{label.data.valign}{Vertical alignment of data label. One of "top", "middle", "bottom".
+This is ignored if \code{text.above.outside} or \code{text.below.outside} is false.}
 
 \item{label.data.halign}{Horizontal alignment of data label. One of "left", "center or "right".}
 
@@ -71,6 +72,8 @@ with override the \code{text.above} parameters. If set to "Below", it will overr
 \item{label.data.font.color}{Font color of data labels.}
 
 \item{label.data.font.size}{Font size of data labels.}
+
+\item{label.data.font.weight}{Weight of data labels, i.e. one of \code{"bold"} or \code{"normal"}.}
 
 \item{text.below}{Text to show below the Oval/Rectangle/Icon/Pictograph. For Oval and Rectangle
 add "<br>" to add new lines to the text.}
@@ -89,6 +92,8 @@ for vertical alignment because it always aligns with the edge of the window.}
 
 \item{text.below.font.size}{Font size of \code{text.below}.}
 
+\item{text.below.font.weight}{Weight of \code{text.below}, i.e. one of "bold" or "normal".}
+
 \item{text.above}{Text to show above the Oval/Rectangle/Icon/Pictograph.}
 
 \item{text.above.outside}{Whether \code{text.above} should be shown outside the Oval/Rectangle.
@@ -104,6 +109,8 @@ for vertical alignment because it always aligns with the edge of the window.}
 \item{text.above.font.color}{Font color of \code{text.above}.}
 
 \item{text.above.font.size}{Font size of \code{text.above}.}
+
+\item{text.above.font.weight}{Weight of \code{text.above}, i.e. one of "bold" or "normal".}
 
 \item{border.color}{Color of the border around "Oval" or "Rectangle")}
 

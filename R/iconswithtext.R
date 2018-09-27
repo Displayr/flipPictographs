@@ -34,18 +34,21 @@ iconsWithText <- function (x,
                          text.overlay.font.family = global.font.family,
                          text.overlay.font.color = global.font.color,
                          text.overlay.font.size = 10,
+                         text.overlay.font.weight = "normal",
                          text.below = "",
                          text.below.halign = "center",
                          text.below.pad = 0.0,
                          text.below.font.family = global.font.family,
                          text.below.font.color = global.font.color,
                          text.below.font.size = 10,
+                         text.below.font.weight = "normal",
                          text.above = "",
                          text.above.halign = "center",
                          text.above.pad = 0.0,
                          text.above.font.family = global.font.family,
                          text.above.font.color = global.font.color,
                          text.above.font.size = 10,
+                         text.above.font.weight = "normal",
                          print.config = FALSE,
                          x.limit = 1000,
                          ...)
@@ -189,15 +192,15 @@ iconsWithText <- function (x,
             \"font-color\":\"%s\", \"font-weight\":\"normal\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
             text.above.pad, text.above, text.above.font.size, text.above.font.family, 
-            text.above.font.color, text.above.halign)
+            text.above.font.color, text.above.font.weight, text.above.halign)
 
     if (sum(nchar(text.below), na.rm = TRUE) > 0)
         label.below.str <- sprintf(", \"table-footer\":{\"padding\": \"%f 1 10 1\",
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
-            \"font-color\":\"%s\", \"font-weight\":\"normal\",
+            \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}",
             text.below.pad, text.below, text.below.font.size, text.below.font.family,
-            text.below.font.color, text.below.halign)
+            text.below.font.color, text.below.font.weight, text.below.halign)
 
     if (sum(nchar(text.overlay), na.rm = TRUE) > 0)
     {
@@ -209,9 +212,9 @@ iconsWithText <- function (x,
                 else number.rows/2
         label.overlay.str <- sprintf(",\"floatingLabels\":[{\"position\":\"%f:%f\", 
           \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
-          \"font-color\":\"%s\", \"font-weight\":\"normal\", \"horizontal-align\":\"%s\"}]",
+          \"font-color\":\"%s\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"}]",
           ypos, xpos, text.overlay, text.overlay.font.size, text.overlay.font.family, 
-          text.overlay.font.color, text.overlay.halign)
+          text.overlay.font.color, text.overlay.font.weight, text.overlay.halign)
     }
 
     json.string <- paste0("{\"table\": {", dim.str,
