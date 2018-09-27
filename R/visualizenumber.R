@@ -105,6 +105,10 @@ VisualizeNumber <- function(x,
                          border.width = 5,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
+                         margin.left = 0,
+                         margin.right = 0,
+                         margin.top = 0,
+                         margin.bottom = 0,
                          ...)
 {
     shape <- "rectangle"
@@ -138,7 +142,7 @@ VisualizeNumber <- function(x,
         }
         if (label.data.position == "None")
             label.str <- ""
-        return(iconsWithText(value, auto.size = TRUE, fill.icon.color = fill.color, ..., # other icon parameters?
+        return(iconsWithText(value, fill.icon.color = fill.color, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = label.data.halign,
             text.overlay.valign = label.data.valign, text.overlay.pad = label.data.pad,
             text.overlay.font.family = label.data.font.family, text.overlay.font.color = label.data.font.color,
@@ -150,7 +154,8 @@ VisualizeNumber <- function(x,
             text.above.halign = text.above.halign, text.above.pad = text.above.pad,
             text.above.font.family = text.above.font.family, text.above.font.color = text.above.font.color,
             text.above.font.size = text.above.font.size, text.above.font.weight = text.above.font.weight,
-            background.color = if (background.opacity > 0) background.color else "transparent"))
+            background.color = if (background.opacity > 0) background.color else "transparent",
+            margin.top = margin.top, margin.right = margin.right, margin.bottom = margin.bottom, margin.left = margin.left))
     }
 
     p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE, 
@@ -182,14 +187,15 @@ VisualizeNumber <- function(x,
                            size = text.below.font.size), text.below.font.weight,
                            text.below.outside, yshift = text.below.pad)
 
-    margin.top <- text.above.outside * getVerticalSpace(annot.above)
-    margin.bottom <- text.below.outside * getVerticalSpace(annot.below)
+    margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above)
+    margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below)
     
     # Padding is needed to avoid truncating the border
     # But this is approximate because the units are relative, but border width is in pixels
     cpad <- border.width/100
 
-    p <- layout(p, margin = list(l = 0, r = 0, t = margin.top, b = margin.bottom, pad = 0, autoexpand = FALSE),
+    p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top, 
+                 b = margin.bottom, pad = 0, autoexpand = FALSE),
                  xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),

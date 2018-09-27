@@ -24,7 +24,8 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   text.above.font.color = global.font.color, text.above.font.size = 10,
   text.above.font.weight = "normal", border.color = rgb(0.5, 0.5, 0.5),
   border.opacity = 0.5, border.width = 5, background.color = rgb(1,
-  1, 1), background.opacity = 0, ...)
+  1, 1), background.opacity = 0, margin.left = 0, margin.right = 0,
+  margin.top = 0, margin.bottom = 0, ...)
 }
 \arguments{
 \item{x}{The number to display}
@@ -122,6 +123,14 @@ for vertical alignment because it always aligns with the edge of the window.}
 
 \item{background.opacity}{Transparency of background (0 to 1). This is only valid for
 Number, Oval or Rectangle.}
+
+\item{margin.left}{Spacing on the left of the graphic.}
+
+\item{margin.right}{Spacing on the right of the graphic.}
+
+\item{margin.top}{Spacing on top of graphic. This value overrides \code{margin}.}
+
+\item{margin.bottom}{Spacing below graphic.}
 
 \item{...}{Other parameters passed to \code{iconWithText}.}
 }

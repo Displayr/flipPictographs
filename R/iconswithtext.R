@@ -186,20 +186,23 @@ iconsWithText <- function (x,
     label.overlay.str <- ""
     label.above.str <- ""
     label.below.str <- ""
+    # padding format: top right bottom left
     if (sum(nchar(text.above), na.rm = TRUE) > 0)
-        label.above.str <- sprintf(", \"table-header\":{\"padding\": \"10 1 %f 1\",
+        label.above.str <- sprintf(", \"table-header\":{\"padding\": \"%f %f %f %f\",
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
-            text.above.pad, text.above, text.above.font.size, text.above.font.family, 
+            margin.top, margin.right, text.above.pad, margin.left, 
+            text.above, text.above.font.size, text.above.font.family, 
             text.above.font.color, text.above.font.weight, text.above.halign)
 
     if (sum(nchar(text.below), na.rm = TRUE) > 0)
-        label.below.str <- sprintf(", \"table-footer\":{\"padding\": \"%f 1 10 1\",
+        label.below.str <- sprintf(", \"table-footer\":{\"padding\": \"%f %f %f %f\",
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}",
-            text.below.pad, text.below, text.below.font.size, text.below.font.family,
+            text.below.pad, margin.right, margin.bottom, margin.left,
+            text.below, text.below.font.size, text.below.font.family,
             text.below.font.color, text.below.font.weight, text.below.halign)
 
     if (sum(nchar(text.overlay), na.rm = TRUE) > 0)
@@ -217,9 +220,13 @@ iconsWithText <- function (x,
           text.overlay.font.color, text.overlay.font.weight, text.overlay.halign)
     }
 
+    pad.around.icons <- sprintf(",\"padding\":\"%f %f %f %f\"",
+        if (sum(nchar(text.above), na.rm = TRUE) > 0) 0 else margin.top, margin.right,
+        if (sum(nchar(text.below), na.rm = TRUE) > 0) 0 else margin.bottom, margin.left)
+        
     json.string <- paste0("{\"table\": {", dim.str,
           ",\"rows\":[[{\"type\":\"graphic\", \"value\":{",
-          "\"proportion\":", prop,
+          "\"proportion\":", prop, pad.around.icons,
           ",\"numImages\":", total.icons,
           label.overlay.str, 
           icon.size.str,
