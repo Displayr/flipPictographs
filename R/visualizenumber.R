@@ -155,22 +155,40 @@ VisualizeNumber <- function(x,
 
     p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE, 
             cliponaxis = FALSE, hoverinfo = "skip")
-    annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign), FALSE,
-                           xshift = label.data.pad, yshift = label.data.pad,
+
+    data.yanchor <- "middle"
+    if (isTextInside(text.above, text.above.outside) && isTextInside(text.below, text.below.outside))
+        data.yanchor <- "middle"
+    else if (isTextInside(text.above, text.above.outside))
+        data.yanchor <- "top"
+    else if (isTextInside(text.below, text.below.outside))
+        data.yanchor <- "bottom"
+    annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
                            font = list(family = label.data.font.family, color = label.data.font.color,
-                           size = label.data.font.size), label.data.font.weight)
-    annot.above <- setText(text.above, "top", tolower(text.above.halign), text.above.outside, 
-                           text.above.pad, 0,
+                           size = label.data.font.size), label.data.font.weight,
+                           xshift = label.data.pad, yshift = label.data.pad, yanchor = data.yanchor)
+
+    if (data.yanchor == "middle" && isTextInside(text.above, text.above.outside))
+        text.above.pad <- text.above.pad + (getVerticalSpace(annot.data))/2
+    annot.above <- setText(text.above, "top", tolower(text.above.halign), 
                            font = list(family = text.above.font.family, color = text.above.font.color,
-                           size = text.above.font.size), text.above.font.weight)
-    annot.below <- setText(text.below, "bottom", tolower(text.below.halign), text.below.outside, 
-                           text.below.pad, 0,
+                           size = text.above.font.size), text.above.font.weight,
+                           text.above.outside, yshift = text.above.pad)
+    
+    if (data.yanchor == "middle" && isTextInside(text.below, text.below.outside))
+        text.below.pad <- text.below.pad + (getVerticalSpace(annot.data))/2
+    annot.below <- setText(text.below, "bottom", tolower(text.below.halign), 
                            font = list(family = text.below.font.family, color = text.below.font.color,
-                           size = text.below.font.size), text.below.font.weight)
+                           size = text.below.font.size), text.below.font.weight,
+                           text.below.outside, yshift = text.below.pad)
 
     margin.top <- text.above.outside * getVerticalSpace(annot.above)
     margin.bottom <- text.below.outside * getVerticalSpace(annot.below)
-    cpad <- border.width/1000
+    
+    # Padding is needed to avoid truncating the border
+    # But this is approximate because the units are relative, but border width is in pixels
+    cpad <- border.width/500
+
     p <- layout(p, margin = list(l = 0, r = 0, t = margin.top, b = margin.bottom, pad = 0, autoexpand = FALSE),
                  xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
@@ -188,7 +206,8 @@ VisualizeNumber <- function(x,
     p
 }
 
-setText <- function(text, yalign, xalign, outside = FALSE, yshift = 0, xshift = 0, font = font, font.weight = "normal")
+setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
+    outside = FALSE, yshift = 0, xshift = 0, yanchor = NA)
 {
     if (sum(nchar(text), na.rm = TRUE) == 0)
         return (NULL)
@@ -198,8 +217,12 @@ setText <- function(text, yalign, xalign, outside = FALSE, yshift = 0, xshift = 
         ypos <- 0.5
     else
         ypos <- switch(yalign, bottom = 0.0, middle = 0.5, top = 1.0)
-    yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
+    
+    if (is.na(yanchor))
+        yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
 
+    if (yanchor == "middle") # which direction??
+        yshift <- 0
     if (yanchor == "top")
         yshift <- -1 * yshift
     if (xalign == "right")
@@ -207,6 +230,8 @@ setText <- function(text, yalign, xalign, outside = FALSE, yshift = 0, xshift = 
 
     if (tolower(font.weight) == "bold")
         text <- paste0("<b>", text, "</b>")
+
+    #cat(text, "yanchor:", yanchor, "\n")
     return(list(text = text, font = font, x = xpos, y = ypos,
                 showarrow = FALSE, xshift = xshift, yshift = yshift,
                 xanchor = xalign, yanchor = yanchor))
