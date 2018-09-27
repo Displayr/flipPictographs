@@ -187,7 +187,7 @@ VisualizeNumber <- function(x,
     
     # Padding is needed to avoid truncating the border
     # But this is approximate because the units are relative, but border width is in pixels
-    cpad <- border.width/500
+    cpad <- border.width/100
 
     p <- layout(p, margin = list(l = 0, r = 0, t = margin.top, b = margin.bottom, pad = 0, autoexpand = FALSE),
                  xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
