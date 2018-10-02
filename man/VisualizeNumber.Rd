@@ -6,13 +6,14 @@
 \usage{
 VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   "Pictograph")[1], fill.color = rgb(0, 0, 1), fill.opacity = 0.4,
-  global.font.family = "Arial", global.font.color = rgb(44, 44, 44,
-  maxColorValue = 255), label.data.number.type = c("Number",
-  "Percentage", "Scientific")[1], label.data.decimals = 0,
-  label.data.1000.separator = ",", label.data.position = "Overlay",
-  label.data.prefix = "", label.data.suffix = "",
-  label.data.valign = "middle", label.data.halign = "center",
-  label.data.pad = 0, label.data.font.family = global.font.family,
+  total.icons = NA, global.font.family = "Arial",
+  global.font.color = rgb(44, 44, 44, maxColorValue = 255),
+  label.data.number.type = c("Number", "Percentage", "Scientific")[1],
+  label.data.decimals = 0, label.data.1000.separator = ",",
+  label.data.position = "Overlay", label.data.prefix = "",
+  label.data.suffix = "", label.data.valign = "middle",
+  label.data.halign = "center", label.data.pad = 0,
+  label.data.font.family = global.font.family,
   label.data.font.color = global.font.color, label.data.font.size = 10,
   label.data.font.weight = "normal", text.below = "",
   text.below.outside = TRUE, text.below.halign = "center",
@@ -38,6 +39,8 @@ or a "Pictograph" (where the amount of icons filled reflects the size of \code{x
 if custom.icon is not used.}
 
 \item{fill.opacity}{Alpha transparency of the Oval or Rectangle.}
+
+\item{total.icons}{Total number of icons. Defaults to \code{total.icons=ceiling(x/scale)}.}
 
 \item{global.font.family}{Character; font family for all occurrences of any
 font attribute for the chart unless specified individually.}

@@ -69,6 +69,7 @@ VisualizeNumber <- function(x,
                          display = c("Oval", "Rectangle", "Number", "Icon", "Pictograph")[1],
                          fill.color = rgb(0, 0, 1),
                          fill.opacity = 0.4,
+                         total.icons = NA,
                          global.font.family = "Arial",
                          global.font.color = rgb(44, 44, 44, maxColorValue = 255),
                          label.data.number.type = c("Number", "Percentage", "Scientific")[1],
@@ -111,11 +112,18 @@ VisualizeNumber <- function(x,
                          margin.bottom = 0,
                          ...)
 {
-    shape <- "rectangle"
-    if (display == "Oval")
-        shape <- "circle"
-    if (display == "Number")
+    display <- switch(tolower(display), oval = "circle", circle = "circle", "number in an oval" = "circle",
+                       rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
+                       number = "number", icon = "icon",
+                       "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
+                       "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",  
+                       "circle") # default
+    
+    if (display == "number")
+    {
         opacity <- 0.0
+        border.opacity <- 0.0
+    }
 
     # Construct formatted string of x
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
@@ -125,9 +133,10 @@ VisualizeNumber <- function(x,
             digits = label.data.decimals, big.mark = label.data.1000.separator),
         tmp.percent, label.data.suffix)
 
-    if (display %in% c("Icon", "Pictograph"))
+    if (display %in% c("icon", "pictograph - single", "pictograph - repeated"))
     {
-        value <- if (display == "Icon") 1.0 else x
+        value <- if (display == "icon") 1.0 else x
+        total.icons <- if (display %in% c("icon", "pictograph - single")) 1.0
         if (label.data.position %in% c("Above icons", "Below icons"))
         {
             pos <- if (label.data.position == "Above icons") "above" else "below"
@@ -142,16 +151,17 @@ VisualizeNumber <- function(x,
         }
         if (label.data.position == "None")
             label.str <- ""
-        return(iconsWithText(value, fill.icon.color = fill.color, ..., # other icon parameters?
-            text.overlay = label.str, text.overlay.halign = label.data.halign,
-            text.overlay.valign = label.data.valign, text.overlay.pad = label.data.pad,
+        return(iconsWithText(value, fill.icon.color = fill.color, 
+            total.icons = total.icons, ..., # other icon parameters?
+            text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
+            text.overlay.valign = tolower(label.data.valign), text.overlay.pad = label.data.pad,
             text.overlay.font.family = label.data.font.family, text.overlay.font.color = label.data.font.color,
             text.overlay.font.size = label.data.font.size, text.overlay.font.weight = label.data.font.weight,
             text.below = text.below, text.below.font.weight = text.below.font.weight,
-            text.below.halign = text.below.halign, text.below.pad = text.below.pad,
+            text.below.halign = tolower(text.below.halign), text.below.pad = text.below.pad,
             text.below.font.family = text.below.font.family, text.below.font.color = text.below.font.color,
             text.below.font.size = text.below.font.size, text.above = text.above,
-            text.above.halign = text.above.halign, text.above.pad = text.above.pad,
+            text.above.halign = tolower(text.above.halign), text.above.pad = text.above.pad,
             text.above.font.family = text.above.font.family, text.above.font.color = text.above.font.color,
             text.above.font.size = text.above.font.size, text.above.font.weight = text.above.font.weight,
             background.color = if (background.opacity > 0) background.color else "transparent",
@@ -200,7 +210,7 @@ VisualizeNumber <- function(x,
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
-                 shapes = list(type = shape, x0 = 0, x1 = 1, y0 = 0, y1 = 1, yref = "y", xref = "x",
+                 shapes = list(type = display, x0 = 0, x1 = 1, y0 = 0, y1 = 1, yref = "y", xref = "x",
                              fillcolor = fill.color, opacity = fill.opacity, layer = "above",
                              line = list(color = toRGB(border.color, alpha = border.opacity),
                                          width = border.width)),

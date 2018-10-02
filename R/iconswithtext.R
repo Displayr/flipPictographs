@@ -66,7 +66,8 @@ iconsWithText <- function (x,
         if (maximum.value <= 0)
             stop("Maximum value must be greater than zero\n")
         if (maximum.value < x)
-            stop("Input data must be smaller than or equal to maximum value\n")
+            stop("Input data must be smaller than or equal to 'Maximum value'. ",
+                 "Change 'Display' to 'Pictograph (repeated icons) to show more than 1 icon.\n")
         if (is.na(total.icons))
             total.icons <- maximum.value
         scale <- maximum.value/total.icons
