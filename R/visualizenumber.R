@@ -114,7 +114,8 @@ VisualizeNumber <- function(x,
 {
     display <- switch(tolower(display), oval = "circle", circle = "circle", "number in an oval" = "circle",
                        rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
-                       number = "number", icon = "icon",
+                       number = "number", 
+                       icon = "icon", "Number on an icon" = "icon",
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",  
                        "circle") # default
@@ -157,14 +158,14 @@ VisualizeNumber <- function(x,
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
             text.overlay.valign = tolower(label.data.valign), text.overlay.pad = label.data.pad,
             text.overlay.font.family = label.data.font.family, text.overlay.font.color = label.data.font.color,
-            text.overlay.font.size = label.data.font.size, text.overlay.font.weight = label.data.font.weight,
-            text.below = text.below, text.below.font.weight = text.below.font.weight,
+            text.overlay.font.size = label.data.font.size, text.overlay.font.weight = tolower(label.data.font.weight),
+            text.below = text.below, text.below.font.weight = tolower(text.below.font.weight),
             text.below.halign = tolower(text.below.halign), text.below.pad = text.below.pad,
             text.below.font.family = text.below.font.family, text.below.font.color = text.below.font.color,
             text.below.font.size = text.below.font.size, text.above = text.above,
             text.above.halign = tolower(text.above.halign), text.above.pad = text.above.pad,
             text.above.font.family = text.above.font.family, text.above.font.color = text.above.font.color,
-            text.above.font.size = text.above.font.size, text.above.font.weight = text.above.font.weight,
+            text.above.font.size = text.above.font.size, text.above.font.weight = tolower(text.above.font.weight),
             background.color = if (background.opacity > 0) background.color else "transparent",
             margin.top = margin.top, margin.right = margin.right, margin.bottom = margin.bottom, margin.left = margin.left))
     }
@@ -181,7 +182,7 @@ VisualizeNumber <- function(x,
         data.yanchor <- "bottom"
     annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
                            font = list(family = label.data.font.family, color = label.data.font.color,
-                           size = label.data.font.size), label.data.font.weight,
+                           size = label.data.font.size), tolower(label.data.font.weight,
                            xshift = label.data.pad, yshift = label.data.pad, yanchor = data.yanchor)
 
     if (data.yanchor == "middle" && isTextInside(text.above, text.above.outside))
