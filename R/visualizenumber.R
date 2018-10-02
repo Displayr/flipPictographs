@@ -122,7 +122,7 @@ VisualizeNumber <- function(x,
     if (display == "number")
     {
         opacity <- 0.0
-        border.opacity <- 0.0
+        border.width <- 0.0
     }
 
     # Construct formatted string of x
