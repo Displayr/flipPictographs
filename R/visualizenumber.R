@@ -115,7 +115,7 @@ VisualizeNumber <- function(x,
     display <- switch(tolower(display), oval = "circle", circle = "circle", "number in an oval" = "circle",
                        rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
                        number = "number", 
-                       icon = "icon", "Number on an icon" = "icon",
+                       icon = "icon", "number on an icon" = "icon",
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",  
                        "circle") # default
@@ -182,7 +182,7 @@ VisualizeNumber <- function(x,
         data.yanchor <- "bottom"
     annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
                            font = list(family = label.data.font.family, color = label.data.font.color,
-                           size = label.data.font.size), tolower(label.data.font.weight,
+                           size = label.data.font.size), label.data.font.weight,
                            xshift = label.data.pad, yshift = label.data.pad, yanchor = data.yanchor)
 
     if (data.yanchor == "middle" && isTextInside(text.above, text.above.outside))
