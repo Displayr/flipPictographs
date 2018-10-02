@@ -136,7 +136,8 @@ VisualizeNumber <- function(x,
     if (display %in% c("icon", "pictograph - single", "pictograph - repeated"))
     {
         value <- if (display == "icon") 1.0 else x
-        total.icons <- if (display %in% c("icon", "pictograph - single")) 1.0
+        if (display %in% c("icon", "pictograph - single"))
+            total.icons <- 1.0
         if (label.data.position %in% c("Above icons", "Below icons"))
         {
             pos <- if (label.data.position == "Above icons") "above" else "below"
