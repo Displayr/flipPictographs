@@ -114,12 +114,12 @@ VisualizeNumber <- function(x,
 {
     display <- switch(tolower(display), oval = "circle", circle = "circle", "number in an oval" = "circle",
                        rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
-                       number = "number", 
+                       number = "number",
                        icon = "icon", "number on an icon" = "icon",
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
-                       "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",  
+                       "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",
                        "circle") # default
-    
+
     if (display == "number")
     {
         opacity <- 0.0
@@ -153,7 +153,7 @@ VisualizeNumber <- function(x,
         }
         if (label.data.position == "None")
             label.str <- ""
-        return(iconsWithText(value, fill.icon.color = fill.color, 
+        return(iconsWithText(value, fill.icon.color = fill.color,
             total.icons = total.icons, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
             text.overlay.valign = tolower(label.data.valign), text.overlay.pad = label.data.pad,
@@ -170,43 +170,46 @@ VisualizeNumber <- function(x,
             margin.top = margin.top, margin.right = margin.right, margin.bottom = margin.bottom, margin.left = margin.left))
     }
 
-    p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE, 
+    p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
             cliponaxis = FALSE, hoverinfo = "skip")
 
     data.yanchor <- NA
-    if (isTextInside(text.above, text.above.outside) && isTextInside(text.below, text.below.outside))
-        data.yanchor <- "middle"
-    else if (isTextInside(text.above, text.above.outside))
-        data.yanchor <- "top"
-    else if (isTextInside(text.below, text.below.outside))
-        data.yanchor <- "bottom"
+    if (tolower(label.data.valign) == "middle")
+    {
+        if (isTextInside(text.above, text.above.outside) && isTextInside(text.below, text.below.outside))
+            data.yanchor <- "middle"
+        else if (isTextInside(text.above, text.above.outside))
+            data.yanchor <- "top"
+        else if (isTextInside(text.below, text.below.outside))
+            data.yanchor <- "bottom"
+    }
     annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
                            font = list(family = label.data.font.family, color = label.data.font.color,
                            size = label.data.font.size), label.data.font.weight,
                            xshift = label.data.pad, yshift = label.data.pad, yanchor = data.yanchor)
 
-    if (data.yanchor == "middle" && isTextInside(text.above, text.above.outside))
+    if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
         text.above.pad <- text.above.pad + (getVerticalSpace(annot.data))/2
-    annot.above <- setText(text.above, "top", tolower(text.above.halign), 
+    annot.above <- setText(text.above, "top", tolower(text.above.halign),
                            font = list(family = text.above.font.family, color = text.above.font.color,
                            size = text.above.font.size), text.above.font.weight,
                            text.above.outside, yshift = text.above.pad)
-    
-    if (data.yanchor == "middle" && isTextInside(text.below, text.below.outside))
+
+    if (isTRUE(data.yanchor == "middle") && isTextInside(text.below, text.below.outside))
         text.below.pad <- text.below.pad + (getVerticalSpace(annot.data))/2
-    annot.below <- setText(text.below, "bottom", tolower(text.below.halign), 
+    annot.below <- setText(text.below, "bottom", tolower(text.below.halign),
                            font = list(family = text.below.font.family, color = text.below.font.color,
                            size = text.below.font.size), text.below.font.weight,
                            text.below.outside, yshift = text.below.pad)
 
     margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above)
     margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below)
-    
+
     # Padding is needed to avoid truncating the border
     # But this is approximate because the units are relative, but border width is in pixels
     cpad <- border.width/100
 
-    p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top, 
+    p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
                  b = margin.bottom, pad = 0, autoexpand = FALSE),
                  xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
@@ -235,9 +238,10 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
         ypos <- 0.5
     else
         ypos <- switch(yalign, bottom = 0.0, middle = 0.5, top = 1.0)
-   
+
+    eval(yanchor)
     if (is.na(outside) && is.na(yanchor))                       # aligning text inside the shape
-        yanchor <- yalign 
+        yanchor <- yalign
     else if (is.na(yanchor))                                    # aligning text outside the shape
         yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
 
@@ -251,7 +255,7 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
     if (tolower(font.weight) == "bold")
         text <- paste0("<b>", text, "</b>")
 
-    #cat(text, "yanchor:", yanchor, "\n")
+    cat(text, "yalign:", yalign, "yanchor:", yanchor, "outside:", outside, "\n")
     return(list(text = text, font = font, x = xpos, y = ypos,
                 showarrow = FALSE, xshift = xshift, yshift = yshift,
                 xanchor = xalign, yanchor = yanchor))
