@@ -213,19 +213,28 @@ VisualizeNumber <- function(x,
 
     # Padding is needed to avoid truncating the border
     # But this is approximate because the units are relative, but border width is in pixels
+    # Note it is the chart area that must be increased not the margins because cliponaxis
+    # works only for markers not shapes
     cpad <- border.width/100
+    border.shape <- NULL
+    if (border.width > 0)
+        border.shape = list(type = display, x0 = 0, x1 = 1, y0 = 0, y1 = 1,
+                            yref = "y", xref = "x", fillcolor = "transparent",
+                            line = list(color = toRGB(border.color, alpha = border.opacity),
+                            width = border.width))
+    fill.shape <- list(type = display, x0 = 0, x1 = 1, y0 = 0, y1 = 1, yref = "y", xref = "x",
+                       fillcolor = fill.color, opacity = fill.opacity, layer = "above",
+                       line = list(width = 0))
+    shapes <- if (border.opacity < fill.opacity) list(border.shape, fill.shape)
+              else                               list(fill.shape, border.shape)
 
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
-                 b = margin.bottom, pad = 0, autoexpand = FALSE),
+                 b = margin.bottom, pad = 0, autoexpand = TRUE),
                  xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
-                 shapes = list(type = display, x0 = 0, x1 = 1, y0 = 0, y1 = 1, yref = "y", xref = "x",
-                             fillcolor = fill.color, opacity = fill.opacity, layer = "above",
-                             line = list(color = toRGB(border.color, alpha = border.opacity),
-                                         width = border.width)),
-                 annotations = list(annot.data, annot.above, annot.below),
+                 shapes = shapes, annotations = list(annot.data, annot.above, annot.below),
                  hovermode = FALSE)
 
     p <- config(p, displayModeBar = FALSE)
