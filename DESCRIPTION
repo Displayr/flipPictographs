@@ -13,6 +13,7 @@ Imports:
     rhtmlPictographs,
     flipChartBasics,
     flipTables (>= 2.2.2),
+    flipStatistics,
     plotly,
     RCurl,
     png,
