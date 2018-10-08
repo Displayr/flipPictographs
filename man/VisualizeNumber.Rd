@@ -13,15 +13,17 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   label.data.position = "Overlay", label.data.prefix = "",
   label.data.suffix = "", label.data.valign = "middle",
   label.data.halign = "center", label.data.pad = 0,
-  label.data.font.family = global.font.family,
+  label.data.xpad = 0, label.data.font.family = global.font.family,
   label.data.font.color = global.font.color, label.data.font.size = 10,
   label.data.font.weight = "normal", text.below = "",
   text.below.outside = TRUE, text.below.halign = "center",
-  text.below.pad = 0, text.below.font.family = global.font.family,
+  text.below.pad = 0, text.below.xpad = 0,
+  text.below.font.family = global.font.family,
   text.below.font.color = global.font.color, text.below.font.size = 10,
   text.below.font.weight = "normal", text.above = "",
   text.above.outside = TRUE, text.above.halign = "center",
-  text.above.pad = 0, text.above.font.family = global.font.family,
+  text.above.pad = 0, text.above.xpad = 0,
+  text.above.font.family = global.font.family,
   text.above.font.color = global.font.color, text.above.font.size = 10,
   text.above.font.weight = "normal", border.color = rgb(0.5, 0.5, 0.5),
   border.opacity = 0.5, border.width = 5, background.color = rgb(1,
@@ -69,7 +71,9 @@ This is ignored if \code{text.above.outside} or \code{text.below.outside} is fal
 
 \item{label.data.halign}{Horizontal alignment of data label. One of "left", "center or "right".}
 
-\item{label.data.pad}{Space between data label and the edge of the shape/icon in pixels.}
+\item{label.data.pad}{Vertical space between data label and the edge of the shape/icon in pixels.}
+
+\item{label.data.xpad}{Horizontal space between data label and the edge of the shape/icon in pixels.}
 
 \item{label.data.font.family}{Font in which the data labels are displayed.}
 
@@ -88,7 +92,9 @@ For Icon/Pictograph, this is always true.}
 \item{text.below.halign}{Horizontal alignment of \code{text.below}. There is no control
 for vertical alignment because it always aligns with the edge of the window.}
 
-\item{text.below.pad}{Numeric; Space between \code{text.below} and edge of shape/icon in pixels.}
+\item{text.below.pad}{Numeric; Vertical space between \code{text.below} and edge of shape/icon in pixels.}
+
+\item{text.below.xpad}{Numeric; Horizontal space between \code{text.below} and edge of shape/icon in pixels.}
 
 \item{text.below.font.family}{Font family of \code{text.below}.}
 
@@ -106,7 +112,9 @@ For Icon/Pictograph, this is always true.}
 \item{text.above.halign}{Horizontal alignment of \code{text.above}. There is no control
 for vertical alignment because it always aligns with the edge of the window.}
 
-\item{text.above.pad}{Numeric; Space between \code{text.above} and edge of shape/icon in pixels.}
+\item{text.above.pad}{Numeric; Vertical space between \code{text.above} and edge of shape/icon in pixels.}
+
+\item{text.above.xpad}{Numeric; Horizontal space between \code{text.above} and edge of shape/icon in pixels.}
 
 \item{text.above.font.family}{Font family of \code{text.above}.}
 

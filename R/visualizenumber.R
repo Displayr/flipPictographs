@@ -29,12 +29,14 @@
 #' @param label.data.halign Horizontal alignment of data label. One of "left", "center or "right".
 #' @param label.data.valign Vertical alignment of data label. One of "top", "middle", "bottom".
 #' This is ignored if \code{text.above.outside} or \code{text.below.outside} is false.
-#' @param label.data.pad Space between data label and the edge of the shape/icon in pixels.
+#' @param label.data.pad Vertical space between data label and the edge of the shape/icon in pixels.
+#' @param label.data.xpad Horizontal space between data label and the edge of the shape/icon in pixels.
 #' @param text.below Text to show below the Oval/Rectangle/Icon/Pictograph. For Oval and Rectangle
 #' add "<br>" to add new lines to the text.
 #' @param text.below.outside Whether \code{text.below} should be shown outside the Oval/Rectangle.
 #' For Icon/Pictograph, this is always true.
-#' @param text.below.pad Numeric; Space between \code{text.below} and edge of shape/icon in pixels.
+#' @param text.below.pad Numeric; Vertical space between \code{text.below} and edge of shape/icon in pixels.
+#' @param text.below.xpad Numeric; Horizontal space between \code{text.below} and edge of shape/icon in pixels.
 #' @param text.below.halign Horizontal alignment of \code{text.below}. There is no control
 #' for vertical alignment because it always aligns with the edge of the window.
 #' @param text.below.font.family Font family of \code{text.below}.
@@ -44,7 +46,8 @@
 #' @param text.above Text to show above the Oval/Rectangle/Icon/Pictograph.
 #' @param text.above.outside Whether \code{text.above} should be shown outside the Oval/Rectangle.
 #' For Icon/Pictograph, this is always true.
-#' @param text.above.pad Numeric; Space between \code{text.above} and edge of shape/icon in pixels.
+#' @param text.above.pad Numeric; Vertical space between \code{text.above} and edge of shape/icon in pixels.
+#' @param text.above.xpad Numeric; Horizontal space between \code{text.above} and edge of shape/icon in pixels.
 #' @param text.above.halign Horizontal alignment of \code{text.above}. There is no control
 #' for vertical alignment because it always aligns with the edge of the window.
 #' @param text.above.font.family Font family of \code{text.above}.
@@ -81,6 +84,7 @@ VisualizeNumber <- function(x,
                          label.data.valign = "middle",
                          label.data.halign = "center",
                          label.data.pad = 0.0,
+                         label.data.xpad = 0.0,
                          label.data.font.family = global.font.family,
                          label.data.font.color = global.font.color,
                          label.data.font.size = 10,
@@ -89,6 +93,7 @@ VisualizeNumber <- function(x,
                          text.below.outside = TRUE,
                          text.below.halign = "center",
                          text.below.pad = 0.0,
+                         text.below.xpad = 0.0,
                          text.below.font.family = global.font.family,
                          text.below.font.color = global.font.color,
                          text.below.font.size = 10,
@@ -97,6 +102,7 @@ VisualizeNumber <- function(x,
                          text.above.outside = TRUE,
                          text.above.halign = "center",
                          text.above.pad = 0.0,
+                         text.above.xpad = 0.0,
                          text.above.font.family = global.font.family,
                          text.above.font.color = global.font.color,
                          text.above.font.size = 10,
@@ -186,21 +192,21 @@ VisualizeNumber <- function(x,
     annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
                            font = list(family = label.data.font.family, color = label.data.font.color,
                            size = label.data.font.size), label.data.font.weight,
-                           xshift = label.data.pad, yshift = label.data.pad, yanchor = data.yanchor)
+                           xshift = label.data.xpad, yshift = label.data.pad, yanchor = data.yanchor)
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
         text.above.pad <- text.above.pad + (getVerticalSpace(annot.data))/2
     annot.above <- setText(text.above, "top", tolower(text.above.halign),
                            font = list(family = text.above.font.family, color = text.above.font.color,
                            size = text.above.font.size), text.above.font.weight,
-                           text.above.outside, yshift = text.above.pad)
+                           text.above.outside, xshift = text.above.xpad, yshift = text.above.pad)
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.below, text.below.outside))
         text.below.pad <- text.below.pad + (getVerticalSpace(annot.data))/2
     annot.below <- setText(text.below, "bottom", tolower(text.below.halign),
                            font = list(family = text.below.font.family, color = text.below.font.color,
                            size = text.below.font.size), text.below.font.weight,
-                           text.below.outside, yshift = text.below.pad)
+                           text.below.outside, xshift = text.below.xpad, yshift = text.below.pad)
 
     margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above)
     margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below)
@@ -255,7 +261,7 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
     if (tolower(font.weight) == "bold")
         text <- paste0("<b>", text, "</b>")
 
-    cat(text, "yalign:", yalign, "yanchor:", yanchor, "outside:", outside, "\n")
+    #cat(text, "yalign:", yalign, "yanchor:", yanchor, "outside:", outside, "\n")
     return(list(text = text, font = font, x = xpos, y = ypos,
                 showarrow = FALSE, xshift = xshift, yshift = yshift,
                 xanchor = xalign, yanchor = yanchor))
