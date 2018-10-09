@@ -20,6 +20,7 @@ Imports:
     jpeg,
     bmp
 Remotes:
+    Displayr/flipStatistics,
     Displayr/flipChartBasics,
     Displayr/flipTables,
     Displayr/rhtmlPictographs
