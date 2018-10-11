@@ -110,7 +110,7 @@ VisualizeNumber <- function(x,
                          text.above.font.weight = "normal",
                          border.color = rgb(0.5, 0.5, 0.5),
                          border.opacity = 0.5,
-                         border.width = 1e-2,
+                         border.width = 0.0,
                          border.resolution = 1000,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
@@ -250,8 +250,7 @@ VisualizeNumber <- function(x,
                        y0 = border.width, y1 = 1 - border.width, yref = "y", xref = "x",
                        fillcolor = fill.color, opacity = fill.opacity, layer = "above",
                        line = list(width = 0))
-    shapes <- if (border.opacity < fill.opacity) list(border.shape, fill.shape)
-              else                               list(fill.shape, border.shape)
+    shapes <- list(border.shape, fill.shape)
 
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
                  b = margin.bottom, pad = 0, autoexpand = TRUE),

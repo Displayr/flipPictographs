@@ -26,10 +26,10 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   text.above.font.family = global.font.family,
   text.above.font.color = global.font.color, text.above.font.size = 10,
   text.above.font.weight = "normal", border.color = rgb(0.5, 0.5, 0.5),
-  border.opacity = 0.5, border.width = 0.01,
-  border.resolution = 1000, background.color = rgb(1, 1, 1),
-  background.opacity = 0, margin.left = 0, margin.right = 0,
-  margin.top = 0, margin.bottom = 0, ...)
+  border.opacity = 0.5, border.width = 0, border.resolution = 1000,
+  background.color = rgb(1, 1, 1), background.opacity = 0,
+  margin.left = 0, margin.right = 0, margin.top = 0,
+  margin.bottom = 0, ...)
 }
 \arguments{
 \item{x}{The number to display}
