@@ -8,7 +8,8 @@
 #'  or a "Pictograph" (where the amount of icons filled reflects the size of \code{x}).
 #' @param border.color Color of the border around "Oval" or "Rectangle")
 #' @param border.opacity Opacity of border, which should be between 0 and 1.
-#' @param border.width Width of the border in pixels.
+#' @param border.width Width of the border as a proportion of the graphic dimensions.
+#' @param border.resolution The number of points used to define the border of the circle.
 #' @param fill.color Color of the shape (Oval or Rectangle) or the icon (for Icon or Pictograph)
 #'   if custom.icon is not used.
 #' @param fill.opacity Alpha transparency of the Oval or Rectangle.
@@ -109,7 +110,8 @@ VisualizeNumber <- function(x,
                          text.above.font.weight = "normal",
                          border.color = rgb(0.5, 0.5, 0.5),
                          border.opacity = 0.5,
-                         border.width = 5,
+                         border.width = 1e-2,
+                         border.resolution = 1000,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
                          margin.left = 0,
@@ -130,6 +132,11 @@ VisualizeNumber <- function(x,
     {
         opacity <- 0.0
         border.width <- 0.0
+    }
+    if (border.width < 0 || border.width >=  0.5)
+    {
+        warning("Border width must be between 0 and 0.5.")
+        border.width <- 0
     }
 
     # Construct formatted string of x
@@ -218,11 +225,29 @@ VisualizeNumber <- function(x,
     cpad <- border.width/100
     border.shape <- NULL
     if (border.width > 0)
-        border.shape = list(type = display, x0 = 0, x1 = 1, y0 = 0, y1 = 1,
-                            yref = "y", xref = "x", fillcolor = "transparent",
-                            line = list(color = toRGB(border.color, alpha = border.opacity),
-                            width = border.width))
-    fill.shape <- list(type = display, x0 = 0, x1 = 1, y0 = 0, y1 = 1, yref = "y", xref = "x",
+    {
+        if (display == "rectangle")
+            border.path = paste("M 0 0 V 1 H 1 V 0 Z M", border.width, border.width,
+                "V", 1-border.width, "H", 1-border.width, "V", border.width, "H", 1 - border.width)
+        else
+        {  
+            wd = 0.05
+            len = 500
+            x0 <- seq(0, 1, length = border.resolution)
+            xx <- rev(seq(border.width, 1-border.width, length = border.resolution))
+            y0 <- sqrt(0.5^2 - (x0 - 0.5)^2) + 0.5
+            yy <- sqrt((0.5 - border.width)^2 - (xx - 0.5)^2) + 0.5
+
+            border.path <- paste("M 0 0.5", paste("L", x0, y0, collapse = " "),
+                    paste("L", rev(x0), 1 - y0, collapse = " "),
+                    paste("L", rev(xx), 1 - yy, collapse = " "),
+                    paste("L", xx, yy, collapse = " "))
+        }
+        border.shape = list(type = "path", path = border.path, line = list(width = 0),
+                            fillcolor = border.color, opacity = border.opacity)
+    }
+    fill.shape <- list(type = display, x0 = border.width, x1 = (1 - border.width), 
+                       y0 = border.width, y1 = 1 - border.width, yref = "y", xref = "x",
                        fillcolor = fill.color, opacity = fill.opacity, layer = "above",
                        line = list(width = 0))
     shapes <- if (border.opacity < fill.opacity) list(border.shape, fill.shape)
@@ -230,8 +255,8 @@ VisualizeNumber <- function(x,
 
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
                  b = margin.bottom, pad = 0, autoexpand = TRUE),
-                 xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
-                 yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(-cpad,1+cpad)),
+                 xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
+                 yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
                  shapes = shapes, annotations = list(annot.data, annot.above, annot.below),
