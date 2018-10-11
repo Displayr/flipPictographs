@@ -7,14 +7,19 @@
 #' @param category A comma-seperated list of the name or indices of the categories to include for 'Percentage'.
 #' @importFrom flipStatistics Mean Sum WeightedTable
 #' @importFrom flipTables SelectEntry
+#' @export
 SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], weights = NULL, subset = NULL, category = NULL)
 {
+    if (!is.null(weights) && length(weights) > 1 && length(weights) != length(x))
+        stop("Weights should be the same length as the input variable")
+
     if (!is.null(subset) && length(subset) > 1)
     {
         if (length(subset) != length(x))
            stop("Filters should have the same length as the input variable")
         x <- x[subset]
-        weights <- weights[weights]
+        if (!is.null(weights))
+            weights <- weights[subset]
     }
 
     if (grepl("Average", type))
