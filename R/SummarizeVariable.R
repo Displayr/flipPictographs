@@ -28,11 +28,11 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
         return(Sum(x, weights = weights))
 
     if (is.null(weights))
-        weights <- rep(1, length(weights))
+        weights <- rep(1, length(x))
     total <- sum(weights, na.rm = TRUE)
 
     # Pick any questions are encoded as 0 and 1s
-    if (is.numeric(x))
+    if (is.numeric(x) && all(x %in% c(TRUE, FALSE)))
         return(sum(weights * x)/total)
 
     # Categorical variable
@@ -40,5 +40,5 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     if (is.null(category) || is.na(category))
         stop("Select categories from '", paste(names(counts), collapse="', '"), "'.")
 
-    return(sum(SelectEntry(counts, category))/total)
+    return(sum(SelectEntry(counts, row=category, column = 1))/total)
 }
