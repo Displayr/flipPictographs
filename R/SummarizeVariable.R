@@ -43,7 +43,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     # Categorical variable
     counts <- WeightedTable(x, weights = weights)
     if (sum(nchar(category), na.rm = TRUE) == 0)
-        stop("Select categories from '", paste(names(counts), collapse="', '"), "'.")
+        stop("Select one or more categories from '", paste(names(counts), collapse="', '"), "'.")
 
     return(sum(SelectEntry(counts, row=category, column = 1))/total)
 }
