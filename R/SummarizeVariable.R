@@ -35,14 +35,14 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     if (is.numeric(x) && all(x %in% c(TRUE, FALSE)))
     {
         if (sum(nchar(category), na.rm = TRUE))
-            warning("Showing percentage selected ignoring Category '",
-                    category, "'.")
+            warning("Showing percentage selected (ignoring Category '",
+                    category, "').")
         return(sum(weights * x)/total)
     }
 
     # Categorical variable
     counts <- WeightedTable(x, weights = weights)
-    if (is.null(category) || is.na(category))
+    if (sum(nchar(category), na.rm = TRUE) == 0)
         stop("Select categories from '", paste(names(counts), collapse="', '"), "'.")
 
     return(sum(SelectEntry(counts, row=category, column = 1))/total)
