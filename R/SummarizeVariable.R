@@ -33,7 +33,12 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 
     # Pick any questions are encoded as 0 and 1s
     if (is.numeric(x) && all(x %in% c(TRUE, FALSE)))
+    {
+        if (sum(nchar(category), na.rm = TRUE))
+            warning("Showing percentage selected ignoring Category '",
+                    category, "'.")
         return(sum(weights * x)/total)
+    }
 
     # Categorical variable
     counts <- WeightedTable(x, weights = weights)
