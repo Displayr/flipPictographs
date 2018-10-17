@@ -158,6 +158,8 @@ VisualizeNumber <- function(x,
             assign(paste0("text.", pos), label.str)
             assign(paste0("text.", pos, ".halign"), label.data.halign)
             assign(paste0("text.", pos, ".valign"), label.data.valign)
+            assign(paste0("text.", pos, ".pad"), label.data.pad)
+            assign(paste0("text.", pos, ".xpad"), label.data.xpad)
             assign(paste0("text.", pos, ".font.family"), label.data.font.family)
             assign(paste0("text.", pos, ".font.color"), label.data.font.color)
             assign(paste0("text.", pos, ".font.size"), label.data.font.size)
@@ -169,18 +171,26 @@ VisualizeNumber <- function(x,
         return(iconsWithText(value, fill.icon.color = fill.color,
             total.icons = total.icons, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
-            text.overlay.valign = tolower(label.data.valign), text.overlay.pad = label.data.pad,
-            text.overlay.font.family = label.data.font.family, text.overlay.font.color = label.data.font.color,
-            text.overlay.font.size = label.data.font.size, text.overlay.font.weight = tolower(label.data.font.weight),
+            text.overlay.valign = tolower(label.data.valign), 
+            text.overlay.pad = label.data.pad, text.overlay.xpad = label.data.xpad,
+            text.overlay.font.family = label.data.font.family, 
+            text.overlay.font.color = label.data.font.color,
+            text.overlay.font.size = label.data.font.size, 
+            text.overlay.font.weight = tolower(label.data.font.weight),
             text.below = text.below, text.below.font.weight = tolower(text.below.font.weight),
-            text.below.halign = tolower(text.below.halign), text.below.pad = text.below.pad,
-            text.below.font.family = text.below.font.family, text.below.font.color = text.below.font.color,
+            text.below.halign = tolower(text.below.halign), 
+            text.below.pad = text.below.pad, text.below.xpad = text.below.xpad,
+            text.below.font.family = text.below.font.family, 
+            text.below.font.color = text.below.font.color,
             text.below.font.size = text.below.font.size, text.above = text.above,
-            text.above.halign = tolower(text.above.halign), text.above.pad = text.above.pad,
+            text.above.halign = tolower(text.above.halign),
+            text.above.pad = text.above.pad, text.above.xpad = text.above.xpad,
             text.above.font.family = text.above.font.family, text.above.font.color = text.above.font.color,
-            text.above.font.size = text.above.font.size, text.above.font.weight = tolower(text.above.font.weight),
+            text.above.font.size = text.above.font.size,
+            text.above.font.weight = tolower(text.above.font.weight),
             background.color = if (background.opacity > 0) background.color else "transparent",
-            margin.top = margin.top, margin.right = margin.right, margin.bottom = margin.bottom, margin.left = margin.left))
+            margin.top = margin.top, margin.right = margin.right, 
+            margin.bottom = margin.bottom, margin.left = margin.left))
     }
 
     p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
@@ -209,20 +219,19 @@ VisualizeNumber <- function(x,
                            text.above.outside, xshift = text.above.xpad, yshift = text.above.pad)
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.below, text.below.outside))
-        text.below.pad <- text.below.pad + (getVerticalSpace(annot.data))/2
+        text.below.pad <- text.below.pad - (getVerticalSpace(annot.data))/2
     annot.below <- setText(text.below, "bottom", tolower(text.below.halign),
                            font = list(family = text.below.font.family, color = text.below.font.color,
                            size = text.below.font.size), text.below.font.weight,
                            text.below.outside, xshift = text.below.xpad, yshift = text.below.pad)
 
+    # Adjust margins so that labels do not fall off
     margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above)
     margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below)
+    margin.left <- margin.left + max(getLeftSpace(annot.above), getLeftSpace(annot.data), getLeftSpace(annot.below))
+    margin.right <- margin.right + max(getRightSpace(annot.above), getRightSpace(annot.data), 
+                    getRightSpace(annot.below))
 
-    # Padding is needed to avoid truncating the border
-    # But this is approximate because the units are relative, but border width is in pixels
-    # Note it is the chart area that must be increased not the margins because cliponaxis
-    # works only for markers not shapes
-    cpad <- border.width/100
     border.shape <- NULL
     if (border.width > 0)
     {
@@ -283,13 +292,8 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
         yanchor <- yalign
     else if (is.na(yanchor))                                    # aligning text outside the shape
         yanchor <- switch(yalign, top = "bottom", bottom = "top", "middle")
-
-    if (yanchor == "middle") # which direction??
-        yshift <- 0
     if (yanchor == "top")
         yshift <- -1 * yshift
-    if (xalign == "right")
-        xshift <- -1 * xshift
 
     if (tolower(font.weight) == "bold")
         text <- paste0("<b>", text, "</b>")
@@ -306,6 +310,22 @@ getVerticalSpace <- function(annot)
         return(0.0)
     nline <- sum(gregexpr("<br>", annot$text)[[1]] > -1) + 1
     return (abs(annot$yshift) + (annot$font$size * nline) + 5)
+}
+
+getLeftSpace <- function(annot)
+{
+    if (is.null(annot) || annot$x > 0.0)
+        return (0.0)
+    else
+        return(max(0.0, -1 * annot$xshift))
+}
+
+getRightSpace <- function(annot)
+{
+    if (is.null(annot) || annot$x < 1.0)
+        return (0.0)
+    else
+        return(max(0.0, annot$xshift))
 }
 
 isTextInside <- function(text, outside)

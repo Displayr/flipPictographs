@@ -31,6 +31,7 @@ iconsWithText <- function (x,
                          text.overlay.halign = "center",
                          text.overlay.valign = "middle",
                          text.overlay.pad = 0.0,
+                         test.overlap.xpad = 0.0,
                          text.overlay.font.family = global.font.family,
                          text.overlay.font.color = global.font.color,
                          text.overlay.font.size = 10,
@@ -38,6 +39,7 @@ iconsWithText <- function (x,
                          text.below = "",
                          text.below.halign = "center",
                          text.below.pad = 0.0,
+                         text.below.xpad = 0.0,
                          text.below.font.family = global.font.family,
                          text.below.font.color = global.font.color,
                          text.below.font.size = 10,
@@ -45,6 +47,7 @@ iconsWithText <- function (x,
                          text.above = "",
                          text.above.halign = "center",
                          text.above.pad = 0.0,
+                         text.above.xpad = 0.0,
                          text.above.font.family = global.font.family,
                          text.above.font.color = global.font.color,
                          text.above.font.size = 10,
@@ -100,8 +103,12 @@ iconsWithText <- function (x,
             width.height.ratio = 1
         if (layout != "Number of rows")
             number.rows = NA
+        else
+            number.rows <- min(number.rows, total.icons)
         if (layout != "Number of columns")
             number.cols = NA
+        else
+            number.cols <- min(number.cols, total.icons)
     }
 
     # Determine plot values
@@ -187,13 +194,34 @@ iconsWithText <- function (x,
     label.overlay.str <- ""
     label.above.str <- ""
     label.below.str <- ""
+    
+    # Adjust margins to fit text labels
     # padding format: top right bottom left
+    pad.above.left <- pad.above.right <- pad.above.top <- pad.above.bottom <- 0
+    pad.below.left <- pad.below.right <- pad.below.top <- pad.below.bottom <- 0
+    if (sum(nchar(text.above), na.rm = TRUE) > 0)
+    {
+        if (text.above.halign == "left")
+            pad.above.left <- text.above.xpad
+        if (text.above.halign == "right")
+            pad.above.right <- text.above.xpad
+    }
+    if (sum(nchar(text.below), na.rm = TRUE) > 0)
+    {
+        if (text.below.halign == "left")
+            pad.below.left <- text.below.xpad
+        if (text.below.halign == "right")
+            pad.below.right <- text.below.xpad
+    }
+    margin.left <- margin.left + max(0, -pad.above.left, -pad.below.left)
+    margin.right <- margin.right + max(0, pad.above.right, pad.below.right)
+
     if (sum(nchar(text.above), na.rm = TRUE) > 0)
         label.above.str <- sprintf(", \"table-header\":{\"padding\": \"%f %f %f %f\",
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
-            margin.top, margin.right, text.above.pad, margin.left, 
+            margin.top, margin.right - pad.above.right, max(0, text.above.pad), margin.left + pad.above.left, 
             text.above, text.above.font.size, text.above.font.family, 
             text.above.font.color, text.above.font.weight, text.above.halign)
 
@@ -202,7 +230,7 @@ iconsWithText <- function (x,
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}",
-            text.below.pad, margin.right, margin.bottom, margin.left,
+            text.below.pad, margin.right - pad.below.right, margin.bottom, margin.left + pad.below.left,
             text.below, text.below.font.size, text.below.font.family,
             text.below.font.color, text.below.font.weight, text.below.halign)
 
@@ -221,9 +249,8 @@ iconsWithText <- function (x,
           text.overlay.font.color, text.overlay.font.weight, text.overlay.halign)
     }
 
-    pad.around.icons <- sprintf(",\"padding\":\"%f %f %f %f\"",
-        if (sum(nchar(text.above), na.rm = TRUE) > 0) 0 else margin.top, margin.right,
-        if (sum(nchar(text.below), na.rm = TRUE) > 0) 0 else margin.bottom, margin.left)
+    pad.around.icons <- sprintf(",\"padding\":\"%f %f %f %f\"", 
+        margin.top, margin.right, margin.bottom, margin.left)
         
     json.string <- paste0("{\"table\": {", dim.str,
           ",\"rows\":[[{\"type\":\"graphic\", \"value\":{",
