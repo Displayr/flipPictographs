@@ -226,8 +226,8 @@ VisualizeNumber <- function(x,
                            text.below.outside, xshift = text.below.xpad, yshift = text.below.pad)
 
     # Adjust margins so that labels do not fall off
-    margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above)
-    margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below)
+    margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above, direction = "top")
+    margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below, direction = "bottom")
     margin.left <- margin.left + max(getLeftSpace(annot.above), getLeftSpace(annot.data), getLeftSpace(annot.below))
     margin.right <- margin.right + max(getRightSpace(annot.above), getRightSpace(annot.data), 
                     getRightSpace(annot.below))
@@ -304,10 +304,14 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
                 xanchor = xalign, yanchor = yanchor))
 }
 
-getVerticalSpace <- function(annot)
+getVerticalSpace <- function(annot, direction = "any")
 {
     if (is.null(annot))
         return(0.0)
+    if (direction == "top" && (annot$yshift < 0 || annot$y < 1))
+        return(0.0) 
+    if (direction == "bottom" && (annot$yshift > 0 || annot$y > 0))
+        return(0.0) 
     nline <- sum(gregexpr("<br>", annot$text)[[1]] > -1) + 1
     return (abs(annot$yshift) + (annot$font$size * nline) + 5)
 }
