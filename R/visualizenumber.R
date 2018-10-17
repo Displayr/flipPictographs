@@ -219,7 +219,7 @@ VisualizeNumber <- function(x,
                            text.above.outside, xshift = text.above.xpad, yshift = text.above.pad)
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.below, text.below.outside))
-        text.below.pad <- text.below.pad - (getVerticalSpace(annot.data))/2
+        text.below.pad <- text.below.pad + (getVerticalSpace(annot.data))/2
     annot.below <- setText(text.below, "bottom", tolower(text.below.halign),
                            font = list(family = text.below.font.family, color = text.below.font.color,
                            size = text.below.font.size), text.below.font.weight,
