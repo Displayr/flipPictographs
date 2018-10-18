@@ -103,12 +103,8 @@ iconsWithText <- function (x,
             width.height.ratio = 1
         if (layout != "Number of rows")
             number.rows = NA
-        else
-            number.rows <- min(number.rows, total.icons)
         if (layout != "Number of columns")
             number.cols = NA
-        else
-            number.cols <- min(number.cols, total.icons)
     }
 
     # Determine plot values
@@ -124,8 +120,12 @@ iconsWithText <- function (x,
         stop("The total icons must be a single numeric value and greater than zero\n")
     if (!is.na(number.rows) && (number.rows <= 0 || number.rows != ceiling(number.rows)))
         stop("The number of rows must be a positive integer\n")
+    if (!is.na(number.rows))
+        number.rows <- min(number.rows, total.icons)
     if (!is.na(number.cols) && (number.cols <= 0 || number.cols != ceiling(number.cols)))
         stop("The number of columns must be a positive integer\n")
+    if (!is.na(number.cols))
+        number.cols <- min(number.cols, total.icons)
     if (width.height.ratio <= 0)
         stop("The width-height ratio must be greater than zero\n")
     if (icon.width <= 0)
