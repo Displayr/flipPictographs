@@ -4,12 +4,15 @@
 #' @inherit SinglePicto
 #' @param x The number to display
 #' @param display A string describing the visualization output. This can be simply "Number"; or
-#'  a number on a shape ("Oval" or "Rectangle"); or a number on top of an "Icon";
+#'  a number on a shape ("Oval", "Rectangle" or "Donut"); or a number on top of an "Icon";
 #'  or a "Pictograph" (where the amount of icons filled reflects the size of \code{x}).
 #' @param border.color Color of the border around "Oval" or "Rectangle")
 #' @param border.opacity Opacity of border, which should be between 0 and 1.
 #' @param border.width Width of the border as a proportion of the graphic dimensions.
 #' @param border.resolution The number of points used to define the border of the circle.
+#' @param base.color The color of the base graphic when a Pictograph (with the base image shown)
+#'   or a Donut is displayed. For backwards compatibility, \code{base.icon.color} can also be used.
+#' @param base.opacity Alpha transparent; only used when \code{display} is Donut. 
 #' @param fill.color Color of the shape (Oval or Rectangle) or the icon (for Icon or Pictograph)
 #'   if custom.icon is not used.
 #' @param fill.opacity Alpha transparency of the Oval or Rectangle.
@@ -56,7 +59,7 @@
 #' @param text.above.font.size Font size of \code{text.above}.
 #' @param text.above.font.weight Weight of \code{text.above}, i.e. one of "bold" or "normal".
 #' @param ... Other parameters passed to \code{iconWithText}.
-#' @importFrom plotly plot_ly layout toRGB config
+#' @importFrom plotly plot_ly layout toRGB config add_pie
 #' @export
 #' @examples
 #' VisualizeNumber(4.0, display = "Rectangle", text.above = "Above", text.above.outside = TRUE)
@@ -70,8 +73,8 @@
 #'      background.color = "grey", background.opacity = 1.0, text.above.outside = FALSE,
 #'      text.below.outside = FALSE)
 VisualizeNumber <- function(x,
-                         display = c("Oval", "Rectangle", "Number", "Icon", "Pictograph")[1],
-                         fill.color = rgb(0, 0, 1),
+                         display = c("Oval", "Rectangle", "Number", "Icon", "Donut", "Pictograph")[1],
+                         fill.color = rgb(166, 197, 57, maxColorValue = 255),
                          fill.opacity = 0.4,
                          total.icons = NA,
                          global.font.family = "Arial",
@@ -112,6 +115,9 @@ VisualizeNumber <- function(x,
                          border.opacity = 0.5,
                          border.width = 0.0,
                          border.resolution = 1000,
+                         base.icon.color = "", # backward compatability
+                         base.color = base.icon.color,
+                         base.opacity = fill.opacity,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
                          margin.left = 0,
@@ -123,6 +129,7 @@ VisualizeNumber <- function(x,
     display <- switch(tolower(display), oval = "circle", circle = "circle", "number in an oval" = "circle",
                        rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
                        number = "number",
+                       donut = "donut", "number in a donut" = "donut", "number on a donut" = "donut",
                        icon = "icon", "number on an icon" = "icon",
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",
@@ -170,7 +177,8 @@ VisualizeNumber <- function(x,
         }
         if (label.data.position == "None")
             label.str <- ""
-        return(iconsWithText(value, fill.icon.color = fill.color,
+        return(iconsWithText(value, fill.icon.color = fill.color, 
+            base.icon.color = base.color,
             total.icons = total.icons, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
             text.overlay.valign = tolower(label.data.valign),
@@ -195,9 +203,54 @@ VisualizeNumber <- function(x,
             margin.bottom = margin.bottom, margin.left = margin.left))
     }
 
-    p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
-            cliponaxis = FALSE, hoverinfo = "skip")
+    if (display == "donut")
+    {
+        if (sum(nchar(base.color), na.rm = TRUE) == 0)
+            base.color <- rgb(230, 230, 230, maxColorValue = 255)
+        p <- plot_ly(values = c(x, 1 - x), hoverinfo = "skip", textinfo = "none",
+                marker = list(colors = c(toRGB(fill.color, alpha = fill.opacity),
+                toRGB(base.color, alpha = base.opacity)), 
+                line = list(width = border.width * 100, 
+                color = toRGB(border.color, alpha = border.opacity))))
+        p <- add_pie(p, hole = 0.8)
+        shapes <- NULL
 
+    } else
+    { 
+        p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
+            cliponaxis = FALSE, hoverinfo = "skip")
+        border.shape <- NULL
+        if (border.width > 0)
+        {
+            if (display == "rectangle")
+                border.path = paste("M 0 0 V 1 H 1 V 0 Z M", border.width, border.width,
+                    "V", 1-border.width, "H", 1-border.width, "V", border.width, "H", 1 - border.width)
+            else
+            {
+                wd = 0.05
+                len = 500
+                x0 <- seq(0, 1, length = border.resolution)
+                xx <- rev(seq(border.width, 1-border.width, length = border.resolution))
+                y0 <- sqrt(0.5^2 - (x0 - 0.5)^2) + 0.5
+                yy <- sqrt((0.5 - border.width)^2 - (xx - 0.5)^2) + 0.5
+
+                border.path <- paste("M 0 0.5", paste("L", x0, y0, collapse = " "),
+                        paste("L", rev(x0), 1 - y0, collapse = " "),
+                        paste("L", rev(xx), 1 - yy, collapse = " "),
+                        paste("L", xx, yy, collapse = " "))
+            }
+            border.shape = list(type = "path", path = border.path, line = list(width = 0),
+                                fillcolor = border.color, opacity = border.opacity)
+        }
+        fill.shape <- list(type = display, x0 = border.width, x1 = (1 - border.width),
+                           y0 = border.width, y1 = 1 - border.width, yref = "y", xref = "x",
+                           fillcolor = fill.color, opacity = fill.opacity, layer = "above",
+                           line = list(width = 0))
+        shapes <- list(border.shape, fill.shape)
+    }
+
+
+    # Position data and text labels
     data.yanchor <- NA
     if (tolower(label.data.valign) == "middle")
     {
@@ -234,37 +287,8 @@ VisualizeNumber <- function(x,
     margin.right <- margin.right + max(getRightSpace(annot.above), getRightSpace(annot.data),
                     getRightSpace(annot.below))
 
-    border.shape <- NULL
-    if (border.width > 0)
-    {
-        if (display == "rectangle")
-            border.path = paste("M 0 0 V 1 H 1 V 0 Z M", border.width, border.width,
-                "V", 1-border.width, "H", 1-border.width, "V", border.width, "H", 1 - border.width)
-        else
-        {
-            wd = 0.05
-            len = 500
-            x0 <- seq(0, 1, length = border.resolution)
-            xx <- rev(seq(border.width, 1-border.width, length = border.resolution))
-            y0 <- sqrt(0.5^2 - (x0 - 0.5)^2) + 0.5
-            yy <- sqrt((0.5 - border.width)^2 - (xx - 0.5)^2) + 0.5
-
-            border.path <- paste("M 0 0.5", paste("L", x0, y0, collapse = " "),
-                    paste("L", rev(x0), 1 - y0, collapse = " "),
-                    paste("L", rev(xx), 1 - yy, collapse = " "),
-                    paste("L", xx, yy, collapse = " "))
-        }
-        border.shape = list(type = "path", path = border.path, line = list(width = 0),
-                            fillcolor = border.color, opacity = border.opacity)
-    }
-    fill.shape <- list(type = display, x0 = border.width, x1 = (1 - border.width),
-                       y0 = border.width, y1 = 1 - border.width, yref = "y", xref = "x",
-                       fillcolor = fill.color, opacity = fill.opacity, layer = "above",
-                       line = list(width = 0))
-    shapes <- list(border.shape, fill.shape)
-
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
-                 b = margin.bottom, pad = 0, autoexpand = TRUE),
+                 b = margin.bottom, pad = 0, autoexpand = TRUE), showlegend = FALSE,
                  xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),

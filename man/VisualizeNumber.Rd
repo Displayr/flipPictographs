@@ -5,15 +5,16 @@
 \title{Visualizes a number}
 \usage{
 VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
-  "Pictograph")[1], fill.color = rgb(0, 0, 1), fill.opacity = 0.4,
-  total.icons = NA, global.font.family = "Arial",
-  global.font.color = rgb(44, 44, 44, maxColorValue = 255),
-  label.data.number.type = c("Number", "Percentage", "Scientific")[1],
-  label.data.decimals = 0, label.data.1000.separator = ",",
-  label.data.position = "Overlay", label.data.prefix = "",
-  label.data.suffix = "", label.data.valign = "middle",
-  label.data.halign = "center", label.data.pad = 0,
-  label.data.xpad = 0, label.data.font.family = global.font.family,
+  "Donut", "Pictograph")[1], fill.color = rgb(166, 197, 57, maxColorValue
+  = 255), fill.opacity = 0.4, total.icons = NA,
+  global.font.family = "Arial", global.font.color = rgb(44, 44, 44,
+  maxColorValue = 255), label.data.number.type = c("Number",
+  "Percentage", "Scientific")[1], label.data.decimals = 0,
+  label.data.1000.separator = ",", label.data.position = "Overlay",
+  label.data.prefix = "", label.data.suffix = "",
+  label.data.valign = "middle", label.data.halign = "center",
+  label.data.pad = 0, label.data.xpad = 0,
+  label.data.font.family = global.font.family,
   label.data.font.color = global.font.color, label.data.font.size = 10,
   label.data.font.weight = "normal", text.below = "",
   text.below.outside = TRUE, text.below.halign = "center",
@@ -27,15 +28,16 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   text.above.font.color = global.font.color, text.above.font.size = 10,
   text.above.font.weight = "normal", border.color = rgb(0.5, 0.5, 0.5),
   border.opacity = 0.5, border.width = 0, border.resolution = 1000,
-  background.color = rgb(1, 1, 1), background.opacity = 0,
-  margin.left = 0, margin.right = 0, margin.top = 0,
-  margin.bottom = 0, ...)
+  base.icon.color = "", base.color = base.icon.color,
+  base.opacity = fill.opacity, background.color = rgb(1, 1, 1),
+  background.opacity = 0, margin.left = 0, margin.right = 0,
+  margin.top = 0, margin.bottom = 0, ...)
 }
 \arguments{
 \item{x}{The number to display}
 
 \item{display}{A string describing the visualization output. This can be simply "Number"; or
-a number on a shape ("Oval" or "Rectangle"); or a number on top of an "Icon";
+a number on a shape ("Oval", "Rectangle" or "Donut"); or a number on top of an "Icon";
 or a "Pictograph" (where the amount of icons filled reflects the size of \code{x}).}
 
 \item{fill.color}{Color of the shape (Oval or Rectangle) or the icon (for Icon or Pictograph)
@@ -132,6 +134,13 @@ for vertical alignment because it always aligns with the edge of the window.}
 \item{border.width}{Width of the border as a proportion of the graphic dimensions.}
 
 \item{border.resolution}{The number of points used to define the border of the circle.}
+
+\item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC). Only applicable for built-in icons.}
+
+\item{base.color}{The color of the base graphic when a Pictograph (with the base image shown)
+or a Donut is displayed. For backwards compatibility, \code{base.icon.color} can also be used.}
+
+\item{base.opacity}{Alpha transparent; only used when \code{display} is Donut.}
 
 \item{background.color}{Color of the graphic background}
 
