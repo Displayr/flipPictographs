@@ -150,6 +150,8 @@ VisualizeNumber <- function(x,
     if (display %in% c("icon", "pictograph - single", "pictograph - repeated"))
     {
         value <- if (display == "icon") 1.0 else x
+        if (!is.numeric(value))
+            stop("Input value for pictographs cannot be non-numeric.")
         if (display %in% c("icon", "pictograph - single"))
             total.icons <- 1.0
         if (label.data.position %in% c("Above icons", "Below icons"))
@@ -171,16 +173,16 @@ VisualizeNumber <- function(x,
         return(iconsWithText(value, fill.icon.color = fill.color,
             total.icons = total.icons, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
-            text.overlay.valign = tolower(label.data.valign), 
+            text.overlay.valign = tolower(label.data.valign),
             text.overlay.pad = label.data.pad, text.overlay.xpad = label.data.xpad,
-            text.overlay.font.family = label.data.font.family, 
+            text.overlay.font.family = label.data.font.family,
             text.overlay.font.color = label.data.font.color,
-            text.overlay.font.size = label.data.font.size, 
+            text.overlay.font.size = label.data.font.size,
             text.overlay.font.weight = tolower(label.data.font.weight),
             text.below = text.below, text.below.font.weight = tolower(text.below.font.weight),
-            text.below.halign = tolower(text.below.halign), 
+            text.below.halign = tolower(text.below.halign),
             text.below.pad = text.below.pad, text.below.xpad = text.below.xpad,
-            text.below.font.family = text.below.font.family, 
+            text.below.font.family = text.below.font.family,
             text.below.font.color = text.below.font.color,
             text.below.font.size = text.below.font.size, text.above = text.above,
             text.above.halign = tolower(text.above.halign),
@@ -189,7 +191,7 @@ VisualizeNumber <- function(x,
             text.above.font.size = text.above.font.size,
             text.above.font.weight = tolower(text.above.font.weight),
             background.color = if (background.opacity > 0) background.color else "transparent",
-            margin.top = margin.top, margin.right = margin.right, 
+            margin.top = margin.top, margin.right = margin.right,
             margin.bottom = margin.bottom, margin.left = margin.left))
     }
 
@@ -229,7 +231,7 @@ VisualizeNumber <- function(x,
     margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above, direction = "top")
     margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below, direction = "bottom")
     margin.left <- margin.left + max(getLeftSpace(annot.above), getLeftSpace(annot.data), getLeftSpace(annot.below))
-    margin.right <- margin.right + max(getRightSpace(annot.above), getRightSpace(annot.data), 
+    margin.right <- margin.right + max(getRightSpace(annot.above), getRightSpace(annot.data),
                     getRightSpace(annot.below))
 
     border.shape <- NULL
@@ -239,7 +241,7 @@ VisualizeNumber <- function(x,
             border.path = paste("M 0 0 V 1 H 1 V 0 Z M", border.width, border.width,
                 "V", 1-border.width, "H", 1-border.width, "V", border.width, "H", 1 - border.width)
         else
-        {  
+        {
             wd = 0.05
             len = 500
             x0 <- seq(0, 1, length = border.resolution)
@@ -255,7 +257,7 @@ VisualizeNumber <- function(x,
         border.shape = list(type = "path", path = border.path, line = list(width = 0),
                             fillcolor = border.color, opacity = border.opacity)
     }
-    fill.shape <- list(type = display, x0 = border.width, x1 = (1 - border.width), 
+    fill.shape <- list(type = display, x0 = border.width, x1 = (1 - border.width),
                        y0 = border.width, y1 = 1 - border.width, yref = "y", xref = "x",
                        fillcolor = fill.color, opacity = fill.opacity, layer = "above",
                        line = list(width = 0))
@@ -309,9 +311,9 @@ getVerticalSpace <- function(annot, direction = "any")
     if (is.null(annot))
         return(0.0)
     if (direction == "top" && (annot$yshift < 0 || annot$y < 1))
-        return(0.0) 
+        return(0.0)
     if (direction == "bottom" && (annot$yshift > 0 || annot$y > 0))
-        return(0.0) 
+        return(0.0)
     nline <- sum(gregexpr("<br>", annot$text)[[1]] > -1) + 1
     return (abs(annot$yshift) + (annot$font$size * nline) + 5)
 }
