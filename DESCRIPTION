@@ -15,7 +15,7 @@ Imports:
     flipTables (>= 2.2.2),
     flipStatistics,
     plotly,
-    RCurl,
+    httr,
     png,
     jpeg,
     bmp

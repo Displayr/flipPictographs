@@ -1,4 +1,4 @@
-#' @importFrom RCurl getURLContent
+#' @importFrom httr GET content
 #' @importFrom bmp read.bmp
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
@@ -6,10 +6,11 @@
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio
-    tmp.image <- try(getURLContent(image.url), silent=T)
+    response <- GET(image.url)
+    tmp.image <- content(response, as = "text", encoding = "UTF-8")
     if (inherits(tmp.image, "try-error"))
         stop("Image not found\n")
-    tmp.type <- attr(tmp.image, "Content-Type")
+    tmp.type <- response$headers$'content-type'
 
     if ("text/html" %in% tmp.type)
         stop("Image type is text/html. Ensure the image url is correct and not redirected.")

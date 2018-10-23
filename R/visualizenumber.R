@@ -4,7 +4,7 @@
 #' @inherit SinglePicto
 #' @param x The number to display
 #' @param display A string describing the visualization output. This can be simply "Number"; or
-#'  a number on a shape ("Oval", "Rectangle" or "Donut"); or a number on top of an "Icon";
+#'  a number on a shape ("Oval", "Rectangle", "Donut", "Gauge"); or a number on top of an "Icon";
 #'  or a "Pictograph" (where the amount of icons filled reflects the size of \code{x}).
 #' @param border.color Color of the border around "Oval" or "Rectangle")
 #' @param border.opacity Opacity of border, which should be between 0 and 1.
@@ -58,6 +58,27 @@
 #' @param text.above.font.color Font color of \code{text.above}.
 #' @param text.above.font.size Font size of \code{text.above}.
 #' @param text.above.font.weight Weight of \code{text.above}, i.e. one of "bold" or "normal".
+#' @param hole.size Numeric between 0 and 1, specifying the size of the hole when \code{display}
+#'      is "Donut" or "Gauge".
+#' @param segment.gap Numeric between 0 and 1, specifying the gap between the segments 
+#'      in the gauge.
+#' @param maximum.value Numeric value specifying the maximum that \code{x} will be expected to take.
+#'      This value is used to show proportional data 
+#'      (i.e. \code{display} is "Donut", "Gauge" or "Pictograph (single icon)").
+#' @param minimum.value Numeric value specifying the minimum value that \code{x} is expected to take.
+#'      This value is only used in "Gauge" (for "Donut" and "Pictograph (single icon)" it is
+#'      always set as zero.
+#' @param tick.show Whether to show the \code{minimum.value} and \code{maximum.value} when
+#'      \code{display} is "Gauge".
+#' @param tick.outside Whether to show the ticks inside or outside the gauge.
+#' @param tick.number.type Format in which \code{x} should be shown. One of "Number", "Percentage", "Scientific".
+#' @param tick.decimals Integer; Number of decimals shown in ticks
+#' @param tick.1000.separator String placed to separate thousands. By default this is a comma. Set to empty string to hide.
+#' @param tick.prefix Optional text to prepend to ticks.
+#' @param tick.suffix Optional text to append to ticks.
+#' @param tick.font.family Font family of \code{tick}.
+#' @param tick.font.color Font color of \code{tick}.
+#' @param tick.font.size Font size of \code{tick}.
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config add_pie
 #' @export
@@ -73,7 +94,7 @@
 #'      background.color = "grey", background.opacity = 1.0, text.above.outside = FALSE,
 #'      text.below.outside = FALSE)
 VisualizeNumber <- function(x,
-                         display = c("Oval", "Rectangle", "Number", "Icon", "Donut", "Pictograph")[1],
+                         display = c("Oval", "Rectangle", "Number", "Icon", "Donut", "Gauge", "Pictograph")[1],
                          fill.color = rgb(166, 197, 57, maxColorValue = 255),
                          fill.opacity = 0.4,
                          total.icons = NA,
@@ -114,7 +135,21 @@ VisualizeNumber <- function(x,
                          border.color = rgb(0.5, 0.5, 0.5),
                          border.opacity = 0.5,
                          border.width = 0.0,
-                         border.resolution = 1000,
+                         border.resolution = 100,
+                         segment.gap = 0.000,
+                         hole.size = 0.8,
+                         tick.outside = TRUE,
+                         tick.show = TRUE,
+                         tick.font.family = global.font.family,
+                         tick.font.color = global.font.color,
+                         tick.font.size = 8,
+                         tick.number.type = label.data.number.type,
+                         tick.decimals = label.data.decimals,
+                         tick.1000.separator = label.data.1000.separator,
+                         tick.prefix = "",
+                         tick.suffix = "",
+                         minimum.value = 0.0,
+                         maximum.value = NA,
                          base.icon.color = "", # backward compatability
                          base.color = base.icon.color,
                          base.opacity = fill.opacity,
@@ -130,6 +165,7 @@ VisualizeNumber <- function(x,
                        rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
                        number = "number",
                        donut = "donut", "number in a donut" = "donut", "number on a donut" = "donut",
+                       gauge = "gauge", "number in a gauge" = "gauge", "number on a gauge" = "gauge",
                        icon = "icon", "number on an icon" = "icon",
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",
@@ -178,7 +214,7 @@ VisualizeNumber <- function(x,
         if (label.data.position == "None")
             label.str <- ""
         return(iconsWithText(value, fill.icon.color = fill.color, 
-            base.icon.color = base.color,
+            base.icon.color = base.color, maximum.value = maximum.value,
             total.icons = total.icons, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
             text.overlay.valign = tolower(label.data.valign),
@@ -202,51 +238,59 @@ VisualizeNumber <- function(x,
             margin.top = margin.top, margin.right = margin.right,
             margin.bottom = margin.bottom, margin.left = margin.left))
     }
-
-    if (display == "donut")
+        
+    if (display %in% c("donut", "gauge"))
     {
         if (sum(nchar(base.color), na.rm = TRUE) == 0)
             base.color <- rgb(230, 230, 230, maxColorValue = 255)
-        p <- plot_ly(values = c(x, 1 - x), hoverinfo = "skip", textinfo = "none",
+        if (is.na(maximum.value))
+            maximum.value <- 1
+        if (display == "donut")
+            minimum.value <- 0.0
+        if (maximum.value <= minimum.value)
+            stop("'Maximum value' (", maximum.value, ") must be greater than the 'Minimum value'(",
+                 minimum.value, ")")  
+        prop <- (x - minimum.value)/(maximum.value - minimum.value)
+        if (prop < 0 || prop > 1)
+            stop("Input value should be between 'Minimum value' (", minimum.value, 
+                 ") and 'Maximum value' (", maximum.value, ")")
+    }
+
+    if (display == "donut")
+    {
+        p <- plot_ly(values = c(prop, 1 - prop), hoverinfo = "skip", textinfo = "none",
                 marker = list(colors = c(toRGB(fill.color, alpha = fill.opacity),
                 toRGB(base.color, alpha = base.opacity)), 
                 line = list(width = border.width * 100, 
                 color = toRGB(border.color, alpha = border.opacity))))
-        p <- add_pie(p, hole = 0.8)
+        p <- add_pie(p, hole = hole.size)
         shapes <- NULL
+
+    } else if (display == "gauge")
+    {
+        p <- plot_ly(x = c(0, 1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
+            cliponaxis = FALSE, hoverinfo = "skip")
+        fill.segment <- pathToShape(segmentPath(c(0, prop - segment.gap), hole.size, 
+            border.resolution), fill.color, fill.opacity)
+        bg.segment <- pathToShape(segmentPath(c(prop + segment.gap, 1), hole.size, 
+            border.resolution), base.color, base.opacity)
+        shapes <- list(fill.segment, bg.segment)
 
     } else
     { 
         p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
             cliponaxis = FALSE, hoverinfo = "skip")
-        border.shape <- NULL
+        border.path <- NULL
         if (border.width > 0)
         {
-            if (display == "rectangle")
-                border.path = paste("M 0 0 V 1 H 1 V 0 Z M", border.width, border.width,
-                    "V", 1-border.width, "H", 1-border.width, "V", border.width, "H", 1 - border.width)
-            else
-            {
-                wd = 0.05
-                len = 500
-                x0 <- seq(0, 1, length = border.resolution)
-                xx <- rev(seq(border.width, 1-border.width, length = border.resolution))
-                y0 <- sqrt(0.5^2 - (x0 - 0.5)^2) + 0.5
-                yy <- sqrt((0.5 - border.width)^2 - (xx - 0.5)^2) + 0.5
-
-                border.path <- paste("M 0 0.5", paste("L", x0, y0, collapse = " "),
-                        paste("L", rev(x0), 1 - y0, collapse = " "),
-                        paste("L", rev(xx), 1 - yy, collapse = " "),
-                        paste("L", xx, yy, collapse = " "))
-            }
-            border.shape = list(type = "path", path = border.path, line = list(width = 0),
-                                fillcolor = border.color, opacity = border.opacity)
+            border.path <- if (display == "rectangle") rectangleBorder(border.width)
+                           else                        circleBorder(border.width, border.resolution)
         }
         fill.shape <- list(type = display, x0 = border.width, x1 = (1 - border.width),
                            y0 = border.width, y1 = 1 - border.width, yref = "y", xref = "x",
                            fillcolor = fill.color, opacity = fill.opacity, layer = "above",
                            line = list(width = 0))
-        shapes <- list(border.shape, fill.shape)
+        shapes <- list(pathToShape(border.path, border.color, border.opacity), fill.shape)
     }
 
 
@@ -280,12 +324,38 @@ VisualizeNumber <- function(x,
                            size = text.below.font.size), text.below.font.weight,
                            text.below.outside, xshift = text.below.xpad, yshift = text.below.pad)
 
+    tick0 <- NULL
+    tick1 <- NULL
+    if (display == "gauge" && tick.show)
+    {
+        tmp.vals <- c(minimum.value, maximum.value)
+        tmp.percent <- if (tick.number.type == "Percentage") "%" else ""
+        tmp.format <- if (tick.number.type == "Scientific") "e" else "f"
+        tick.str <- paste0(tick.prefix,
+            formatC(if (tmp.percent == "%") tmp.vals * 100 else tmp.vals, format = tmp.format,
+                digits = tick.decimals, big.mark = tick.1000.separator),
+            tmp.percent, tick.suffix)
+
+        tick.font = list(family = tick.font.family, size = tick.font.size, color = tick.font.color)
+        tick.align <- if (tick.outside) "top" else "bottom"
+        pos <- (1 - hole.size)/4
+        tick0 <- list(text = tick.str[1], font = tick.font, x = pos, y = 0, yshift = 0,
+                    yanchor = tick.align, xanchor = "center", showarrow = FALSE)
+        tick1 <- list(text = tick.str[2], font = tick.font, x = 1 - pos, y = 0, yshift = 0,
+                    yanchor = tick.align, xanchor = "center", showarrow = FALSE)
+    }
+
     # Adjust margins so that labels do not fall off
-    margin.top <- margin.top + text.above.outside * getVerticalSpace(annot.above, direction = "top")
-    margin.bottom <- margin.bottom + text.below.outside * getVerticalSpace(annot.below, direction = "bottom")
-    margin.left <- margin.left + max(getLeftSpace(annot.above), getLeftSpace(annot.data), getLeftSpace(annot.below))
-    margin.right <- margin.right + max(getRightSpace(annot.above), getRightSpace(annot.data),
-                    getRightSpace(annot.below))
+    margin.top <- margin.top + 
+                  text.above.outside * getVerticalSpace(annot.above, direction = "top")
+    margin.bottom <- margin.bottom + 
+                     max(text.below.outside * getVerticalSpace(annot.below, direction = "bottom"),
+                         tick.outside * getVerticalSpace(tick0), tick.outside * getVerticalSpace(tick1))
+    margin.left <- margin.left + 
+                   max(getLeftSpace(annot.above), getLeftSpace(annot.data), getLeftSpace(annot.below))
+    margin.right <- margin.right + 
+                    max(getRightSpace(annot.above), getRightSpace(annot.data), getRightSpace(annot.below))
+
 
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
                  b = margin.bottom, pad = 0, autoexpand = TRUE), showlegend = FALSE,
@@ -293,7 +363,7 @@ VisualizeNumber <- function(x,
                  yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0,1)),
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
-                 shapes = shapes, annotations = list(annot.data, annot.above, annot.below),
+                 shapes = shapes, annotations = list(annot.data, annot.above, annot.below, tick0, tick1),
                  hovermode = FALSE)
 
     p <- config(p, displayModeBar = FALSE)
@@ -324,7 +394,7 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
     if (tolower(font.weight) == "bold")
         text <- paste0("<b>", text, "</b>")
 
-    #cat(text, "yalign:", yalign, "yanchor:", yanchor, "outside:", outside, "\n")
+    #cat("x:", xpos, "y:", ypos, text, "yalign:", yalign, "yanchor:", yanchor, "outside:", outside, "\n")
     return(list(text = text, font = font, x = xpos, y = ypos,
                 showarrow = FALSE, xshift = xshift, yshift = yshift,
                 xanchor = xalign, yanchor = yanchor))
