@@ -5,8 +5,8 @@
 \title{Visualizes a number}
 \usage{
 VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
-  "Donut", "Pictograph")[1], fill.color = rgb(166, 197, 57, maxColorValue
-  = 255), fill.opacity = 0.4, total.icons = NA,
+  "Donut", "Gauge", "Pictograph")[1], fill.color = rgb(166, 197, 57,
+  maxColorValue = 255), fill.opacity = 0.4, total.icons = NA,
   global.font.family = "Arial", global.font.color = rgb(44, 44, 44,
   maxColorValue = 255), label.data.number.type = c("Number",
   "Percentage", "Scientific")[1], label.data.decimals = 0,
@@ -28,6 +28,13 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   text.above.font.color = global.font.color, text.above.font.size = 10,
   text.above.font.weight = "normal", border.color = rgb(0.5, 0.5, 0.5),
   border.opacity = 0.5, border.width = 0, border.resolution = 1000,
+  segment.gap = 0, hole.size = 0.8, tick.outside = TRUE,
+  tick.show = TRUE, tick.font.family = global.font.family,
+  tick.font.color = global.font.color, tick.font.size = 8,
+  tick.number.type = label.data.number.type,
+  tick.decimals = label.data.decimals,
+  tick.1000.separator = label.data.1000.separator, tick.prefix = "",
+  tick.suffix = "", minimum.value = 0, maximum.value = NA,
   base.icon.color = "", base.color = base.icon.color,
   base.opacity = fill.opacity, background.color = rgb(1, 1, 1),
   background.opacity = 0, margin.left = 0, margin.right = 0,
@@ -37,7 +44,7 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
 \item{x}{The number to display}
 
 \item{display}{A string describing the visualization output. This can be simply "Number"; or
-a number on a shape ("Oval", "Rectangle" or "Donut"); or a number on top of an "Icon";
+a number on a shape ("Oval", "Rectangle", "Donut", "Gauge"); or a number on top of an "Icon";
 or a "Pictograph" (where the amount of icons filled reflects the size of \code{x}).}
 
 \item{fill.color}{Color of the shape (Oval or Rectangle) or the icon (for Icon or Pictograph)
@@ -135,12 +142,47 @@ for vertical alignment because it always aligns with the edge of the window.}
 
 \item{border.resolution}{The number of points used to define the border of the circle.}
 
+\item{segment.gap}{Numeric between 0 and 1, specifying the gap between the segments
+in the gauge.}
+
+\item{hole.size}{Numeric between 0 and 1, specifying the size of the hole when \code{display}
+is "Donut" or "Gauge".}
+
+\item{tick.outside}{Whether to show the ticks inside or outside the gauge.}
+
+\item{tick.show}{Whether to show the \code{minimum.value} and \code{maximum.value} when
+\code{display} is "Gauge".}
+
+\item{tick.font.family}{Font family of \code{tick}.}
+
+\item{tick.font.color}{Font color of \code{tick}.}
+
+\item{tick.font.size}{Font size of \code{tick}.}
+
+\item{tick.number.type}{Format in which \code{x} should be shown. One of "Number", "Percentage", "Scientific".}
+
+\item{tick.decimals}{Integer; Number of decimals shown in ticks}
+
+\item{tick.1000.separator}{String placed to separate thousands. By default this is a comma. Set to empty string to hide.}
+
+\item{tick.prefix}{Optional text to prepend to ticks.}
+
+\item{tick.suffix}{Optional text to append to ticks.}
+
+\item{minimum.value}{Numeric value specifying the minimum value that \code{x} is expected to take.
+This value is only used in "Gauge" (for "Donut" and "Pictograph (single icon)" it is
+always set as zero.}
+
+\item{maximum.value}{Numeric value specifying the maximum that \code{x} will be expected to take.
+This value is used to show proportional data
+(i.e. \code{display} is "Donut", "Gauge" or "Pictograph (single icon)").}
+
 \item{base.icon.color}{Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC). Only applicable for built-in icons.}
 
 \item{base.color}{The color of the base graphic when a Pictograph (with the base image shown)
 or a Donut is displayed. For backwards compatibility, \code{base.icon.color} can also be used.}
 
-\item{base.opacity}{Alpha transparent; only used when \code{display} is Donut.}
+\item{base.opacity}{Alpha transparency; only used when \code{display} is Donut.}
 
 \item{background.color}{Color of the graphic background}
 

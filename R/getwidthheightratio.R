@@ -1,4 +1,4 @@
-#' @importFrom RCurl getURLContent
+#' @importFrom httr GET content
 #' @importFrom bmp read.bmp
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
@@ -6,11 +6,11 @@
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio
-    tmp.image <- try(getURLContent(image.url), silent=T)
-    if (inherits(tmp.image, "try-error"))
-        stop("Image not found\n")
-    tmp.type <- attr(tmp.image, "Content-Type")
+    response <- GET(image.url)
+    if (inherits(response, "try-error") || response$status_code != 200)
+        stop("Error (status code ", response$status_code, ") retrieving image ", image.url)
 
+    tmp.type <- response$headers$'content-type'
     if ("text/html" %in% tmp.type)
         stop("Image type is text/html. Ensure the image url is correct and not redirected.")
 
@@ -22,6 +22,7 @@ getWidthHeightRatio <- function(image.url)
         # if (!any(grepl("fill", tmp.image)))
         #    warning("SVG image is missing fill attribute. Icon cannot be recolored\n")
 
+        tmp.image <- content(response, as = "text", encoding = "UTF-8")
         tmp.image <- unlist(strsplit(split="<", tmp.image))[1:5]
         tmp.str <- regmatches(tmp.image, regexpr("viewBox=\"[0-9 .-]+", tmp.image))
         tmp.dim <- suppressWarnings(as.numeric(unlist(strsplit(split=" ", tmp.str))))
@@ -43,6 +44,7 @@ getWidthHeightRatio <- function(image.url)
     } else
     {
         tmp.file <- NULL
+        tmp.image <- content(response, as = "raw", encoding = "UTF-8")
         if (grepl("png", tmp.type))
             tmp.file <- readPNG(tmp.image)
         if (grepl("jpeg|jpg", tmp.type))

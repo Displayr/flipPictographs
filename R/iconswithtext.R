@@ -221,7 +221,8 @@ iconsWithText <- function (x,
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
-            margin.top, margin.right - pad.above.right, max(0, text.above.pad), margin.left + pad.above.left, 
+            margin.top, margin.right - pad.above.right, max(0, text.above.pad), 
+            margin.left + pad.above.left, 
             text.above, text.above.font.size, text.above.font.family, 
             text.above.font.color, text.above.font.weight, text.above.halign)
 
