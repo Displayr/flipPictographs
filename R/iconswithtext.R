@@ -221,7 +221,7 @@ iconsWithText <- function (x,
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
-            margin.top, margin.right - pad.above.right, max(0, text.above.pad), 
+            margin.top, margin.right - pad.above.right, max(0, text.above.pad) + 1, 
             margin.left + pad.above.left, 
             text.above, text.above.font.size, text.above.font.family, 
             text.above.font.color, text.above.font.weight, text.above.halign)
@@ -231,7 +231,7 @@ iconsWithText <- function (x,
             \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
             \"font-color\":\"%s\", \"font-weight\":\"%s\",
             \"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}",
-            text.below.pad, margin.right - pad.below.right, margin.bottom, margin.left + pad.below.left,
+            max(text.below.pad, 0) + 1, margin.right - pad.below.right, margin.bottom, margin.left + pad.below.left,
             text.below, text.below.font.size, text.below.font.family,
             text.below.font.color, text.below.font.weight, text.below.halign)
 
