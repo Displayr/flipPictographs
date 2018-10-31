@@ -177,8 +177,8 @@ VisualizeNumber <- function(x,
     {
         label.data.font.size = 1.5 * label.data.font.size
         text.above.font.size = 1.5 * text.above.font.size
-        text.above.font.size = 1.5 * text.above.font.size
         text.below.font.size = 1.5 * text.below.font.size
+        tick.font.size = 1.5 * tick.font.size
     }
 
     if (display == "number")
@@ -261,9 +261,12 @@ VisualizeNumber <- function(x,
             stop("'Maximum value' (", maximum.value, ") must be greater than the 'Minimum value'(",
                  minimum.value, ")")
         prop <- (x - minimum.value)/(maximum.value - minimum.value)
-        if (prop < 0 || prop > 1)
-            stop("Input value should be between 'Minimum value' (", minimum.value,
-                 ") and 'Maximum value' (", maximum.value, ")")
+        if (prop > 1)
+            stop("Input data cannot be greater than 'Maximum value'.")
+        if (prop < 0 && display == "donut")
+            stop("Input data cannot be smaller than zero.")
+        if (prop < 0 && display == "gauge")
+            stop("Input data cannot be smaller than 'Minimum value'.")
     }
 
     if (display == "donut")
