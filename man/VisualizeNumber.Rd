@@ -7,15 +7,14 @@
 VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   "Donut", "Gauge", "Pictograph")[1], fill.color = rgb(166, 197, 57,
   maxColorValue = 255), fill.opacity = 0.4, total.icons = NA,
-  global.font.family = "Arial", global.font.color = rgb(44, 44, 44,
-  maxColorValue = 255), label.data.number.type = c("Number",
-  "Percentage", "Scientific")[1], label.data.decimals = 0,
-  label.data.1000.separator = ",", label.data.position = "Overlay",
-  label.data.prefix = "", label.data.suffix = "",
-  label.data.valign = "middle", label.data.halign = "center",
-  label.data.pad = 0, label.data.xpad = 0,
-  label.data.font.family = global.font.family,
-  label.data.font.color = global.font.color, label.data.font.size = 10,
+  global.font.family = "Arial", global.font.color = "#808080",
+  label.data.number.type = c("Number", "Percentage", "Scientific")[1],
+  label.data.decimals = 0, label.data.1000.separator = ",",
+  label.data.position = "Overlay", label.data.prefix = "",
+  label.data.suffix = "", label.data.valign = "middle",
+  label.data.halign = "center", label.data.pad = 0,
+  label.data.xpad = 0, label.data.font.family = global.font.family,
+  label.data.font.color = global.font.color, label.data.font.size = 16,
   label.data.font.weight = "normal", text.below = "",
   text.below.outside = TRUE, text.below.halign = "center",
   text.below.pad = 0, text.below.xpad = 0,
@@ -37,8 +36,8 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   tick.suffix = "", minimum.value = 0, maximum.value = NA,
   base.icon.color = "", base.color = base.icon.color,
   base.opacity = fill.opacity, background.color = rgb(1, 1, 1),
-  background.opacity = 0, margin.left = 0, margin.right = 0,
-  margin.top = 0, margin.bottom = 0, ...)
+  background.opacity = 0, font.unit = "px", margin.left = 0,
+  margin.right = 0, margin.top = 0, margin.bottom = 0, ...)
 }
 \arguments{
 \item{x}{The number to display}
@@ -188,6 +187,8 @@ or a Donut is displayed. For backwards compatibility, \code{base.icon.color} can
 
 \item{background.opacity}{Transparency of background (0 to 1). This is only valid for
 Number, Oval or Rectangle.}
+
+\item{font.unit}{Set to "px" for larger font sizes.}
 
 \item{margin.left}{Spacing on the left of the graphic.}
 

@@ -79,6 +79,7 @@
 #' @param tick.font.family Font family of \code{tick}.
 #' @param tick.font.color Font color of \code{tick}.
 #' @param tick.font.size Font size of \code{tick}.
+#' @param font.unit Set to "px" for larger font sizes.
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config add_pie
 #' @export
@@ -99,7 +100,7 @@ VisualizeNumber <- function(x,
                          fill.opacity = 0.4,
                          total.icons = NA,
                          global.font.family = "Arial",
-                         global.font.color = rgb(44, 44, 44, maxColorValue = 255),
+                         global.font.color = "#808080",
                          label.data.number.type = c("Number", "Percentage", "Scientific")[1],
                          label.data.decimals  = 0,
                          label.data.1000.separator = ",",
@@ -112,7 +113,7 @@ VisualizeNumber <- function(x,
                          label.data.xpad = 0.0,
                          label.data.font.family = global.font.family,
                          label.data.font.color = global.font.color,
-                         label.data.font.size = 10,
+                         label.data.font.size = 16,
                          label.data.font.weight = "normal",
                          text.below = "",
                          text.below.outside = TRUE,
@@ -155,6 +156,7 @@ VisualizeNumber <- function(x,
                          base.opacity = fill.opacity,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
+                         font.unit = "px",
                          margin.left = 0,
                          margin.right = 0,
                          margin.top = 0,
@@ -170,6 +172,14 @@ VisualizeNumber <- function(x,
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",
                        "circle") # default
+
+    if (font.unit == "px")
+    {
+        label.data.font.size = 1.5 * label.data.font.size
+        text.above.font.size = 1.5 * text.above.font.size
+        text.above.font.size = 1.5 * text.above.font.size
+        text.below.font.size = 1.5 * text.below.font.size
+    }
 
     if (display == "number")
     {
@@ -263,7 +273,7 @@ VisualizeNumber <- function(x,
                 toRGB(base.color, alpha = base.opacity)),
                 line = list(width = border.width * 100,
                 color = toRGB(border.color, alpha = border.opacity))))
-        p <- add_pie(p, hole = hole.size)
+        p <- add_pie(p, hole = hole.size, direction = "clockwise")
         shapes <- NULL
 
     } else if (display == "gauge")
