@@ -196,10 +196,15 @@ VisualizeNumber <- function(x,
     # Construct formatted string of x
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
-    label.str <- paste0(label.data.prefix,
+    if (is.na(x) || is.null(x))
+        label.str <- "NA"
+    else
+        label.str <- paste0(label.data.prefix,
         formatC(if (tmp.percent == "%") x * 100 else x, format = tmp.format,
             digits = label.data.decimals, big.mark = label.data.1000.separator),
         tmp.percent, label.data.suffix)
+    if (is.na(x) || is.null(x))
+        x <- 0
 
     if (display %in% c("icon", "pictograph - single", "pictograph - repeated"))
     {
@@ -252,6 +257,8 @@ VisualizeNumber <- function(x,
 
     if (display %in% c("donut", "gauge"))
     {
+        if (!is.numeric(x) || !is.finite(x))
+            stop("Input data is non-numeric")
         if (sum(nchar(base.color), na.rm = TRUE) == 0)
             base.color <- rgb(230, 230, 230, maxColorValue = 255)
         if (is.na(maximum.value))
