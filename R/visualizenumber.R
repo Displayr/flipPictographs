@@ -175,10 +175,11 @@ VisualizeNumber <- function(x,
 
     if (font.unit == "px")
     {
-        label.data.font.size = 1.5 * label.data.font.size
-        text.above.font.size = 1.5 * text.above.font.size
-        text.below.font.size = 1.5 * text.below.font.size
-        tick.font.size = 1.5 * tick.font.size
+        fsc <- 1.3125
+        label.data.font.size = fsc * label.data.font.size
+        text.above.font.size = fsc * text.above.font.size
+        text.below.font.size = fsc * text.below.font.size
+        tick.font.size = fsc * tick.font.size
     }
 
     if (display == "number")
