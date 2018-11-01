@@ -284,7 +284,7 @@ VisualizeNumber <- function(x,
                 toRGB(base.color, alpha = base.opacity)),
                 line = list(width = border.width * 100,
                 color = toRGB(border.color, alpha = border.opacity))))
-        p <- add_pie(p, hole = hole.size, direction = "clockwise")
+        p <- add_pie(p, hole = hole.size, direction = "clockwise", sort = FALSE)
         shapes <- NULL
 
     } else if (display == "gauge")
