@@ -177,10 +177,10 @@ VisualizeNumber <- function(x,
     if (tolower(font.unit) %in% c("pt", "point", "points"))
     {
         fsc <- 1.3333
-        label.data.font.size = round(fsc * label.data.font.size)
-        text.above.font.size = round(fsc * text.above.font.size)
-        text.below.font.size = round(fsc * text.below.font.size)
-        tick.font.size = round(fsc * tick.font.size)
+        label.data.font.size = round(fsc * label.data.font.size, 1)
+        text.above.font.size = round(fsc * text.above.font.size, 1)
+        text.below.font.size = round(fsc * text.below.font.size, 1)
+        tick.font.size = round(fsc * tick.font.size, 1)
     }
 
     if (display == "number")
