@@ -36,7 +36,7 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   tick.suffix = "", minimum.value = 0, maximum.value = NA,
   base.icon.color = "", base.color = base.icon.color,
   base.opacity = fill.opacity, background.color = rgb(1, 1, 1),
-  background.opacity = 0, font.unit = "px", margin.left = 0,
+  background.opacity = 0, font.unit = "pt", margin.left = 0,
   margin.right = 0, margin.top = 0, margin.bottom = 0, ...)
 }
 \arguments{
@@ -188,7 +188,8 @@ or a Donut is displayed. For backwards compatibility, \code{base.icon.color} can
 \item{background.opacity}{Transparency of background (0 to 1). This is only valid for
 Number, Oval or Rectangle.}
 
-\item{font.unit}{Set to "px" for larger font sizes.}
+\item{font.unit}{Set to 'pt' (default) to get font sizing consistent with textboxes.
+Otherwise fonts will be taken to be specified in pixels.}
 
 \item{margin.left}{Spacing on the left of the graphic.}
 

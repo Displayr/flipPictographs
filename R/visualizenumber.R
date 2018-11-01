@@ -79,7 +79,8 @@
 #' @param tick.font.family Font family of \code{tick}.
 #' @param tick.font.color Font color of \code{tick}.
 #' @param tick.font.size Font size of \code{tick}.
-#' @param font.unit Set to "px" for larger font sizes.
+#' @param font.unit Set to 'pt' (default) to get font sizing consistent with textboxes.
+#' Otherwise fonts will be taken to be specified in pixels.
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config add_pie
 #' @export
@@ -156,7 +157,7 @@ VisualizeNumber <- function(x,
                          base.opacity = fill.opacity,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
-                         font.unit = "px",
+                         font.unit = "pt",
                          margin.left = 0,
                          margin.right = 0,
                          margin.top = 0,
@@ -173,9 +174,9 @@ VisualizeNumber <- function(x,
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",
                        "circle") # default
 
-    if (font.unit == "px")
+    if (tolower(font.unit) %in% c("pt", "point", "points"))
     {
-        fsc <- 1.3125
+        fsc <- 1.3333
         label.data.font.size = fsc * label.data.font.size
         text.above.font.size = fsc * text.above.font.size
         text.below.font.size = fsc * text.below.font.size
