@@ -36,8 +36,11 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   tick.suffix = "", minimum.value = 0, maximum.value = NA,
   base.icon.color = "", base.color = base.icon.color,
   base.opacity = fill.opacity, background.color = rgb(1, 1, 1),
-  background.opacity = 0, font.unit = "pt", margin.left = 0,
-  margin.right = 0, margin.top = 0, margin.bottom = 0, ...)
+  background.opacity = 0, hover.text = "", hover.distance = 20,
+  hover.bg.color = rgb(0.5, 0.5, 0.5), hover.font.color = rgb(1, 1, 1),
+  hover.font.size = 9, hover.font.family = global.font.family,
+  font.unit = "pt", margin.left = 0, margin.right = 0,
+  margin.top = 0, margin.bottom = 0, ...)
 }
 \arguments{
 \item{x}{The number to display}
@@ -187,6 +190,18 @@ or a Donut is displayed. For backwards compatibility, \code{base.icon.color} can
 
 \item{background.opacity}{Transparency of background (0 to 1). This is only valid for
 Number, Oval or Rectangle.}
+
+\item{hover.text}{Optional text to show when the cursor hovers above widget.}
+
+\item{hover.distance}{Distance in pixels around which hovertext will be detected.}
+
+\item{hover.bg.color}{Color of the background of the hovertext.}
+
+\item{hover.font.color}{Font color of \code{hover.text}.}
+
+\item{hover.font.size}{Font size of \code{hover.text}.}
+
+\item{hover.font.family}{Font family of \code{hover.text}.}
 
 \item{font.unit}{Set to 'pt' (default) to get font sizing consistent with textboxes.
 Otherwise fonts will be taken to be specified in pixels.}

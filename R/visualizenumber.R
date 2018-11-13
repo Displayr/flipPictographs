@@ -58,6 +58,13 @@
 #' @param text.above.font.color Font color of \code{text.above}.
 #' @param text.above.font.size Font size of \code{text.above}.
 #' @param text.above.font.weight Weight of \code{text.above}, i.e. one of "bold" or "normal".
+#' @param hover.text Optional text to show when the cursor hovers above widget.
+#' @param hover.distance Distance in pixels around which hovertext will be detected.
+#' @param hover.bg.color Color of the background of the hovertext.
+#' @param hover.font.family Font family of \code{hover.text}.
+#' @param hover.font.color Font color of \code{hover.text}.
+#' @param hover.font.size Font size of \code{hover.text}.
+
 #' @param hole.size Numeric between 0 and 1, specifying the size of the hole when \code{display}
 #'      is "Donut" or "Gauge".
 #' @param segment.gap Numeric between 0 and 1, specifying the gap between the segments
@@ -82,7 +89,7 @@
 #' @param font.unit Set to 'pt' (default) to get font sizing consistent with textboxes.
 #' Otherwise fonts will be taken to be specified in pixels.
 #' @param ... Other parameters passed to \code{iconWithText}.
-#' @importFrom plotly plot_ly layout toRGB config add_pie
+#' @importFrom plotly plot_ly layout toRGB config add_pie add_trace
 #' @export
 #' @examples
 #' VisualizeNumber(4.0, display = "Rectangle", text.above = "Above", text.above.outside = TRUE)
@@ -157,6 +164,12 @@ VisualizeNumber <- function(x,
                          base.opacity = fill.opacity,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
+                         hover.text = "",
+                         hover.distance = 20,
+                         hover.bg.color = rgb(0.5,0.5,0.5),
+                         hover.font.color = rgb(1,1,1),
+                         hover.font.size = 9,
+                         hover.font.family = global.font.family, 
                          font.unit = "pt",
                          margin.left = 0,
                          margin.right = 0,
@@ -169,6 +182,7 @@ VisualizeNumber <- function(x,
                        number = "number",
                        donut = "donut", "number in a donut" = "donut", "number on a donut" = "donut",
                        gauge = "gauge", "number in a gauge" = "gauge", "number on a gauge" = "gauge",
+                       bar = "bar", "number in a bar" = "bar", "number on a bar" = "bar",
                        icon = "icon", "number on an icon" = "icon",
                        "pictograph (single icon)" = "pictograph - single", "pictograph - single icon" = "pictograph - single",
                        "pictograph (repeated icons)" = "pictograph - repeated", "pictograph - repeated icons" = "pictograph - repeated",
@@ -181,6 +195,7 @@ VisualizeNumber <- function(x,
         text.above.font.size = round(fsc * text.above.font.size, 0)
         text.below.font.size = round(fsc * text.below.font.size, 0)
         tick.font.size = round(fsc * tick.font.size, 0)
+        hover.font.size = round(fsc * hover.font.size, 0)
     }
 
     if (display == "number")
@@ -256,7 +271,7 @@ VisualizeNumber <- function(x,
             margin.bottom = margin.bottom, margin.left = margin.left))
     }
 
-    if (display %in% c("donut", "gauge"))
+    if (display %in% c("donut", "gauge", "bar"))
     {
         if (!is.numeric(x) || !is.finite(x))
             stop("Input data is non-numeric")
@@ -290,17 +305,27 @@ VisualizeNumber <- function(x,
 
     } else if (display == "gauge")
     {
-        p <- plot_ly(x = c(0, 1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
+        p <- plot_ly(x = c(0, 1), y = c(0, 1), type = "scatter", mode = "none",
             cliponaxis = FALSE, hoverinfo = "skip")
         fill.segment <- pathToShape(segmentPath(c(0, prop - segment.gap), hole.size,
             border.resolution), fill.color, fill.opacity)
         bg.segment <- pathToShape(segmentPath(c(prop + segment.gap, 1), hole.size,
             border.resolution), base.color, base.opacity)
         shapes <- list(fill.segment, bg.segment)
+    
+    } else if (display == "bar")
+    {
+        p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none",
+                cliponaxis = FALSE, hoverinfo = "skip")
+        fill.shape <- list(type = "rectangle", x0 = 0, x1 = prop,
+                           y0 = 0, y1 = 1, yref = "y", xref = "x",
+                           fillcolor = fill.color, opacity = fill.opacity, layer = "above",
+                           line = list(width = 0))
+        shapes <- fill.shape
 
     } else
     {
-        p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none", visible = FALSE,
+        p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none",
             cliponaxis = FALSE, hoverinfo = "skip")
         border.path <- NULL
         if (border.width > 0)
@@ -331,6 +356,8 @@ VisualizeNumber <- function(x,
                            font = list(family = label.data.font.family, color = label.data.font.color,
                            size = label.data.font.size), label.data.font.weight,
                            xshift = label.data.xpad, yshift = label.data.pad, yanchor = data.yanchor)
+    if (display == "bar" && label.data.halign == "right")
+        annot.data$x <- prop
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
         text.above.pad <- text.above.pad + (getVerticalSpace(annot.data))/2
@@ -378,6 +405,11 @@ VisualizeNumber <- function(x,
     margin.right <- margin.right +
                     max(getRightSpace(annot.above), getRightSpace(annot.data), getRightSpace(annot.below))
 
+    # Add hovertext
+    if (sum(nchar(hover.text), na.rm = TRUE) > 0)
+        p <- add_trace(p, x = 0.5, y = 0.5, type = "scatter", mode = "markers",
+                marker = list(opacity = 0.0), hoverinfo = "text", text = hover.text)
+
 
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
                  b = margin.bottom, pad = 0, autoexpand = TRUE), showlegend = FALSE,
@@ -389,7 +421,10 @@ VisualizeNumber <- function(x,
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
                  shapes = shapes, annotations = list(annot.data, annot.above, annot.below, tick0, tick1),
-                 hovermode = FALSE)
+                 hoverlabel = list(bgcolor = hover.bg.color, border.color = hover.bg.color,
+                              font = list(color = hover.font.color, size = hover.font.size, 
+                              family = hover.font.family)),
+                 hovermode = "closest", hoverdistance = hover.distance)
 
     p <- config(p, displayModeBar = FALSE)
     p$sizingPolicy$browser$padding <- 0
