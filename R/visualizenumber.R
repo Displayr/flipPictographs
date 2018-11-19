@@ -365,6 +365,7 @@ VisualizeNumber <- function(x,
     annot.above <- setText(text.above, "top", tolower(text.above.halign),
                            font = list(family = text.above.font.family, color = text.above.font.color,
                            size = text.above.font.size), text.above.font.weight,
+                           xmax = if (display == "bar") prop else 1.0,
                            text.above.outside, xshift = text.above.xpad, yshift = text.above.pad)
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.below, text.below.outside))
@@ -372,6 +373,7 @@ VisualizeNumber <- function(x,
     annot.below <- setText(text.below, "bottom", tolower(text.below.halign),
                            font = list(family = text.below.font.family, color = text.below.font.color,
                            size = text.below.font.size), text.below.font.weight,
+                           xmax = if (display == "bar") prop else 1.0,
                            text.below.outside, xshift = text.below.xpad, yshift = text.below.pad)
 
     tick0 <- NULL
