@@ -355,6 +355,7 @@ VisualizeNumber <- function(x,
     annot.data <- setText(label.str, tolower(label.data.valign), tolower(label.data.halign),
                            font = list(family = label.data.font.family, color = label.data.font.color,
                            size = label.data.font.size), label.data.font.weight,
+                           xmax = if (display == "bar") prop else 1.0,
                            xshift = label.data.xpad, yshift = label.data.pad, yanchor = data.yanchor)
     if (display == "bar" && label.data.halign == "right")
         annot.data$x <- prop
@@ -432,12 +433,12 @@ VisualizeNumber <- function(x,
 }
 
 setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
-    outside = NA, yshift = 0, xshift = 0, yanchor = NA)
+    outside = NA, yshift = 0, xshift = 0, yanchor = NA, xmax = 1.0)
 {
     if (sum(nchar(text), na.rm = TRUE) == 0)
         return (NULL)
 
-    xpos <- switch(xalign, left = 0.0, center = 0.5, right = 1.0)
+    xpos <- switch(xalign, left = 0.0, center = xmax/2, right = xmax)
     if (!is.na(outside) && !outside)
         ypos <- 0.5
     else
