@@ -59,7 +59,9 @@
 #' @param text.above.font.size Font size of \code{text.above}.
 #' @param text.above.font.weight Weight of \code{text.above}, i.e. one of "bold" or "normal".
 #' @param hover.text Optional text to show when the cursor hovers above widget.
-#' @param hover.distance Distance in pixels around which hovertext will be detected.
+#' @param hover.distance Distance in pixels around which hovertext will be detected (centred
+#'  on the data label). \code{hover.distance = -1} will mean placing the cursor anywhere
+#'  on the widget will bring up the hovertext.
 #' @param hover.bg.color Color of the background of the hovertext.
 #' @param hover.font.family Font family of \code{hover.text}.
 #' @param hover.font.color Font color of \code{hover.text}.
@@ -165,7 +167,7 @@ VisualizeNumber <- function(x,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
                          hover.text = "",
-                         hover.distance = 20,
+                         hover.distance = -1,
                          hover.bg.color = rgb(0.5,0.5,0.5),
                          hover.font.color = rgb(1,1,1),
                          hover.font.size = 9,
@@ -410,7 +412,8 @@ VisualizeNumber <- function(x,
 
     # Add hovertext
     if (sum(nchar(hover.text), na.rm = TRUE) > 0)
-        p <- add_trace(p, x = 0.5, y = 0.5, type = "scatter", mode = "markers",
+        p <- add_trace(p, x = annot.data$x, y = annot.data$y, type = "scatter", mode = "markers",
+                values = NULL, textinfo = NULL,
                 marker = list(opacity = 0.0), hoverinfo = "text", text = hover.text)
 
 

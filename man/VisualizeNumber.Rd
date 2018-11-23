@@ -36,7 +36,7 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   tick.suffix = "", minimum.value = 0, maximum.value = NA,
   base.icon.color = "", base.color = base.icon.color,
   base.opacity = fill.opacity, background.color = rgb(1, 1, 1),
-  background.opacity = 0, hover.text = "", hover.distance = 20,
+  background.opacity = 0, hover.text = "", hover.distance = -1,
   hover.bg.color = rgb(0.5, 0.5, 0.5), hover.font.color = rgb(1, 1, 1),
   hover.font.size = 9, hover.font.family = global.font.family,
   font.unit = "pt", margin.left = 0, margin.right = 0,
@@ -193,7 +193,9 @@ Number, Oval or Rectangle.}
 
 \item{hover.text}{Optional text to show when the cursor hovers above widget.}
 
-\item{hover.distance}{Distance in pixels around which hovertext will be detected.}
+\item{hover.distance}{Distance in pixels around which hovertext will be detected (centred
+on the data label). \code{hover.distance = -1} will mean placing the cursor anywhere
+on the widget will bring up the hovertext.}
 
 \item{hover.bg.color}{Color of the background of the hovertext.}
 
