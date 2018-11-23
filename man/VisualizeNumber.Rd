@@ -193,9 +193,7 @@ Number, Oval or Rectangle.}
 
 \item{hover.text}{Optional text to show when the cursor hovers above widget.}
 
-\item{hover.distance}{Distance in pixels around which hovertext will be detected (centred
-on the data label). \code{hover.distance = -1} will mean placing the cursor anywhere
-on the widget will bring up the hovertext.}
+\item{hover.distance}{Deprecated.}
 
 \item{hover.bg.color}{Color of the background of the hovertext.}
 

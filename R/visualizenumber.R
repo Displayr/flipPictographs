@@ -59,9 +59,7 @@
 #' @param text.above.font.size Font size of \code{text.above}.
 #' @param text.above.font.weight Weight of \code{text.above}, i.e. one of "bold" or "normal".
 #' @param hover.text Optional text to show when the cursor hovers above widget.
-#' @param hover.distance Distance in pixels around which hovertext will be detected (centred
-#'  on the data label). \code{hover.distance = -1} will mean placing the cursor anywhere
-#'  on the widget will bring up the hovertext.
+#' @param hover.distance Deprecated.
 #' @param hover.bg.color Color of the background of the hovertext.
 #' @param hover.font.family Font family of \code{hover.text}.
 #' @param hover.font.color Font color of \code{hover.text}.
@@ -361,6 +359,8 @@ VisualizeNumber <- function(x,
                            xshift = label.data.xpad, yshift = label.data.pad, yanchor = data.yanchor)
     if (display == "bar" && label.data.halign == "right")
         annot.data$x <- prop
+    if (sum(nchar(hover.text), na.rm = TRUE) > 0)
+        annot.data$hovertext <- hover.text
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
         text.above.pad <- text.above.pad + (getVerticalSpace(annot.data))/2
@@ -410,12 +410,6 @@ VisualizeNumber <- function(x,
     margin.right <- margin.right +
                     max(getRightSpace(annot.above), getRightSpace(annot.data), getRightSpace(annot.below))
 
-    # Add hovertext
-    if (sum(nchar(hover.text), na.rm = TRUE) > 0)
-        p <- add_trace(p, x = annot.data$x, y = annot.data$y, type = "scatter", mode = "markers",
-                values = NULL, textinfo = NULL,
-                marker = list(opacity = 0.0), hoverinfo = "text", text = hover.text)
-
 
     p <- layout(p, margin = list(l = margin.left, r = margin.right, t = margin.top,
                  b = margin.bottom, pad = 0, autoexpand = TRUE), showlegend = FALSE,
@@ -427,7 +421,7 @@ VisualizeNumber <- function(x,
                  plot_bgcolor = toRGB(rgb(0,0,0), alpha = 0.0),
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
                  shapes = shapes, annotations = list(annot.data, annot.above, annot.below, tick0, tick1),
-                 hoverlabel = list(bgcolor = hover.bg.color, border.color = hover.bg.color,
+                 hoverlabel = list(bgcolor = hover.bg.color, bordercolor = hover.bg.color,
                               font = list(color = hover.font.color, size = hover.font.size, 
                               family = hover.font.family)),
                  hovermode = "closest", hoverdistance = hover.distance)
