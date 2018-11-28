@@ -31,14 +31,29 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
         weights <- rep(1, length(x))
     total <- sum(weights, na.rm = TRUE)
 
-    # Pick any questions are encoded as 0 and 1s
-    if (is.numeric(x) && all(x %in% c(TRUE, FALSE)))
+	if (isTRUE(attr(x, "questiontype") == "PickAny") || is.logical(x))
     {
         if (sum(nchar(category), na.rm = TRUE))
             warning("Showing percentage selected (ignoring Category '",
                     category, "').")
         return(sum(weights * x)/total)
+
     }
+
+	if (is.numeric(x))
+	{
+		if (nchar(category) > 0 && grepl("\\d+\\s*-\\s*\\d+", category))
+		{
+			cat.range <- as.numeric(trimws(strsplit(category, split = "-")[[1]]))
+			if (length(cat.range) == 2 && all(!is.na(cat.range)))
+			{
+				in.range <- x >= min(cat.range) & x <= max(cat.range)
+				return(sum(weights * in.range)/total)
+			} 
+		}
+		else if (is.numeric(x) && any(x != round(x, 0)))
+			warning("A numeric variable was supplied. Specify a range as the category (e.g. '1-5') or round variables to integers")
+	}
 
     # Categorical variable
     counts <- WeightedTable(x, weights = weights)
