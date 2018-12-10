@@ -1,7 +1,7 @@
 Package: flipPictographs
 Type: Package
 Title: Pictograph htmlwidgets
-Version: 1.0.0
+Version: 1.0.1
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Wrappers for the rhtmlPictographs package, using the flip project conventions.
@@ -14,6 +14,7 @@ Imports:
     flipChartBasics,
     flipTables (>= 2.2.2),
     flipStatistics,
+    flipTransformations,
     plotly,
     httr,
     png,
@@ -21,6 +22,7 @@ Imports:
     bmp
 Remotes:
     Displayr/flipStatistics,
+    Displayr/flipTransformations,
     Displayr/flipChartBasics,
     Displayr/flipTables,
     Displayr/rhtmlPictographs

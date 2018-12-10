@@ -7,6 +7,7 @@
 #' @param category A comma-seperated list of the name or indices of the categories to include for 'Percentage'.
 #' @importFrom flipStatistics Mean Sum WeightedTable
 #' @importFrom flipTables SelectEntry
+#' @importFrom flipTransformations AsNumeric
 #' @export
 SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], weights = NULL, subset = NULL, category = NULL)
 {
@@ -23,9 +24,9 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     }
 
     if (grepl("Average", type))
-        return(Mean(x, weights = weights))
+        return(Mean(AsNumeric(x, binary = FALSE), weights = weights))
     if (grepl("Sum", type))
-        return(Sum(x, weights = weights))
+        return(Sum(AsNumeric(x, binary = FALSE), weights = weights))
 
     if (is.null(weights))
         weights <- rep(1, length(x))
