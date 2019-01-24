@@ -8,12 +8,13 @@ VisualizeNumber(x, display = c("Oval", "Rectangle", "Number", "Icon",
   "Donut", "Gauge", "Pictograph")[1], fill.color = rgb(166, 197, 57,
   maxColorValue = 255), fill.opacity = 0.4, total.icons = NA,
   global.font.family = "Arial", global.font.color = "#808080",
-  label.data.number.type = c("Number", "Percentage", "Scientific")[1],
-  label.data.decimals = 0, label.data.1000.separator = ",",
-  label.data.position = "Overlay", label.data.prefix = "",
-  label.data.suffix = "", label.data.valign = "middle",
-  label.data.halign = "center", label.data.pad = 0,
-  label.data.xpad = 0, label.data.font.family = global.font.family,
+  label.data.number.type = c("Automatic", "Number", "Percentage",
+  "Scientific")[1], label.data.decimals = 0,
+  label.data.1000.separator = ",", label.data.position = "Overlay",
+  label.data.prefix = "", label.data.suffix = "",
+  label.data.valign = "middle", label.data.halign = "center",
+  label.data.pad = 0, label.data.xpad = 0,
+  label.data.font.family = global.font.family,
   label.data.font.color = global.font.color, label.data.font.size = 16,
   label.data.font.weight = "normal", text.below = "",
   text.below.outside = TRUE, text.below.halign = "center",
@@ -161,7 +162,7 @@ is "Donut" or "Gauge".}
 
 \item{tick.font.size}{Font size of \code{tick}.}
 
-\item{tick.number.type}{Format in which \code{x} should be shown. One of "Number", "Percentage", "Scientific".}
+\item{tick.number.type}{Format in which \code{x} should be shown. One of "Automatic", "Number", "Percentage", "Scientific". If "Automatic" is used, then a percentage format will be used if \code{attr(x, "statistic")} is "\%". Otherwise a number format will be used.}
 
 \item{tick.decimals}{Integer; Number of decimals shown in ticks}
 

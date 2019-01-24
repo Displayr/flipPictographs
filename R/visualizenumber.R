@@ -78,7 +78,7 @@
 #' @param tick.show Whether to show the \code{minimum.value} and \code{maximum.value} when
 #'      \code{display} is "Gauge".
 #' @param tick.outside Whether to show the ticks inside or outside the gauge.
-#' @param tick.number.type Format in which \code{x} should be shown. One of "Number", "Percentage", "Scientific".
+#' @param tick.number.type Format in which \code{x} should be shown. One of "Automatic", "Number", "Percentage", "Scientific". If "Automatic" is used, then a percentage format will be used if \code{attr(x, "statistic")} is "\%". Otherwise a number format will be used.
 #' @param tick.decimals Integer; Number of decimals shown in ticks
 #' @param tick.1000.separator String placed to separate thousands. By default this is a comma. Set to empty string to hide.
 #' @param tick.prefix Optional text to prepend to ticks.
@@ -109,7 +109,7 @@ VisualizeNumber <- function(x,
                          total.icons = NA,
                          global.font.family = "Arial",
                          global.font.color = "#808080",
-                         label.data.number.type = c("Number", "Percentage", "Scientific")[1],
+                         label.data.number.type = c("Automatic", "Number", "Percentage", "Scientific")[1],
                          label.data.decimals  = 0,
                          label.data.1000.separator = ",",
                          label.data.position = "Overlay", # only used for icons
@@ -210,6 +210,8 @@ VisualizeNumber <- function(x,
     }
 
     # Construct formatted string of x
+    if (label.data.number.type == "Automatic" && isTRUE(attr(x, "statistic") == "%"))
+        label.data.number.type <- "Percentage"
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
     if (is.na(x) || is.null(x))

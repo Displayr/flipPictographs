@@ -36,6 +36,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
             return(x[x == tmp][1])
     }
 
+    # Remaining code is to find percentage selected
     if (is.null(weights))
         weights <- rep(1, length(x))
     total <- sum(weights, na.rm = TRUE)
@@ -45,7 +46,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
         if (sum(nchar(category), na.rm = TRUE))
             warning("Showing percentage selected (ignoring Category '",
                     category, "').")
-        return(sum(weights * x)/total)
+        return(as_pct(sum(weights * x)/total))
 
     }
 
@@ -57,7 +58,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 			if (length(cat.range) == 2 && all(!is.na(cat.range)))
 			{
 				in.range <- x >= min(cat.range) & x <= max(cat.range)
-				return(sum(weights * in.range)/total)
+				return(as_pct(sum(weights * in.range)/total))
 			}
 		}
 		else if (is.numeric(x) && any(x != round(x, 0)))
@@ -69,5 +70,11 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     if (sum(nchar(category), na.rm = TRUE) == 0)
         stop("Select one or more categories from '", paste(names(counts), collapse="', '"), "'.")
 
-    return(sum(counts[TextAsVector(as.character(category))], na.rm = TRUE)/total)
+    return(as_pct(sum(counts[TextAsVector(as.character(category))], na.rm = TRUE)/total))
+}
+
+as_pct <- function (x) 
+{
+    attr(x, "statistic") <- "%"
+    return(x)
 }

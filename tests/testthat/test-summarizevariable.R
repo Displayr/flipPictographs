@@ -11,7 +11,7 @@ test_that("SummarizeVariable",
 {
     expect_equal(SummarizeVariable(x0, "Sum"), 55)
     expect_equal(SummarizeVariable(x0, "Sum", weight = ww), 215)
-    expect_equal(round(SummarizeVariable(x.logical, "Percentage"),2), 0.67)
+    expect_equal(round(SummarizeVariable(x.logical, "Percentage"),2), structure(0.67, statistic = "%"))
     expect_equal(round(SummarizeVariable(x.logical, "Average"),2), 0.67)
     expect_equal(SummarizeVariable(x.logical, "Sum"), 4)
     expect_warning(SummarizeVariable(x.logical, "Percentage", category="3"),
@@ -24,5 +24,5 @@ test_that("SummarizeVariable",
     expect_warning(SummarizeVariable(x.numeric, "Percentage", category = 1),
                    "A numeric variable was supplied")
 
-    expect_equal(SummarizeVariable(x.numeric, "Percentage", category = "0.4 - 0.6"), 0.3)
+    expect_equal(SummarizeVariable(x.numeric, "Percentage", category = "0.4 - 0.6"), structure(0.3, statistic = "%"))
 })
