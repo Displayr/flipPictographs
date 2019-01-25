@@ -209,9 +209,21 @@ VisualizeNumber <- function(x,
         border.width <- 0
     }
 
-    # Construct formatted string of x
-    if (label.data.number.type == "Automatic" && isTRUE(attr(x, "statistic") == "%"))
+    if (label.data.number.type == "Automatic" && grepl("%$", paste0("", attr(x, "statistic"))))
+    {
+        # If number.type is percentage, we typically expect inputs
+        # to be decimals in [0.00, 1.00]
+        # But when number.type is automatic, we check that
+        # range is not incorrectly specified
+        # Note that manually setting type to percentage will avoid this 
         label.data.number.type <- "Percentage"
+        if (isTRUE(maximum.value == 100))
+            maximum.value <- 1
+    }
+
+    # Construct formatted string of x
+    if (any(class(x) %in% c("Date", "POSIXct", "POSIXlt")))
+        x <- as.character(x)
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
     if (is.na(x) || is.null(x))
@@ -384,6 +396,8 @@ VisualizeNumber <- function(x,
     tick1 <- NULL
     if (display == "gauge" && tick.show)
     {
+        if (tick.number.type == "Automatic")
+            tick.number.type <- label.data.number.type
         tmp.vals <- c(minimum.value, maximum.value)
         tmp.percent <- if (tick.number.type == "Percentage") "%" else ""
         tmp.format <- if (tick.number.type == "Scientific") "e" else "f"
