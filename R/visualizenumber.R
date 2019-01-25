@@ -210,7 +210,9 @@ VisualizeNumber <- function(x,
     }
 
     # Construct formatted string of x
-    if (label.data.number.type == "Automatic" && isTRUE(attr(x, "statistic") == "%"))
+    if (any(class(x) %in% c("Date", "POSIXct", "POSIXlt")))
+        x <- as.character(x)
+    if (label.data.number.type == "Automatic" && grepl("%$", paste0("", attr(x, "statistic"))))
         label.data.number.type <- "Percentage"
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
@@ -384,6 +386,8 @@ VisualizeNumber <- function(x,
     tick1 <- NULL
     if (display == "gauge" && tick.show)
     {
+        if (tick.number.type == "Automatic")
+            tick.number.type <- label.data.number.type
         tmp.vals <- c(minimum.value, maximum.value)
         tmp.percent <- if (tick.number.type == "Percentage") "%" else ""
         tmp.format <- if (tick.number.type == "Scientific") "e" else "f"
