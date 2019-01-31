@@ -63,7 +63,8 @@ font attribute for the chart unless specified individually.}
 \item{global.font.color}{Global font color as a named color in character format
 (e.g. "black") or an a hex code.}
 
-\item{label.data.number.type}{Format in which \code{x} should be shown. One of "Number", "Percentage", "Scientific".}
+\item{label.data.number.type}{Format in which \code{x} should be shown.
+One of "Number", "Percentage", "Percentage (no sign)", Scientific".}
 
 \item{label.data.decimals}{Integer; Number of decimals shown in data label.}
 

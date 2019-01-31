@@ -22,7 +22,8 @@
 #' (e.g. "black") or an a hex code.
 #' @param background.opacity Transparency of background (0 to 1). This is only valid for
 #' Number, Oval or Rectangle.
-#' @param label.data.number.type Format in which \code{x} should be shown. One of "Number", "Percentage", "Scientific".
+#' @param label.data.number.type Format in which \code{x} should be shown.
+#' One of "Number", "Percentage", "Percentage (no sign)", Scientific".
 #' @param label.data.decimals Integer; Number of decimals shown in data label.
 #' @param label.data.1000.separator String placed to separate thousands.
 #' By default this is a comma. Set to empty string to hide.
@@ -169,7 +170,7 @@ VisualizeNumber <- function(x,
                          hover.bg.color = rgb(0.5,0.5,0.5),
                          hover.font.color = rgb(1,1,1),
                          hover.font.size = 9,
-                         hover.font.family = global.font.family, 
+                         hover.font.family = global.font.family,
                          font.unit = "pt",
                          margin.left = 0,
                          margin.right = 0,
@@ -215,7 +216,7 @@ VisualizeNumber <- function(x,
         # to be decimals in [0.00, 1.00]
         # But when number.type is automatic, we check that
         # range is not incorrectly specified
-        # Note that manually setting type to percentage will avoid this 
+        # Note that manually setting type to percentage will avoid this
         label.data.number.type <- "Percentage"
         if (isTRUE(maximum.value == 100))
             maximum.value <- 1
@@ -224,13 +225,14 @@ VisualizeNumber <- function(x,
     # Construct formatted string of x
     if (any(class(x) %in% c("Date", "POSIXct", "POSIXlt")))
         x <- as.character(x)
+    is.percent <- (grepl("^Percentage", label.data.number.type)) # includes "Percentage (no sign)"
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
     if (is.na(x) || is.null(x))
         label.str <- "NA"
     else
         label.str <- paste0(label.data.prefix,
-        formatC(if (tmp.percent == "%") x * 100 else x, format = tmp.format,
+        formatC(if (is.percent) x * 100 else x, format = tmp.format,
             digits = label.data.decimals, big.mark = label.data.1000.separator),
         tmp.percent, label.data.suffix)
     if (is.na(x) || is.null(x))
@@ -326,7 +328,7 @@ VisualizeNumber <- function(x,
         bg.segment <- pathToShape(segmentPath(c(prop + segment.gap, 1), hole.size,
             border.resolution), base.color, base.opacity)
         shapes <- list(fill.segment, bg.segment)
-    
+
     } else if (display == "bar")
     {
         p <- plot_ly(x = c(0,1), y = c(0, 1), type = "scatter", mode = "none",
@@ -399,10 +401,11 @@ VisualizeNumber <- function(x,
         if (tick.number.type == "Automatic")
             tick.number.type <- label.data.number.type
         tmp.vals <- c(minimum.value, maximum.value)
+        is.percent <- grepl("^Percentage", tick.number.type)
         tmp.percent <- if (tick.number.type == "Percentage") "%" else ""
         tmp.format <- if (tick.number.type == "Scientific") "e" else "f"
         tick.str <- paste0(tick.prefix,
-            formatC(if (tmp.percent == "%") tmp.vals * 100 else tmp.vals, format = tmp.format,
+            formatC(if (is.percent) tmp.vals * 100 else tmp.vals, format = tmp.format,
                 digits = tick.decimals, big.mark = tick.1000.separator),
             tmp.percent, tick.suffix)
 
@@ -438,7 +441,7 @@ VisualizeNumber <- function(x,
                  paper_bgcolor = toRGB(background.color, alpha = background.opacity),
                  shapes = shapes, annotations = list(annot.data, annot.above, annot.below, tick0, tick1),
                  hoverlabel = list(bgcolor = hover.bg.color, bordercolor = hover.bg.color,
-                              font = list(color = hover.font.color, size = hover.font.size, 
+                              font = list(color = hover.font.color, size = hover.font.size,
                               family = hover.font.family)),
                  hovermode = "closest", hoverdistance = hover.distance)
 
