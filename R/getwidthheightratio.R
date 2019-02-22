@@ -47,16 +47,24 @@ getWidthHeightRatio <- function(image.url)
         tmp.image <- content(response, as = "raw", encoding = "UTF-8")
         if (grepl("png", tmp.type))
             tmp.file <- readPNG(tmp.image)
-        if (grepl("jpeg|jpg", tmp.type))
+        else if (grepl("jpeg|jpg", tmp.type))
             tmp.file <- readJPEG(tmp.image)
-        if (grepl("bmp", tmp.type))
+        else if (grepl("bmp", tmp.type))
+            tmp.file <- as.raster(read.bmp(tmp.file), max=255)
+        else if (grepl("png", image.url))
+            tmp.file <- readPNG(tmp.image)
+        else if (grepl("jpeg|jpg", image.url))
+            tmp.file <- readJPEG(tmp.image)
+        else if (grepl("bmp", image.url))
             tmp.file <- as.raster(read.bmp(tmp.file), max=255)
 
+
         tmp.dim <- dim(tmp.file)
-        whratio <- tmp.dim[2]/tmp.dim[1]
+        if (length(tmp.dim) >= 1)
+            whratio <- tmp.dim[2]/tmp.dim[1]
     }
 
-    if (is.na(whratio))
+    if (is.null(tmp.file) || is.null(whratio) || is.na(whratio))
     {
         whratio <- 1
         warning("Could not determine width-height ratio from image. Defaulting to 1.\n")
