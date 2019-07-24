@@ -7,6 +7,7 @@
 #' @param category A comma-seperated list of the name or indices of the categories to include for 'Percentage'.
 #' @importFrom flipStatistics Mean Sum WeightedTable
 #' @importFrom flipTransformations AsNumeric TextAsVector
+#' @importFrom flipU ConvertCommaSeparatedStringToVector
 #' @export
 SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], weights = NULL, subset = NULL, category = NULL)
 {
@@ -26,6 +27,11 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
         return(Mean(AsNumeric(x, binary = FALSE), weights = weights))
     if (grepl("Sum", type))
         return(Sum(AsNumeric(x, binary = FALSE), weights = weights))
+
+    # Convert QDate to Factors (Dates do not give sensible result for Average or Sum either way)
+    if (!is.null(attr(x, "QDate")))
+        x <- attr(x, "QDate")
+
     if (grepl("Most frequent", type))
     {
         counts <- sort(WeightedTable(x, weights = weights), decreasing = TRUE)
@@ -68,12 +74,17 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     # Categorical variable
     counts <- WeightedTable(x, weights = weights)
     if (sum(nchar(category), na.rm = TRUE) == 0)
-        stop("Select one or more categories from '", paste(names(counts), collapse="', '"), "'.")
+        stop("Select one or more categories from \"", paste(names(counts), collapse = "\", \""), "\".")
+    category.selected <- ConvertCommaSeparatedStringToVector(as.character(category), text.qualifier = "\"")
+    ind.not.selected <- which(!category.selected %in% names(counts))
+    if (length(ind.not.selected) > 0 && any(grepl(",", names(counts), fixed = TRUE)))
+        warning("Categories \"", paste(category.selected[ind.not.selected], collapse = "\", \""), 
+                 "\" not found. Use double-quotes to surround category names containing commas.")
 
-    return(as_pct(sum(counts[TextAsVector(as.character(category))], na.rm = TRUE)/total))
+    return(as_pct(sum(counts[category.selected], na.rm = TRUE)/total))
 }
 
-as_pct <- function (x) 
+as_pct <- function (x)
 {
     attr(x, "statistic") <- "%"
     return(x)
