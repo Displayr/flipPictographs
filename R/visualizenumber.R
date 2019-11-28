@@ -244,7 +244,14 @@ VisualizeNumber <- function(x,
         if (!is.numeric(value))
             stop("Input value for pictographs cannot be non-numeric.")
         if (display %in% c("icon", "pictograph - single"))
+        {
+            if (is.null(maximum.value) || !is.finite(maximum.value))
+                maximum.value <- 1.0
+            if (is.null(minimum.value) || !is.finite(minimum.value))
+                minimum.value <- 0.0
+            value <- (x - minimum.value)/(maximum.value - minimum.value)
             total.icons <- 1.0
+        }
         if (label.data.position %in% c("Above icons", "Below icons"))
         {
             pos <- if (label.data.position == "Above icons") "above" else "below"
