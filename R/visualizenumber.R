@@ -245,21 +245,6 @@ VisualizeNumber <- function(x,
             stop("Input value for pictographs cannot be non-numeric.")
         if (display %in% c("icon", "pictograph - single"))
             total.icons <- 1.0
-        if (display == "pictograph - single")
-        {
-            if (is.null(maximum.value) || !is.finite(maximum.value))
-                maximum.value <- 1.0
-            if (is.null(minimum.value) || !is.finite(minimum.value))
-                minimum.value <- 0.0
-            if (maximum.value > minimum.value)
-                stop("Maximum value must be greater than ", minimum.value)
-            value <- (x - minimum.value)/(maximum.value - minimum.value)
-            if (value > 1)
-                stop("Input data cannot be greater the 'Maximum value'")
-            if (value < 0)
-                stop("Input data cannot be smaller than 'Minimum value'")
-            maximum.value <- NA
-        }
         if (label.data.position %in% c("Above icons", "Below icons"))
         {
             pos <- if (label.data.position == "Above icons") "above" else "below"
