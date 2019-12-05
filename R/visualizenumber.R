@@ -74,8 +74,8 @@
 #'      This value is used to show proportional data
 #'      (i.e. \code{display} is "Donut", "Gauge" or "Pictograph (single icon)").
 #' @param minimum.value Numeric value specifying the minimum value that \code{x} is expected to take.
-#'      This value is only used in "Gauge" (for "Donut" and "Pictograph (single icon)" it is
-#'      always set as zero.
+#'      This value is only used in "Gauge", "Bar" and "Pictograph (single icon)". 
+#'      For "Donut" it is always assumed to be zero.
 #' @param tick.show Whether to show the \code{minimum.value} and \code{maximum.value} when
 #'      \code{display} is "Gauge".
 #' @param tick.outside Whether to show the ticks inside or outside the gauge.
@@ -245,6 +245,21 @@ VisualizeNumber <- function(x,
             stop("Input value for pictographs cannot be non-numeric.")
         if (display %in% c("icon", "pictograph - single"))
             total.icons <- 1.0
+        if (display == "pictograph - single")
+        {
+            if (is.null(minimum.value) || !is.finite(minimum.value))
+                minimum.value <- 0.0
+            if (maximum.value <= minimum.value)
+                stop("'Maximum value' (", maximum.value, ") must be greater than the ",
+                     "'Minimum value' (", minimum.value, ").")
+            value <- (x - minimum.value)/(maximum.value - minimum.value)
+            if (value > 1)
+                stop("Input data cannot be greater 'Maximum value'. ",
+                     "Change 'Display' to 'Pictograph (repeated icons)' to show more than 1 icon.\n")
+            if (value < 0)
+                stop("Input data cannot be smaller than 'Minimum value'.")
+            maximum.value <- 1.0
+        }
         if (label.data.position %in% c("Above icons", "Below icons"))
         {
             pos <- if (label.data.position == "Above icons") "above" else "below"
@@ -298,8 +313,8 @@ VisualizeNumber <- function(x,
         if (display == "donut")
             minimum.value <- 0.0
         if (maximum.value <= minimum.value)
-            stop("'Maximum value' (", maximum.value, ") must be greater than the 'Minimum value'(",
-                 minimum.value, ")")
+            stop("'Maximum value' (", maximum.value, ") must be greater than the 'Minimum value' (",
+                 minimum.value, ").")
         prop <- (x - minimum.value)/(maximum.value - minimum.value)
         if (prop > 1)
             stop("Input data cannot be greater than 'Maximum value'.")

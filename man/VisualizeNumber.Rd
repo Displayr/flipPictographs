@@ -174,8 +174,8 @@ is "Donut" or "Gauge".}
 \item{tick.suffix}{Optional text to append to ticks.}
 
 \item{minimum.value}{Numeric value specifying the minimum value that \code{x} is expected to take.
-This value is only used in "Gauge" (for "Donut" and "Pictograph (single icon)" it is
-always set as zero.}
+This value is only used in "Gauge", "Bar" and "Pictograph (single icon)". 
+For "Donut" it is always assumed to be zero.}
 
 \item{maximum.value}{Numeric value specifying the maximum that \code{x} will be expected to take.
 This value is used to show proportional data
