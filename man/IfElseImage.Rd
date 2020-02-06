@@ -4,9 +4,11 @@
 \alias{IfElseImage}
 \title{IfElseImage}
 \usage{
-IfElseImage(condition,
+IfElseImage(
+  condition,
   true.image = "https://displayrcors.azureedge.net/images/uparrow_grey.svg",
-  false.image = "https://displayrcors.azureedge.net/images/downarrow_grey.svg")
+  false.image = "https://displayrcors.azureedge.net/images/downarrow_grey.svg"
+)
 }
 \arguments{
 \item{condition}{Expression evaluating to \code{TRUE} or {FALSE} that determines which image is displayed.}

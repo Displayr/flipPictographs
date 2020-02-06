@@ -6,13 +6,19 @@
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio
-    response <- GET(image.url)
-    if (inherits(response, "try-error") || response$status_code != 200)
+    response <- try(GET(image.url), silent = TRUE)
+    if (inherits(response, "try-error"))
+        stop("Could not retrieve image from '", image.url, "'. Check that url is correct.")
+    if(response$status_code != 200)
         stop("Error (status code ", response$status_code, ") retrieving image ", image.url)
-
     tmp.type <- response$headers$'content-type'
-    if ("text/html" %in% tmp.type)
-        stop("Image type is text/html. Ensure the image url is correct and not redirected.")
+    if (any(grepl("text/html", tmp.type, fixed = TRUE)))
+        stop("The url content type is 'text/html'. Ensure the image url is correct and not redirected.")
+    # Give warning because sometimes chrome can fix this, but will show as blank in IE
+    unknown.type <- !any(grepl("image", tmp.type, fixed = TRUE))
+    if (unknown.type)
+        warning("URL content type is '", tmp.type,
+        "'. This may not display properly in all browsers.")
 
     whratio <- NA
     if (grepl("svg", tmp.type))
@@ -67,7 +73,8 @@ getWidthHeightRatio <- function(image.url)
     if (is.null(whratio) || is.na(whratio))
     {
         whratio <- 1
-        warning("Could not determine width-height ratio from image. Defaulting to 1.\n")
+        if (!unknown.type)
+            warning("Could not determine width-height ratio from image. Defaulting to 1.\n")
     }
     return(whratio)
 }

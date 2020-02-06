@@ -4,8 +4,13 @@
 \alias{SummarizeVariable}
 \title{Summarizes a numeric or categorical variable for plotting}
 \usage{
-SummarizeVariable(x, type = c("Average", "Sum", "Percentage")[1],
-  weights = NULL, subset = NULL, category = NULL)
+SummarizeVariable(
+  x,
+  type = c("Average", "Sum", "Percentage")[1],
+  weights = NULL,
+  subset = NULL,
+  category = NULL
+)
 }
 \arguments{
 \item{x}{The input variable to summarize}
