@@ -42,20 +42,18 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
             return(x[x == tmp][1])
     }
 
-    # Remaining code is to find percentage selected
-    if (is.null(weights))
-        weights <- rep(1, length(x))
-    total <- sum(weights, na.rm = TRUE)
-
-	if (isTRUE(attr(x, "questiontype") == "PickAny") || is.logical(x))
+    # Compute "Percentage" selected
+    # for binary variable
+	if (isTRUE(attr(x, "questiontype") == "PickAny") ||
+	    isTRUE(attr(x, "questiontype") == "PickAnyGrid") || is.logical(x))
     {
         if (sum(nchar(category), na.rm = TRUE))
             warning("Showing percentage selected (ignoring Category '",
                     category, "').")
-        return(as_pct(sum(weights * x)/total))
-
+        return(as_pct(Mean(x, weights = weights)))
     }
 
+    # "Percentage" for numeric variable
 	if (is.numeric(x) && sum(nchar(category) > 0, na.rm = TRUE))
 	{
 		if (grepl("\\d+\\s*-\\s*\\d+", category))
@@ -64,24 +62,26 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 			if (length(cat.range) == 2 && all(!is.na(cat.range)))
 			{
 				in.range <- x >= min(cat.range) & x <= max(cat.range)
-				return(as_pct(sum(weights * in.range)/total))
+				return(as_pct(Mean(in.range, weights = weights)))
 			}
 		}
 		else if (is.numeric(x) && any(x != round(x, 0)))
 			warning("A numeric variable was supplied. Specify a range as the category (e.g. '1-5') or round variables to integers")
 	}
 
-    # Categorical variable
-    counts <- WeightedTable(x, weights = weights)
+    category.names <- levels(as.factor(x)) # only interested in labels so don't need to worry about values
     if (sum(nchar(category), na.rm = TRUE) == 0)
-        stop("Select one or more categories from \"", paste(names(counts), collapse = "\", \""), "\".")
+        stop("Select one or more categories from \"", paste(category.names, collapse = "\", \""), "\".")
     category.selected <- ConvertCommaSeparatedStringToVector(as.character(category), text.qualifier = "\"")
-    ind.not.selected <- which(!category.selected %in% names(counts))
-    if (length(ind.not.selected) > 0 && any(grepl(",", names(counts), fixed = TRUE)))
-        warning("Categories \"", paste(category.selected[ind.not.selected], collapse = "\", \""), 
+    ind.not.selected <- which(!category.selected %in% category.names)
+    if (length(ind.not.selected) > 0 && any(grepl(",", category.names, fixed = TRUE)))
+        warning("Categories \"", paste(category.selected[ind.not.selected], collapse = "\", \""),
                  "\" not found. Use double-quotes to surround category names containing commas.")
 
-    return(as_pct(sum(counts[category.selected], na.rm = TRUE)/total))
+    # "Percentage" for categorical variable (the section above is just to get warning)
+    is.selected <- x %in% category.selected
+    is.selected[is.na(x)] <- NA     # '%in%' converts NA to FALSE
+	return(as_pct(Mean(is.selected, weights = weights)))
 }
 
 as_pct <- function (x)

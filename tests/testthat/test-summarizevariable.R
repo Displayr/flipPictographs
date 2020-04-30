@@ -188,3 +188,19 @@ test_that("SummarizeVariable",
     expect_equal(SummarizeVariable(x.categoric.with.comma, "Percentage", category = "\"$1,000\""),
                 structure(0.375, statistic = "%"))
 })
+
+test_that("missing values",
+{
+    data("phone", package = "flipExampleData")
+    ff <- phone$choiceid %% 4 == 0
+    ww <- phone$q1
+
+    expect_equal(SummarizeVariable(phone$q8), 1.377279, tol = 1e-5)
+    expect_equal(SummarizeVariable(phone$q2, "Percentage", category = "Student"),
+        structure(0.301428571428571, statistic = "%"))
+
+    expect_equal(SummarizeVariable(phone$q8, weights = ww, subset = ff),
+        1.38364779874214, tol = 1e-5)
+    expect_equal(SummarizeVariable(phone$q2, "Percentage", category = "Retired",
+        weights = ww, subset = ff), structure(0.05, statistic = "%"))
+})
