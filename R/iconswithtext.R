@@ -194,7 +194,7 @@ iconsWithText <- function (x,
     label.overlay.str <- ""
     label.above.str <- ""
     label.below.str <- ""
-    
+
     # Adjust margins to fit text labels
     # padding format: top right bottom left
     pad.above.left <- pad.above.right <- pad.above.top <- pad.above.bottom <- 0
@@ -217,21 +217,21 @@ iconsWithText <- function (x,
     margin.right <- margin.right + max(0, pad.above.right, pad.below.right)
 
     if (sum(nchar(text.above), na.rm = TRUE) > 0)
-        label.above.str <- sprintf(", \"table-header\":{\"padding\": \"%f %f %f %f\",
-            \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
-            \"font-color\":\"%s\", \"font-weight\":\"%s\",
-            \"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}",
-            margin.top + 1, margin.right - pad.above.right + 1, 
-            max(0, text.above.pad) + 1, margin.left + pad.above.left + 1, 
-            text.above, text.above.font.size, text.above.font.family, 
+        label.above.str <- sprintf(paste0(", \"table-header\":{\"padding\": \"%f %f %f %f\", ",
+            "\"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\", ",
+            "\"font-color\":\"%s\", \"font-weight\":\"%s\", ",
+            "\"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}"),
+            margin.top + 1, margin.right - pad.above.right + 1,
+            max(0, text.above.pad) + 1, margin.left + pad.above.left + 1,
+            text.above, text.above.font.size, text.above.font.family,
             text.above.font.color, text.above.font.weight, text.above.halign)
 
     if (sum(nchar(text.below), na.rm = TRUE) > 0)
-        label.below.str <- sprintf(", \"table-footer\":{\"padding\": \"%f %f %f %f\",
-            \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
-            \"font-color\":\"%s\", \"font-weight\":\"%s\",
-            \"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}",
-            max(text.below.pad, 0) + 1, margin.right - pad.below.right + 1, 
+        label.below.str <- sprintf(paste0(", \"table-footer\":{\"padding\": \"%f %f %f %f\", ",
+            "\"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\", ",
+            "\"font-color\":\"%s\", \"font-weight\":\"%s\", ",
+            "\"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}"),
+            max(text.below.pad, 0) + 1, margin.right - pad.below.right + 1,
             margin.bottom + 1, margin.left + pad.below.left + 1,
             text.below, text.below.font.size, text.below.font.family,
             text.below.font.color, text.below.font.weight, text.below.halign)
@@ -239,26 +239,26 @@ iconsWithText <- function (x,
     if (sum(nchar(text.overlay), na.rm = TRUE) > 0)
     {
         xpos <- if (text.overlay.halign == "left") 0
-                else if (text.overlay.halign == "right") number.cols 
+                else if (text.overlay.halign == "right") number.cols
                 else number.cols/2
         ypos <- if (text.overlay.valign == "top") 0
                 else if (text.overlay.valign == "bottom") number.rows
                 else number.rows/2
-        label.overlay.str <- sprintf(",\"floatingLabels\":[{\"position\":\"%f:%f\", 
-          \"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\",
-          \"font-color\":\"%s\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"}]",
-          ypos, xpos, text.overlay, text.overlay.font.size, text.overlay.font.family, 
+        label.overlay.str <- sprintf(paste0(",\"floatingLabels\":[{\"position\":\"%f:%f\", ",
+          "\"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\", ",
+          "\"font-color\":\"%s\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"}]"),
+          ypos, xpos, text.overlay, text.overlay.font.size, text.overlay.font.family,
           text.overlay.font.color, text.overlay.font.weight, text.overlay.halign)
     }
 
-    pad.around.icons <- sprintf(",\"padding\":\"%f %f %f %f\"", 
+    pad.around.icons <- sprintf(",\"padding\":\"%f %f %f %f\"",
         margin.top, margin.right, margin.bottom, margin.left)
-        
+
     json.string <- paste0("{\"table\": {", dim.str,
           ",\"rows\":[[{\"type\":\"graphic\", \"value\":{",
           "\"proportion\":", prop, pad.around.icons,
           ",\"numImages\":", total.icons,
-          label.overlay.str, 
+          label.overlay.str,
           icon.size.str,
           layout.str,
           ",\"rowGutter\":", pad.row,
@@ -266,8 +266,23 @@ iconsWithText <- function (x,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str, "}}]]}",
           label.above.str, label.below.str,
           ",\"background-color\":\"", background.color, "\"}")
+    cat("line 269\n")
+    json.string <- cleanPictographLabels(json.string)
 
     if (print.config)
         cat(json.string)
     graphic(json.string)
+}
+
+cleanPictographLabels <- function(x)
+{
+    # New line characters were causing errors in the JSON
+    # Errors are now fixed but new lines are shown as spaces by rhtmlPictograph
+    x <- gsub("\n", "\\\\n", x)
+
+    # These characters used to be shown as text but that is
+    # probably not what the user wants to see
+    x <- gsub("<br>", "\\\\n", x)
+    x <- gsub("&nbsp;", " ", x)
+    return(x)
 }
