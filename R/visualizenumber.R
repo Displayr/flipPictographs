@@ -74,7 +74,7 @@
 #'      This value is used to show proportional data
 #'      (i.e. \code{display} is "Donut", "Gauge" or "Pictograph (single icon)").
 #' @param minimum.value Numeric value specifying the minimum value that \code{x} is expected to take.
-#'      This value is only used in "Gauge", "Bar" and "Pictograph (single icon)". 
+#'      This value is only used in "Gauge", "Bar" and "Pictograph (single icon)".
 #'      For "Donut" it is always assumed to be zero.
 #' @param tick.show Whether to show the \code{minimum.value} and \code{maximum.value} when
 #'      \code{display} is "Gauge".
@@ -210,7 +210,7 @@ VisualizeNumber <- function(x,
         border.width <- 0
     }
 
-    if (label.data.number.type == "Automatic" && grepl("%$", paste0("", attr(x, "statistic"))))
+    if (label.data.number.type == "Automatic" && grepl("%)?$", paste0("", attr(x, "statistic"))))
     {
         # If number.type is percentage, we typically expect inputs
         # to be decimals in [0.00, 1.00]
