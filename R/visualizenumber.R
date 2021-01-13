@@ -225,6 +225,8 @@ VisualizeNumber <- function(x,
     # Construct formatted string of x
     if (any(class(x) %in% c("Date", "POSIXct", "POSIXlt")))
         x <- as.character(x)
+    if (isTRUE(grepl("%", attr(x, "statistic"))))
+        x <- x/100
     is.percent <- (grepl("^Percentage", label.data.number.type)) # includes "Percentage (no sign)"
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"

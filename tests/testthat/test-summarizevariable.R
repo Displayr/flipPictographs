@@ -165,7 +165,7 @@ test_that("SummarizeVariable",
 {
     expect_equal(SummarizeVariable(x0, "Sum"), 55)
     expect_equal(SummarizeVariable(x0, "Sum", weight = ww), 215)
-    expect_equal(round(SummarizeVariable(x.logical, "Percentage"),2), structure(0.67, statistic = "%"))
+    expect_equal(round(SummarizeVariable(x.logical, "Percentage"),0), structure(67, statistic = "%"))
     expect_equal(round(SummarizeVariable(x.logical, "Average"),2), 0.67)
     expect_equal(SummarizeVariable(x.logical, "Sum"), 4)
     expect_warning(SummarizeVariable(x.logical, "Percentage", category="3"),
@@ -178,15 +178,15 @@ test_that("SummarizeVariable",
     expect_warning(SummarizeVariable(x.numeric, "Percentage", category = 1),
                    "A numeric variable was supplied")
 
-    expect_equal(SummarizeVariable(x.numeric, "Percentage", category = "0.4 - 0.6"), structure(0.3, statistic = "%"))
+    expect_equal(SummarizeVariable(x.numeric, "Percentage", category = "0.4 - 0.6"), structure(30, statistic = "%"))
     expect_error(SummarizeVariable(x.qdate, "Percentage", category = ""),
                  "Select one or more categories from \"26/12/2011-8/01/2012\", \"9/01/2012-22/01/2012\"")
-    expect_equal(SummarizeVariable(x.qdate, "Percentage", category = "26/12/2011-8/01/2012"), structure(0.02, statistic = "%"))
+    expect_equal(SummarizeVariable(x.qdate, "Percentage", category = "26/12/2011-8/01/2012"), structure(2, statistic = "%"))
 
     expect_warning(SummarizeVariable(x.categoric.with.comma, "Percentage", category = "$1,000"),
                 "Categories ") #\"$1\", \"000\" not found. Use double-quotes to surround category names containing commas.")
     expect_equal(SummarizeVariable(x.categoric.with.comma, "Percentage", category = "\"$1,000\""),
-                structure(0.375, statistic = "%"))
+                structure(37.5, statistic = "%"))
 })
 
 test_that("missing values",
@@ -197,10 +197,10 @@ test_that("missing values",
 
     expect_equal(SummarizeVariable(phone$q8), 1.377279, tol = 1e-5)
     expect_equal(SummarizeVariable(phone$q2, "Percentage", category = "Student"),
-        structure(0.301428571428571, statistic = "%"))
+        structure(30.1428571428571, statistic = "%"))
 
     expect_equal(SummarizeVariable(phone$q8, weights = ww, subset = ff),
         1.38364779874214, tol = 1e-5)
     expect_equal(SummarizeVariable(phone$q2, "Percentage", category = "Retired",
-        weights = ww, subset = ff), structure(0.05, statistic = "%"))
+        weights = ww, subset = ff), structure(5, statistic = "%"))
 })
