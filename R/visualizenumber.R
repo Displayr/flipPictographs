@@ -222,11 +222,19 @@ VisualizeNumber <- function(x,
             maximum.value <- 1
     }
 
-    # Construct formatted string of x
+    # Once we have used statistic attribute to set label.data.number.type
+    # we can parse inputs and discard the attribute
     if (any(class(x) %in% c("Date", "POSIXct", "POSIXlt")))
         x <- as.character(x)
     if (isTRUE(grepl("%", attr(x, "statistic"))))
         x <- x/100
+    if (isTRUE(grepl("%", attr(maximum.value, "statistic"))))
+        maximum.value <- maximum.value/100
+    if (isTRUE(grepl("%", attr(minimum.value, "statistic"))))
+        minimum.value <- minimum.value/100
+
+
+    # Construct formatted string of x
     is.percent <- (grepl("^Percentage", label.data.number.type)) # includes "Percentage (no sign)"
     tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
@@ -490,7 +498,6 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
     if (tolower(font.weight) == "bold")
         text <- paste0("<b>", text, "</b>")
 
-    #cat("x:", xpos, "y:", ypos, text, "yalign:", yalign, "yanchor:", yanchor, "outside:", outside, "\n")
     return(list(text = text, font = font, x = xpos, y = ypos,
                 showarrow = FALSE, xshift = xshift, yshift = yshift,
                 xanchor = xalign, yanchor = yanchor))
