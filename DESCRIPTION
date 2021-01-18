@@ -24,9 +24,9 @@ Imports:
     bmp
 Remotes:
     Displayr/flipStatistics,
-    Displayr/flipTransformations@DS-3202,
+    Displayr/flipTransformations,
     Displayr/flipChartBasics,
-    Displayr/flipTables@DS-3202,
+    Displayr/flipTables,
     Displayr/rhtmlPictographs,
     Displayr/flipU
 RoxygenNote: 7.1.1
