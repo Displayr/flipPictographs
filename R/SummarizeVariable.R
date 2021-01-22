@@ -86,6 +86,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 
 as_pct <- function (x)
 {
+    x <- x * 100
     attr(x, "statistic") <- "%"
     return(x)
 }

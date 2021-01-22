@@ -60,6 +60,8 @@ iconsWithText <- function (x,
         stop("Input data must be a single positive number\n")
     if (scale <= 0 && is.na(maximum.value))
         stop("Scale must be greater than zero\n")
+    if (isTRUE(grepl("%", attr(scale, "statistic"))))
+        scale <- scale/100
     if (!is.na(maximum.value) && scale != 1)
         warning("Parameter scale overridden by maximum value\n")
     if (!is.na(total.icons) && total.icons <= 0)
@@ -266,7 +268,6 @@ iconsWithText <- function (x,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str, "}}]]}",
           label.above.str, label.below.str,
           ",\"background-color\":\"", background.color, "\"}")
-    cat("line 269\n")
     json.string <- cleanPictographLabels(json.string)
 
     if (print.config)
