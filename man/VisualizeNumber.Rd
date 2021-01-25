@@ -201,7 +201,10 @@ is "Donut" or "Gauge".}
 
 \item{tick.font.size}{Font size of \code{tick}.}
 
-\item{tick.number.type}{Format in which \code{x} should be shown. One of "Automatic", "Number", "Percentage", "Scientific". If "Automatic" is used, then a percentage format will be used if \code{attr(x, "statistic")} is "\%". Otherwise a number format will be used.}
+\item{tick.number.type}{Format in which \code{x} should be shown.
+One of "Automatic", "Number", "Percentage", "Scientific". If "Automatic" is used,
+then a percentage format will be used if \code{attr(x, "statistic")} or
+\code{attr(x, "format")} is "\%". Otherwise a number format will be used.}
 
 \item{tick.decimals}{Integer; Number of decimals shown in ticks}
 

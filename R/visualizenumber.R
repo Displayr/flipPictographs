@@ -79,7 +79,10 @@
 #' @param tick.show Whether to show the \code{minimum.value} and \code{maximum.value} when
 #'      \code{display} is "Gauge".
 #' @param tick.outside Whether to show the ticks inside or outside the gauge.
-#' @param tick.number.type Format in which \code{x} should be shown. One of "Automatic", "Number", "Percentage", "Scientific". If "Automatic" is used, then a percentage format will be used if \code{attr(x, "statistic")} is "\%". Otherwise a number format will be used.
+#' @param tick.number.type Format in which \code{x} should be shown.
+#'      One of "Automatic", "Number", "Percentage", "Scientific". If "Automatic" is used,
+#'      then a percentage format will be used if \code{attr(x, "statistic")} or
+#'      \code{attr(x, "format")} is "\%". Otherwise a number format will be used.
 #' @param tick.decimals Integer; Number of decimals shown in ticks
 #' @param tick.1000.separator String placed to separate thousands. By default this is a comma. Set to empty string to hide.
 #' @param tick.prefix Optional text to prepend to ticks.
@@ -210,7 +213,7 @@ VisualizeNumber <- function(x,
         border.width <- 0
     }
 
-    if (label.data.number.type == "Automatic" && grepl("%)?$", paste0("", attr(x, "statistic"))))
+    if (label.data.number.type == "Automatic" && isTRUE(grepl("%)?$", attr(x, "statistic"))))
     {
         # If number.type is percentage, we typically expect inputs
         # to be decimals in [0.00, 1.00]
@@ -221,6 +224,8 @@ VisualizeNumber <- function(x,
         if (isTRUE(maximum.value == 100))
             maximum.value <- 1
     }
+    else if (label.data.number.type == "Automatic" && isTRUE(grepl("%", attr(x, "format"))))
+        label.data.number.type <- "Percentage"
 
     # Once we have used statistic attribute to set label.data.number.type
     # we can parse inputs and discard the attribute
