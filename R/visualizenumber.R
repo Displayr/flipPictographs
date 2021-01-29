@@ -213,19 +213,18 @@ VisualizeNumber <- function(x,
         border.width <- 0
     }
 
-    if (label.data.number.type == "Automatic" && isTRUE(grepl("%)?$", attr(x, "statistic"))))
+    if (label.data.number.type == "Automatic" && (isTRUE(grepl("%", attr(x, "statistic"))) ||
+                                                  isTRUE(grepl("%", attr(x, "format")))))
     {
         # If number.type is percentage, we typically expect inputs
         # to be decimals in [0.00, 1.00]
         # But when number.type is automatic, we check that
-        # range is not incorrectly specified
+        # range is not incorrectly specified (bad defaults on old std R pages)
         # Note that manually setting type to percentage will avoid this
         label.data.number.type <- "Percentage"
         if (isTRUE(maximum.value == 100))
             maximum.value <- 1
     }
-    else if (label.data.number.type == "Automatic" && isTRUE(grepl("%", attr(x, "format"))))
-        label.data.number.type <- "Percentage"
 
     # Once we have used statistic attribute to set label.data.number.type
     # we can parse inputs and discard the attribute
