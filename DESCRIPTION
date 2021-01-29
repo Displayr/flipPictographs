@@ -21,7 +21,8 @@ Imports:
     httr,
     png,
     jpeg,
-    bmp
+    bmp,
+    verbs
 Depends: R (>= 3.5.0)
 Remotes:
     Displayr/flipStatistics,
@@ -29,6 +30,7 @@ Remotes:
     Displayr/flipChartBasics,
     Displayr/flipTables,
     Displayr/rhtmlPictographs,
-    Displayr/flipU
+    Displayr/flipU,
+    Displayr/verbs
 RoxygenNote: 7.1.1
 Encoding: UTF-8

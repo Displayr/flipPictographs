@@ -8,6 +8,7 @@
 #' @importFrom flipStatistics Mean Sum WeightedTable
 #' @importFrom flipTransformations AsNumeric TextAsVector
 #' @importFrom flipU ConvertCommaSeparatedStringToVector
+#' @importFrom verbs Sum
 #' @export
 SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], weights = NULL, subset = NULL, category = NULL)
 {
@@ -47,14 +48,14 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 	if (isTRUE(attr(x, "questiontype") == "PickAny") ||
 	    isTRUE(attr(x, "questiontype") == "PickAnyGrid") || is.logical(x))
     {
-        if (sum(nchar(category), na.rm = TRUE))
+        if (Sum(nchar(category)))
             warning("Showing percentage selected (ignoring Category '",
                     category, "').")
         return(as_pct(Mean(x, weights = weights)))
     }
 
     # "Percentage" for numeric variable
-	if (is.numeric(x) && sum(nchar(category) > 0, na.rm = TRUE))
+	if (is.numeric(x) && Sum(nchar(category) > 0))
 	{
 		if (grepl("\\d+\\s*-\\s*\\d+", category))
 		{
@@ -70,7 +71,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 	}
 
     category.names <- levels(as.factor(x)) # only interested in labels so don't need to worry about values
-    if (sum(nchar(category), na.rm = TRUE) == 0)
+    if (Sum(nchar(category)) == 0)
         stop("Select one or more categories from \"", paste(category.names, collapse = "\", \""), "\".")
     category.selected <- ConvertCommaSeparatedStringToVector(as.character(category), text.qualifier = "\"")
     ind.not.selected <- which(!category.selected %in% category.names)

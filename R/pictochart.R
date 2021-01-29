@@ -54,8 +54,8 @@
 #' @param graphic.width.inch Horizontal dimension of the chart output in inches. If these dimensions are not specified, the width-to-height ratio of the chart output may not match the desired dimensions.
 #' @param graphic.height.inch Verical dimension of the chart output in inches.
 #' @keywords internal
-#' @importFrom  utils tail
-
+#' @importFrom utils tail
+#' @importFrom verbs Sum
 pictoChart <- function(x,
                        fill.image,
                        base.image = NA,
@@ -222,8 +222,8 @@ pictoChart <- function(x,
         icon.nrow <- apply(total.icons/icon.ncol.matrix, 1, function(x){ceiling(max(x))})
         layout.str <- paste("\"numCols\":", icon.ncol.matrix)
     }
-    tot.icon.nrow <- sum(icon.nrow)
-    tot.icon.ncol <- sum(icon.ncol)
+    tot.icon.nrow <- Sum(icon.nrow, remove.missing = FALSE)
+    tot.icon.ncol <- Sum(icon.ncol, remove.missing = FALSE)
 
     # Fill row/column labels with defaults
     if (!is.null(label.left) && is.na(label.left) && m == 1 && is.null(row.names(x)) && !is.null(names(x)))
@@ -302,12 +302,12 @@ pictoChart <- function(x,
 
         label.float.position <- sprintf("%.2f:%.2f", i.pos, j.pos)
         label.float.str <- sprintf("\"floatingLabels\":[{\"position\":\"%s\", \"text\":\"%s\",
-                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\": \"4em\", 
+                            \"font-size\":\"%fpx\",\"font-weight\":\"%s\", \"%s\": \"4em\",
                             \"font-family\":\"%s\", \"font-color\":\"%s\",
                             \"horizontal-align\":\"%s\", \"vertical-align\":\"center\"}],",
                             label.float.position, label.float.text,
-                            label.float.font.size, label.float.font.weight, pad.dir, 
-                            label.float.font.family, label.float.font.color, label.float.align.horizontal) 
+                            label.float.font.size, label.float.font.weight, pad.dir,
+                            label.float.font.family, label.float.font.color, label.float.align.horizontal)
     }
 
     # Calculate size of table cells
@@ -517,12 +517,12 @@ pictoChart <- function(x,
         row.height <- c(row.height, label.bottom.height)
     row.str <- apply(row.str, 1, paste, collapse = ",")
 
-    # Exact dimensions should not matter as long as aspect ratio is correct 
+    # Exact dimensions should not matter as long as aspect ratio is correct
     dim.str <- ""
     if (!is.na(graphic.width.inch) && !is.na(graphic.height.inch))
-        dim.str <- paste0("\"width\":", graphic.width.inch * graphic.resolution, 
+        dim.str <- paste0("\"width\":", graphic.width.inch * graphic.resolution,
                           ", \"height\":", graphic.height.inch * graphic.resolution, ",")
-    json.str <- paste("{", dim.str, 
+    json.str <- paste("{", dim.str,
              "\"background-color\":\"", background.color, "\",",
              "\"table\":{\"rowHeights\":[", paste(row.height, collapse = ","), "],",
              "\"rowGutterLength\":", pad.row, ",\"columnGutterLength\":", pad.col, ",",

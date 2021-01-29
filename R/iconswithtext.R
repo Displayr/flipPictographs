@@ -1,5 +1,6 @@
 # Similar to single picto but has more flexibility with text labels.
 # Arguments are designed to match with PrettyNumber
+#' @importFrom verbs Sum
 iconsWithText <- function (x,
                          total.icons = NA,
                          image = "star",
@@ -201,14 +202,14 @@ iconsWithText <- function (x,
     # padding format: top right bottom left
     pad.above.left <- pad.above.right <- pad.above.top <- pad.above.bottom <- 0
     pad.below.left <- pad.below.right <- pad.below.top <- pad.below.bottom <- 0
-    if (sum(nchar(text.above), na.rm = TRUE) > 0)
+    if (Sum(nchar(text.above)) > 0)
     {
         if (text.above.halign == "left")
             pad.above.left <- text.above.xpad
         if (text.above.halign == "right")
             pad.above.right <- text.above.xpad
     }
-    if (sum(nchar(text.below), na.rm = TRUE) > 0)
+    if (Sum(nchar(text.below)) > 0)
     {
         if (text.below.halign == "left")
             pad.below.left <- text.below.xpad
@@ -218,7 +219,7 @@ iconsWithText <- function (x,
     margin.left <- margin.left + max(0, -pad.above.left, -pad.below.left)
     margin.right <- margin.right + max(0, pad.above.right, pad.below.right)
 
-    if (sum(nchar(text.above), na.rm = TRUE) > 0)
+    if (Sum(nchar(text.above)) > 0)
         label.above.str <- sprintf(paste0(", \"table-header\":{\"padding\": \"%f %f %f %f\", ",
             "\"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\", ",
             "\"font-color\":\"%s\", \"font-weight\":\"%s\", ",
@@ -228,7 +229,7 @@ iconsWithText <- function (x,
             text.above, text.above.font.size, text.above.font.family,
             text.above.font.color, text.above.font.weight, text.above.halign)
 
-    if (sum(nchar(text.below), na.rm = TRUE) > 0)
+    if (Sum(nchar(text.below)) > 0)
         label.below.str <- sprintf(paste0(", \"table-footer\":{\"padding\": \"%f %f %f %f\", ",
             "\"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\", ",
             "\"font-color\":\"%s\", \"font-weight\":\"%s\", ",
@@ -238,7 +239,7 @@ iconsWithText <- function (x,
             text.below, text.below.font.size, text.below.font.family,
             text.below.font.color, text.below.font.weight, text.below.halign)
 
-    if (sum(nchar(text.overlay), na.rm = TRUE) > 0)
+    if (Sum(nchar(text.overlay)) > 0)
     {
         xpos <- if (text.overlay.halign == "left") 0
                 else if (text.overlay.halign == "right") number.cols
