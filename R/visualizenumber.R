@@ -94,7 +94,6 @@
 #' Otherwise fonts will be taken to be specified in pixels.
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config add_pie add_trace
-#' @importFrom verbs Sum
 #' @export
 #' @examples
 #' VisualizeNumber(4.0, display = "Rectangle", text.above = "Above", text.above.outside = TRUE)
@@ -537,7 +536,6 @@ getRightSpace <- function(annot)
         return(max(0.0, annot$xshift))
 }
 
-#' @importFrom verbs Sum
 isTextInside <- function(text, outside)
 {
     if (outside)

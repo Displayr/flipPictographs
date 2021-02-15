@@ -5,7 +5,7 @@
 #'   an observation in \code{x}.
 #' @param weights Sampling or replication weights. This is a numeric vector of the same length as \code{x}.
 #' @param category A comma-seperated list of the name or indices of the categories to include for 'Percentage'.
-#' @importFrom flipStatistics Mean Sum WeightedTable
+#' @importFrom flipStatistics Mean WeightedTable
 #' @importFrom flipTransformations AsNumeric TextAsVector
 #' @importFrom flipU ConvertCommaSeparatedStringToVector
 #' @importFrom verbs Sum
@@ -27,7 +27,8 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     if (grepl("Average", type) || grepl("Mean", type))
         return(Mean(AsNumeric(x, binary = FALSE), weights = weights))
     if (grepl("Sum", type))
-        return(Sum(AsNumeric(x, binary = FALSE), weights = weights))
+        return(Sum(x, weights = weights))
+
 
     # Convert QDate to Factors (Dates do not give sensible result for Average or Sum either way)
     if (!is.null(attr(x, "QDate")))
