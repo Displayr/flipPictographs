@@ -48,14 +48,14 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 	if (isTRUE(attr(x, "questiontype") == "PickAny") ||
 	    isTRUE(attr(x, "questiontype") == "PickAnyGrid") || is.logical(x))
     {
-        if (Sum(nchar(category)))
+        if (any(nzchar(category)))
             warning("Showing percentage selected (ignoring Category '",
                     category, "').")
         return(as_pct(Mean(x, weights = weights)))
     }
 
     # "Percentage" for numeric variable
-	if (is.numeric(x) && Sum(nchar(category) > 0))
+	if (is.numeric(x) && any(nzchar(category)))
 	{
 		if (grepl("\\d+\\s*-\\s*\\d+", category))
 		{
@@ -71,7 +71,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 	}
 
     category.names <- levels(as.factor(x)) # only interested in labels so don't need to worry about values
-    if (Sum(nchar(category)) == 0)
+    if (!any(nzchar(category)))
         stop("Select one or more categories from \"", paste(category.names, collapse = "\", \""), "\".")
     category.selected <- ConvertCommaSeparatedStringToVector(as.character(category), text.qualifier = "\"")
     ind.not.selected <- which(!category.selected %in% category.names)

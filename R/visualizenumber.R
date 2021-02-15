@@ -321,7 +321,7 @@ VisualizeNumber <- function(x,
     {
         if (!is.numeric(x) || !is.finite(x))
             stop("Input data is non-numeric")
-        if (Sum(nchar(base.color)) == 0)
+        if (!any(nzchar(base.color)))
             base.color <- rgb(230, 230, 230, maxColorValue = 255)
         if (is.na(maximum.value))
             maximum.value <- 1
@@ -405,7 +405,7 @@ VisualizeNumber <- function(x,
                            xshift = label.data.xpad, yshift = label.data.pad, yanchor = data.yanchor)
     if (display == "bar" && label.data.halign == "right")
         annot.data$x <- prop
-    if (Sum(nchar(hover.text)) > 0)
+    if (any(nzchar(hover.text)))
         annot.data$hovertext <- hover.text
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
@@ -483,7 +483,7 @@ VisualizeNumber <- function(x,
 setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
     outside = NA, yshift = 0, xshift = 0, yanchor = NA, xmax = 1.0)
 {
-    if (Sum(nchar(text)) == 0)
+    if (!any(nzchar(text)))
         return (NULL)
 
     xpos <- switch(xalign, left = 0.0, center = xmax/2, right = xmax)
@@ -542,7 +542,7 @@ isTextInside <- function(text, outside)
 {
     if (outside)
         return(FALSE)
-    if (Sum(nchar(text)) == 0)
+    if (!any(nzchar(text)))
         return(FALSE)
     return(TRUE)
 }
