@@ -320,7 +320,7 @@ VisualizeNumber <- function(x,
     {
         if (!is.numeric(x) || !is.finite(x))
             stop("Input data is non-numeric")
-        if (sum(nchar(base.color), na.rm = TRUE) == 0)
+        if (!any(nzchar(base.color)))
             base.color <- rgb(230, 230, 230, maxColorValue = 255)
         if (is.na(maximum.value))
             maximum.value <- 1
@@ -404,7 +404,7 @@ VisualizeNumber <- function(x,
                            xshift = label.data.xpad, yshift = label.data.pad, yanchor = data.yanchor)
     if (display == "bar" && label.data.halign == "right")
         annot.data$x <- prop
-    if (sum(nchar(hover.text), na.rm = TRUE) > 0)
+    if (any(nzchar(hover.text)))
         annot.data$hovertext <- hover.text
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
@@ -482,7 +482,7 @@ VisualizeNumber <- function(x,
 setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
     outside = NA, yshift = 0, xshift = 0, yanchor = NA, xmax = 1.0)
 {
-    if (sum(nchar(text), na.rm = TRUE) == 0)
+    if (!any(nzchar(text)))
         return (NULL)
 
     xpos <- switch(xalign, left = 0.0, center = xmax/2, right = xmax)
@@ -507,6 +507,7 @@ setText <- function(text, yalign, xalign, font, font.weight,    # parameters alw
                 xanchor = xalign, yanchor = yanchor))
 }
 
+#' @importFrom verbs Sum
 getVerticalSpace <- function(annot, direction = "any")
 {
     if (is.null(annot))
@@ -515,7 +516,7 @@ getVerticalSpace <- function(annot, direction = "any")
         return(0.0)
     if (direction == "bottom" && (annot$yshift > 0 || annot$y > 0))
         return(0.0)
-    nline <- sum(gregexpr("<br>", annot$text)[[1]] > -1) + 1
+    nline <- Sum(gregexpr("<br>", annot$text)[[1]] > -1, remove.missing = FALSE) + 1
     return (abs(annot$yshift) + (annot$font$size * nline) + 5)
 }
 
@@ -539,7 +540,7 @@ isTextInside <- function(text, outside)
 {
     if (outside)
         return(FALSE)
-    if (sum(nchar(text), na.rm = TRUE) == 0)
+    if (!any(nzchar(text)))
         return(FALSE)
     return(TRUE)
 }

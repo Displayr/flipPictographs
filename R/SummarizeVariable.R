@@ -5,9 +5,10 @@
 #'   an observation in \code{x}.
 #' @param weights Sampling or replication weights. This is a numeric vector of the same length as \code{x}.
 #' @param category A comma-seperated list of the name or indices of the categories to include for 'Percentage'.
-#' @importFrom flipStatistics Mean Sum WeightedTable
+#' @importFrom flipStatistics Mean WeightedTable
 #' @importFrom flipTransformations AsNumeric TextAsVector
 #' @importFrom flipU ConvertCommaSeparatedStringToVector
+#' @importFrom verbs Sum
 #' @export
 SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], weights = NULL, subset = NULL, category = NULL)
 {
@@ -26,7 +27,8 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
     if (grepl("Average", type) || grepl("Mean", type))
         return(Mean(AsNumeric(x, binary = FALSE), weights = weights))
     if (grepl("Sum", type))
-        return(Sum(AsNumeric(x, binary = FALSE), weights = weights))
+        return(Sum(x, weights = weights))
+
 
     # Convert QDate to Factors (Dates do not give sensible result for Average or Sum either way)
     if (!is.null(attr(x, "QDate")))
@@ -47,14 +49,14 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 	if (isTRUE(attr(x, "questiontype") == "PickAny") ||
 	    isTRUE(attr(x, "questiontype") == "PickAnyGrid") || is.logical(x))
     {
-        if (sum(nchar(category), na.rm = TRUE))
+        if (any(nzchar(category)))
             warning("Showing percentage selected (ignoring Category '",
                     category, "').")
         return(as_pct(Mean(x, weights = weights)))
     }
 
     # "Percentage" for numeric variable
-	if (is.numeric(x) && sum(nchar(category) > 0, na.rm = TRUE))
+	if (is.numeric(x) && any(nzchar(category)))
 	{
 		if (grepl("\\d+\\s*-\\s*\\d+", category))
 		{
@@ -70,7 +72,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 	}
 
     category.names <- levels(as.factor(x)) # only interested in labels so don't need to worry about values
-    if (sum(nchar(category), na.rm = TRUE) == 0)
+    if (!any(nzchar(category)))
         stop("Select one or more categories from \"", paste(category.names, collapse = "\", \""), "\".")
     category.selected <- ConvertCommaSeparatedStringToVector(as.character(category), text.qualifier = "\"")
     ind.not.selected <- which(!category.selected %in% category.names)
