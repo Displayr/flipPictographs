@@ -94,6 +94,7 @@
 #' Otherwise fonts will be taken to be specified in pixels.
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config add_pie add_trace
+#' @importFrom janitor round_half_up
 #' @export
 #' @examples
 #' VisualizeNumber(4.0, display = "Rectangle", text.above = "Above", text.above.outside = TRUE)
@@ -245,10 +246,16 @@ VisualizeNumber <- function(x,
     if (is.na(x) || is.null(x))
         label.str <- "NA"
     else
+    {
+        if (!is.numeric(x))
+            x.round <- x
+        else
+            x.round <- as.numeric(round_half_up(if (is.percent) x * 100 else x, label.data.decimals))
         label.str <- paste0(label.data.prefix,
-        formatC(if (is.percent) x * 100 else x, format = tmp.format,
+        formatC(x.round, format = tmp.format,
             digits = label.data.decimals, big.mark = label.data.1000.separator),
         tmp.percent, label.data.suffix)
+    }
     if (is.na(x) || is.null(x))
         x <- 0
 

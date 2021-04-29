@@ -1,7 +1,7 @@
 Package: flipPictographs
 Type: Package
 Title: Pictograph htmlwidgets
-Version: 1.1.4
+Version: 1.1.5
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Wrappers for the rhtmlPictographs package, using the flip project conventions.
@@ -19,6 +19,7 @@ Imports:
     flipU,
     plotly,
     httr,
+    janitor,
     png,
     jpeg,
     bmp,
