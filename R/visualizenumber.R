@@ -247,7 +247,7 @@ VisualizeNumber <- function(x,
         label.str <- "NA"
     else
     {
-        if (!is.numeric(x))
+        if (!is.numeric(x) || label.data.number.type == "Scientific")
             x.round <- x
         else
             x.round <- as.numeric(round_half_up(if (is.percent) x * 100 else x, label.data.decimals))
