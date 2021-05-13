@@ -279,8 +279,8 @@ iconsWithText <- function (x,
 cleanPictographLabels <- function(x)
 {
     # New line characters were causing errors in the JSON
-    # Errors are now fixed but new lines are shown as spaces by rhtmlPictograph
-    x <- gsub("\n", "\\\\n", x)
+    # Note these can be coded as \n or \r
+    x <- gsub("\\s", " ", x)
 
     # These characters used to be shown as text but that is
     # probably not what the user wants to see
