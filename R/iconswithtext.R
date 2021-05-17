@@ -273,7 +273,9 @@ iconsWithText <- function (x,
 
     if (print.config)
         cat(json.string)
-    graphic(json.string)
+    res <- graphic(json.string)
+    class(res) <- c(class(res), "visualization-selector")
+    return(res)
 }
 
 cleanPictographLabels <- function(x)

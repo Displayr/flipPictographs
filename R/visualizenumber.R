@@ -483,8 +483,9 @@ VisualizeNumber <- function(x,
 
     p <- config(p, displayModeBar = FALSE)
     p$sizingPolicy$browser$padding <- 0
+    class(p) <- c(class(p), "visualization-selector")
     attr(p, "can-run-in-root-dom") <- TRUE
-    p
+    return(p)
 }
 
 setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
