@@ -226,7 +226,7 @@ iconsWithText <- function (x,
             "\"horizontal-align\":\"%s\", \"vertical-align\":\"top\"}"),
             margin.top + 1, margin.right - pad.above.right + 1,
             max(0, text.above.pad) + 1, margin.left + pad.above.left + 1,
-            text.above, text.above.font.size, text.above.font.family,
+            cleanPictographLabels(text.above), text.above.font.size, text.above.font.family,
             text.above.font.color, text.above.font.weight, text.above.halign)
 
     if (any(nzchar(text.below)))
@@ -236,7 +236,7 @@ iconsWithText <- function (x,
             "\"horizontal-align\":\"%s\", \"vertical-align\":\"bottom\"}"),
             max(text.below.pad, 0) + 1, margin.right - pad.below.right + 1,
             margin.bottom + 1, margin.left + pad.below.left + 1,
-            text.below, text.below.font.size, text.below.font.family,
+            cleanPictographLabels(text.below), text.below.font.size, text.below.font.family,
             text.below.font.color, text.below.font.weight, text.below.halign)
 
     if (any(nzchar(text.overlay)))
@@ -250,7 +250,7 @@ iconsWithText <- function (x,
         label.overlay.str <- sprintf(paste0(",\"floatingLabels\":[{\"position\":\"%f:%f\", ",
           "\"text\":\"%s\", \"font-size\":\"%fpx\", \"font-family\":\"%s\", ",
           "\"font-color\":\"%s\", \"font-weight\":\"%s\", \"horizontal-align\":\"%s\"}]"),
-          ypos, xpos, text.overlay, text.overlay.font.size, text.overlay.font.family,
+          ypos, xpos, cleanPictographLabels(text.overlay), text.overlay.font.size, text.overlay.font.family,
           text.overlay.font.color, text.overlay.font.weight, text.overlay.halign)
     }
 
@@ -269,7 +269,6 @@ iconsWithText <- function (x,
           ",\"variableImage\":\"", variable.image, "\"", base.image.str, "}}]]}",
           label.above.str, label.below.str,
           ",\"background-color\":\"", background.color, "\"}")
-    json.string <- cleanPictographLabels(json.string)
 
     if (print.config)
         cat(json.string)
@@ -288,5 +287,6 @@ cleanPictographLabels <- function(x)
     # probably not what the user wants to see
     x <- gsub("<br>", "\\\\n", x)
     x <- gsub("&nbsp;", " ", x)
+    x <- gsub('"', '\\"', x, fixed = TRUE)
     return(x)
 }

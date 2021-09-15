@@ -27,8 +27,11 @@ test_that("VisualizeNumber",
                     label.data.number.type = "Percentage",
                     maximum.value = ParseText("100%"),
                     minimum.value = ParseText("-100%")), NA)
-
-
+    expect_error(VisualizeNumber(0.46, display = "Pictograph (single icon)",
+                    maximum.value = 1.0, text.below = "\"ABC\""), NA)
+    expect_error(VisualizeNumber(0.46, display = "Pictograph (single icon)",
+                    maximum.value = 1.0, label.data.number.type = "Percentage",
+                    label.data.prefix = "\"", label.data.suffix = "\""), NA)
 })
 
 # This is QTable with the Base n statistic
