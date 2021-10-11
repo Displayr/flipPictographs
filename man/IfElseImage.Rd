@@ -21,8 +21,10 @@ IfElseImage(
 Conditionally shows an image as a htmlwidget
 }
 \examples{
+#'\dontrun{
 IfElseImage(TRUE)
 IfElseImage(3 < 2,
             "https://displayrcors.displayr.com/images/thumbsup_grey.svg",
             "https://displayrcors.displayr.com/images/thumbsdown_grey.svg")
+}
 }

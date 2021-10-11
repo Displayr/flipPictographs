@@ -5,10 +5,12 @@
 #' @param true.image URL to image (jpeg, png or svg) to be shown when \code{condition} is \code{TRUE}.
 #' @param false.image URL to image (jpeg, png or svg) to be shown when \code{condition} is \code{FALSE}.
 #' @examples
+#' #'\dontrun{
 #' IfElseImage(TRUE)
 #' IfElseImage(3 < 2,
 #'             "https://displayrcors.displayr.com/images/thumbsup_grey.svg",
 #'             "https://displayrcors.displayr.com/images/thumbsdown_grey.svg")
+#' }
 #' @export
 
 IfElseImage <- function(condition,
