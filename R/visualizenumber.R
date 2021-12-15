@@ -479,7 +479,7 @@ VisualizeNumber <- function(x,
                  hoverlabel = list(bgcolor = hover.bg.color, bordercolor = hover.bg.color,
                               font = list(color = hover.font.color, size = hover.font.size,
                               family = hover.font.family)),
-                 hovermode = "closest", hoverdistance = hover.distance)
+                 hovermode = "closest", hoverdistance = hover.distance, autosize = TRUE)
 
     p <- config(p, displayModeBar = FALSE, responsive = TRUE)
     p$sizingPolicy$browser$padding <- 0
