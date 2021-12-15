@@ -481,7 +481,7 @@ VisualizeNumber <- function(x,
                               family = hover.font.family)),
                  hovermode = "closest", hoverdistance = hover.distance)
 
-    p <- config(p, displayModeBar = FALSE)
+    p <- config(p, displayModeBar = FALSE, responsive = TRUE)
     p$sizingPolicy$browser$padding <- 0
     class(p) <- c(class(p), "visualization-selector")
     attr(p, "can-run-in-root-dom") <- TRUE
