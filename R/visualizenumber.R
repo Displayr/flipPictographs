@@ -170,7 +170,7 @@ VisualizeNumber <- function(x,
                          background.color = rgb(1, 1, 1),
                          background.opacity = 0,
                          hover.text = "",
-                         hover.distance = -1,
+                         hover.distance = 0.2,
                          hover.bg.color = rgb(0.5,0.5,0.5),
                          hover.font.color = rgb(1,1,1),
                          hover.font.size = 9,
@@ -412,7 +412,10 @@ VisualizeNumber <- function(x,
     if (display == "bar" && label.data.halign == "right")
         annot.data$x <- prop
     if (any(nzchar(hover.text)))
-        annot.data$hovertext <- hover.text
+        p <- add_trace(p, type = "scatter", mode = "markers", x = annot.data$x, y = annot.data$y,
+                       hoverinfo = "text", hovertext = hover.text, values = NULL, textinfo = NULL,
+                       marker = list(color="transparent", size = max(annot.data$xshift, annot.data$yshift) +
+                       annot.data$font$size))
 
     if (isTRUE(data.yanchor == "middle") && isTextInside(text.above, text.above.outside))
         text.above.pad <- text.above.pad + (getVerticalSpace(annot.data))/2
