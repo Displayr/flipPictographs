@@ -241,7 +241,8 @@ VisualizeNumber <- function(x,
 
     # Construct formatted string of x
     is.percent <- (grepl("^Percentage", label.data.number.type)) # includes "Percentage (no sign)"
-    tmp.percent <- if (label.data.number.type == "Percentage") "%" else ""
+    suffix.doesnt.use.percent <- !any(grepl("%", label.data.suffix))
+    tmp.percent <- if (label.data.number.type == "Percentage" && suffix.doesnt.use.percent) "%"
     tmp.format <- if (label.data.number.type == "Scientific") "e" else "f"
     if (is.na(x) || is.null(x))
         label.str <- "NA"
