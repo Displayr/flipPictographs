@@ -6,19 +6,8 @@
 getWidthHeightRatio <- function(image.url)
 {
    # Download custom image to compute width-height ratio
-    response <- try(GET(image.url), silent = TRUE)
-    if (inherits(response, "try-error"))
-        stop("Could not retrieve image from '", image.url, "'. Check that url is correct.")
-    if(response$status_code != 200)
-        stop("Error (status code ", response$status_code, ") retrieving image ", image.url)
+    response <- getImage(image.url)
     tmp.type <- response$headers$'content-type'
-    if (any(grepl("text/html", tmp.type, fixed = TRUE)))
-        stop("The url content type is 'text/html'. Ensure the image url is correct and not redirected.")
-    # Give warning because sometimes chrome can fix this, but will show as blank in IE
-    unknown.type <- !any(grepl("image", tmp.type, fixed = TRUE))
-    if (unknown.type)
-        warning("URL content type is '", tmp.type,
-        "'. This may not display properly in all browsers.")
 
     whratio <- NA
     if (grepl("svg", tmp.type))
@@ -77,4 +66,28 @@ getWidthHeightRatio <- function(image.url)
             warning("Could not determine width-height ratio from image. Defaulting to 1.\n")
     }
     return(whratio)
+}
+
+getImage <- function(image.url)
+{
+    response <- try(GET(image.url), silent = TRUE)
+    if (inherits(response, "try-error"))
+        stop("Could not retrieve image from '", image.url, "'. Check that url is correct.")
+    if(response$status_code != 200)
+        stop("Error (status code ", response$status_code, ") retrieving image ", image.url)
+    tmp.type <- response$headers$'content-type'
+    if (any(grepl("text/html", tmp.type, fixed = TRUE)))
+        stop("The url content type is 'text/html'. Ensure the image url is correct and not redirected.")
+    # Give warning because sometimes chrome can fix this, but will show as blank in IE
+    unknown.type <- !any(grepl("image", tmp.type, fixed = TRUE))
+    if (unknown.type)
+        warning("URL content type is '", tmp.type,
+                "'. This may not display properly in all browsers.")
+    response
+}
+
+checkImageUrl <- function(image.url)
+{
+    getImage(image.url)
+    invisible()
 }

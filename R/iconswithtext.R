@@ -171,7 +171,14 @@ iconsWithText <- function (x,
     {
         if (nchar(base.icon.color) > 0)
             base.icon.color <- paste(base.icon.color, ":", sep="")
-        base.image.url <- if (is.custom.url) base.image else imageURL[image]
+        base.image.url <- if (is.custom.url)
+        {
+            checkImageUrl(base.image)
+            base.image
+        }
+        else
+            imageURL[image]
+
         base.image.str <- if (nchar(base.image.url) == 0 && is.custom.url) ""
                           else paste(",\"baseImage\":\"", image.type, ":", base.icon.color, base.image.url, "\"", sep="")
     }
@@ -283,9 +290,11 @@ cleanPictographLabels <- function(x)
     # Note these can be coded as \n or \r
     x <- gsub("\\s", " ", x)
 
+    # Escape backslashes in labels
+    x <- gsub("\\", "\\\\", x, fixed = TRUE)
+
     # These characters used to be shown as text but that is
     # probably not what the user wants to see
-    x <- gsub("<br>", "\\\\n", x)
     x <- gsub("&nbsp;", " ", x)
     x <- gsub('"', '\\"', x, fixed = TRUE)
     return(x)

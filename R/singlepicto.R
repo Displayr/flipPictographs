@@ -211,7 +211,13 @@ SinglePicto <- function (x,
     {
         if (nchar(base.icon.color) > 0)
             base.icon.color <- paste(base.icon.color, ":", sep="")
-        base.image.url <- if (is.custom.url) base.image else imageURL[image]
+        base.image.url <- if (is.custom.url)
+        {
+            checkImageUrl(base.image)
+            base.image
+        }
+        else
+            imageURL[image]
         base.image.str <- if (nchar(base.image.url) == 0 && is.custom.url) ""
                           else paste(",\"baseImage\":\"", image.type, ":", base.icon.color, base.image.url, "\"", sep="")
     }
