@@ -290,12 +290,14 @@ cleanPictographLabels <- function(x)
     # Note these can be coded as \n or \r
     x <- gsub("\\s", " ", x)
 
-    # Escape backslashes in labels
-    x <- gsub("\\", "\\\\")
+    # Escape backslashes in labels. Why do we need so many slashes?
+    # If a user inputs a single backslash (\) in a text control,
+    # this becomes the R string "\\". We need to replace this with "\\\\"
+    # for the JSON string, which is done using the line below:
+    x <- gsub("\\\\", "\\\\\\\\", x)
 
     # These characters used to be shown as text but that is
     # probably not what the user wants to see
-    x <- gsub("<br>", "\\\\n", x)
     x <- gsub("&nbsp;", " ", x)
     x <- gsub('"', '\\"', x, fixed = TRUE)
     return(x)
