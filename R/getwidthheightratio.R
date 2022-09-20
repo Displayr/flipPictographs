@@ -62,8 +62,7 @@ getWidthHeightRatio <- function(image.url)
     if (is.null(whratio) || is.na(whratio))
     {
         whratio <- 1
-        if (!unknown.type)
-            warning("Could not determine width-height ratio from image. Defaulting to 1.\n")
+        warning("Could not determine width-height ratio from image. Defaulting to 1.\n")
     }
     return(whratio)
 }

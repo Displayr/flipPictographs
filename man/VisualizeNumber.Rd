@@ -68,7 +68,7 @@ VisualizeNumber(
   background.color = rgb(1, 1, 1),
   background.opacity = 0,
   hover.text = "",
-  hover.distance = -1,
+  hover.distance = 0.2,
   hover.bg.color = rgb(0.5, 0.5, 0.5),
   hover.font.color = rgb(1, 1, 1),
   hover.font.size = 9,
