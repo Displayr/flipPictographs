@@ -73,7 +73,7 @@ SinglePicto(
 
 \item{hide.base.image}{Set to \code{TRUE} to use blank background instead of base image.}
 
-\item{fill.direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).}
+\item{fill.direction}{Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom","radial"}).}
 
 \item{fill.icon.color}{Color of the filled icons. Only applicable for built-in icons.}
 

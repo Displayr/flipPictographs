@@ -15,7 +15,7 @@
 #' @param number.cols Maximum number of icons in each column. Overrides \code{number.rows} and \code{width.height.ratio}.
 #' @param width.height.ratio Width to height ratio of pictograph if \code{layout == "Width-to-height ratio"}.
 #' @param hide.base.image Set to \code{TRUE} to use blank background instead of base image.
-#' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom"}).
+#' @param fill.direction Direction in which pictograph is filled (one of \code{"fromleft","fromright","fromtop","frombottom","radial"}).
 #' @param fill.icon.color Color of the filled icons. Only applicable for built-in icons.
 #' @param base.icon.color Color of the unfilled icons when \code{hide.base.image == FALSE}. Defaults to grey (#CCCCCC). Only applicable for built-in icons.
 #' @param background.color Color of the graphic background
