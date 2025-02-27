@@ -16,7 +16,7 @@ Imports:
     flipTables (>= 2.7.1),
     flipStatistics,
     flipTransformations (>= 1.10.0),
-    flipU,
+    flipU (>= 1.6.2),
     plotly,
     httr,
     janitor,
@@ -34,5 +34,5 @@ Remotes:
     Displayr/flipU,
     Displayr/verbs,
     Displayr/flipExampleData
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.2
 Encoding: UTF-8
