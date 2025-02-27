@@ -45,6 +45,7 @@
 #' @param print.config If set to \code{TRUE}, the JSON string used to generate pictograph will be printed to standard output. This is useful for debugging.
 #' @param x.limit Upper limit of x above which \code{scale} is automatically calculated. This can be set to \code{NA}, but may cause slowness or freezing when the user inputs a large \code{x}.
 #' @importFrom  rhtmlPictographs graphic
+#' @importFrom flipU StopForUserError
 #' @examples
 #' xx <- 4
 #' SinglePicto(xx)
@@ -97,19 +98,19 @@ SinglePicto <- function (x,
                          x.limit = 1000)
 {
     if (!(length(x) == 1 && x >= 0))
-        stop("Input data must be a single positive number\n")
+        StopForUserError("Input data must be a single positive number\n")
     if (scale <= 0 && is.na(maximum.value))
-        stop("Scale must be greater than zero\n")
+        StopForUserError("Scale must be greater than zero\n")
     if (!is.na(maximum.value) && scale != 1)
         warning("Parameter scale overridden by maximum value\n")
     if (!is.na(total.icons) && total.icons <= 0)
-        stop("Total icons must be greater than zero\n")
+        StopForUserError("Total icons must be greater than zero\n")
     if (!is.na(maximum.value))
     {
         if (maximum.value <= 0)
-            stop("Maximum value must be greater than zero\n")
+            StopForUserError("Maximum value must be greater than zero\n")
         if (maximum.value < x)
-            stop("Input data must be smaller than or equal to maximum value\n")
+            StopForUserError("Input data must be smaller than or equal to maximum value\n")
         if (is.na(total.icons))
             total.icons <- maximum.value
         scale <- maximum.value/total.icons
@@ -164,21 +165,21 @@ SinglePicto <- function (x,
     if (is.na(total.icons))
         total.icons <- ceiling(x)
     if (length(total.icons) != 1 && total.icons > 0)
-        stop("The total icons must be a single numeric value and greater than zero\n")
+        StopForUserError("The total icons must be a single numeric value and greater than zero\n")
     if (!is.na(number.rows) && (number.rows <= 0 || number.rows != ceiling(number.rows)))
-        stop("The number of rows must be a positive integer\n")
+        StopForUserError("The number of rows must be a positive integer\n")
     if (!is.na(number.cols) && (number.cols <= 0 || number.cols != ceiling(number.cols)))
-        stop("The number of columns must be a positive integer\n")
+        StopForUserError("The number of columns must be a positive integer\n")
     if (width.height.ratio <= 0)
-        stop("The width-height ratio must be greater than zero\n")
+        StopForUserError("The width-height ratio must be greater than zero\n")
     if (icon.width <= 0)
-        stop("icon width must be greater than zero\n")
+        StopForUserError("icon width must be greater than zero\n")
 
     prop <- x/total.icons
     if (prop < 0 | prop > 1)
-        stop("Input data must be between 0 and total icons\n")
+        StopForUserError("Input data must be between 0 and total icons\n")
     if (round(total.icons) != total.icons)
-        stop("The number of total icons must be an integer\n")
+        StopForUserError("The number of total icons must be an integer\n")
 
     # Determine layout based on which parameters are supplied
     layout.str <- ""

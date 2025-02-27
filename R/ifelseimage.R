@@ -11,6 +11,7 @@
 #'             "https://displayrcors.displayr.com/images/thumbsup_grey.svg",
 #'             "https://displayrcors.displayr.com/images/thumbsdown_grey.svg")
 #' }
+#' @importFrom flipU StopForUserError
 #' @export
 
 IfElseImage <- function(condition,
@@ -18,7 +19,7 @@ IfElseImage <- function(condition,
                     false.image = "https://displayrcors.displayr.com/images/downarrow_grey.svg")
 {
     if (is.na(condition) || !is.logical(condition))
-        stop("Parameter 'condition' should be TRUE or FALSE.")
+        StopForUserError("Parameter 'condition' should be TRUE or FALSE.")
 
     image <- if (condition) true.image else false.image
     SinglePicto(1, 1, is.custom.url = TRUE, image = image, auto.size = TRUE)

@@ -56,6 +56,7 @@
 #' @keywords internal
 #' @importFrom utils tail
 #' @importFrom verbs Sum
+#' @importFrom flipU StopForUserError
 pictoChart <- function(x,
                        fill.image,
                        base.image = NA,
@@ -170,21 +171,21 @@ pictoChart <- function(x,
     if (is.na(width.height.ratio))
         width.height.ratio <- 1
     if (any(total.icons != ceiling(total.icons)))
-        stop("Total icons must be a whole number\n")
+        StopForUserError("Total icons must be a whole number\n")
     if (any(total.icons <= 0))
-        stop("Total icons must be greater than zero\n")
+        StopForUserError("Total icons must be greater than zero\n")
     if (length(total.icons) != 1 && length(total.icons) != length(x))
-        stop("total.icons must be either a single integer or a matrix with the same dimensions as x\n")
+        StopForUserError("total.icons must be either a single integer or a matrix with the same dimensions as x\n")
     if (all(total.icons == 0))
-        stop("No non-zero entries in total.icons\n")
+        StopForUserError("No non-zero entries in total.icons\n")
     if (length(icon.nrow) != 1 && length(icon.nrow) != n)
-        stop("icon.nrow should be a single integer or a vector of length ", n, "\n")
+        StopForUserError("icon.nrow should be a single integer or a vector of length ", n, "\n")
     if (length(icon.ncol) != 1 && length(icon.ncol) != m)
-        stop("icon.ncol should be a single integer or a vector of length ", m, "\n")
+        StopForUserError("icon.ncol should be a single integer or a vector of length ", m, "\n")
     if (pad.icon.row < 0 || pad.icon.row >= 1)
-        stop("pad.icon.row must be smaller than 1 and greater or equal to 0\n")
+        StopForUserError("pad.icon.row must be smaller than 1 and greater or equal to 0\n")
     if (pad.icon.col < 0 || pad.icon.col >= 1)
-        stop("pad.icon.col must be smaller than 1 and greater or equal to 0\n")
+        StopForUserError("pad.icon.col must be smaller than 1 and greater or equal to 0\n")
 
     total.icons <- matrix(total.icons, nrow=n, ncol=m)
     prop <- as.vector(unlist(x))/unlist(total.icons)
@@ -197,9 +198,9 @@ pictoChart <- function(x,
 
     # Scale has already been checked for non-negativity in pictographchart
     if (any(prop < 0))
-        stop("Input data cannot be negative\n")
+        StopForUserError("Input data cannot be negative\n")
     if (any(prop > 1))
-        stop("Input data is too large. Try increasing the scale or total icons\n")
+        StopForUserError("Input data is too large. Try increasing the scale or total icons\n")
 
     # Determine layout
     layout.str <- ""
@@ -250,18 +251,18 @@ pictoChart <- function(x,
         sublabel.right <- NULL
 
     if (!is.null(label.left) && length(label.left) != n)
-        stop("label.left must be of length ", n, "\n")
+        StopForUserError("label.left must be of length ", n, "\n")
     if (!is.null(label.right) && length(label.right) != n)
-        stop("label.right must be of length ", n, "\n")
+        StopForUserError("label.right must be of length ", n, "\n")
     if (!is.null(label.top) && length(label.top) != m)
-        stop("label.top must be of length ", m, "\n")
+        StopForUserError("label.top must be of length ", m, "\n")
     if (!is.null(label.bottom) && length(label.bottom) != m)
-        stop("label.bottom must be of length ", m, "\n")
+        StopForUserError("label.bottom must be of length ", m, "\n")
 
     if (length(row.height) !=  1 && length(row.height) !=  n)
-        stop("row.height must be of length 1 or ", n, "\n")
+        StopForUserError("row.height must be of length 1 or ", n, "\n")
     if (length(column.width) !=  1 && length(column.width) != m)
-        stop ("column.width must be of length 1 or ", m, "\n")
+        StopForUserError("column.width must be of length 1 or ", m, "\n")
 
 
     fill.icon.color.str <- ifelse(nchar(fill.icon.color) > 0, paste(fill.icon.color, ":", sep = ""), "")

@@ -67,16 +67,17 @@ getWidthHeightRatio <- function(image.url)
     return(whratio)
 }
 
+#' @importFrom flipU StopForUserError
 getImage <- function(image.url)
 {
     response <- try(GET(image.url), silent = TRUE)
     if (inherits(response, "try-error"))
-        stop("Could not retrieve image from '", image.url, "'. Check that url is correct.")
+        StopForUserError("Could not retrieve image from '", image.url, "'. Check that url is correct.")
     if(response$status_code != 200)
-        stop("Error (status code ", response$status_code, ") retrieving image ", image.url)
+        StopForUserError("Error (status code ", response$status_code, ") retrieving image ", image.url)
     tmp.type <- response$headers$'content-type'
     if (any(grepl("text/html", tmp.type, fixed = TRUE)))
-        stop("The url content type is 'text/html'. Ensure the image url is correct and not redirected.")
+        StopForUserError("The url content type is 'text/html'. Ensure the image url is correct and not redirected.")
     # Give warning because sometimes chrome can fix this, but will show as blank in IE
     unknown.type <- !any(grepl("image", tmp.type, fixed = TRUE))
     if (unknown.type)

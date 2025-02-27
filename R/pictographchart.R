@@ -46,6 +46,7 @@
 #' @importFrom stats median
 #' @importFrom flipChartBasics ChartColors
 #' @importFrom rhtmlPictographs graphic
+#' @importFrom flipU StopForUserError
 #' @examples
 #' xx <- c(First = 3, Second = 6, Third=2)
 #' PictographChart(xx, image="circle", mode="bar")
@@ -143,7 +144,7 @@ PictographChart <- function(x,
     label.data.text = NULL
 
     if (!is.numeric(unlist(x)))
-        stop("Input data must be numeric")
+        StopForUserError("Input data must be numeric")
 
     if (label.data.type != "None")
         show.label.data <- TRUE
@@ -283,11 +284,9 @@ PictographChart <- function(x,
     {
         err.msg <- ifelse(is.null(attr(x,"questions")), "x has too many dimensions\n",
                           "Input table should only contain one statistic per cell\n")
-        stop(err.msg)
+        StopForUserError(err.msg)
     }
     x <- as.matrix(x)
-    #if (!is.atomic(x) && !is.table(x) && !is.matrix(x) && !is.data.frame(x) && !is.array(x))
-    #    stop(paste("x must be a vector, matrix, data.frame or array"))
 
     # Reshaping arrays/matrices and removing unwanted rows/columns
     if (mode == "column")
@@ -296,13 +295,13 @@ PictographChart <- function(x,
             icon.ncol <- 1
         icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Input data should be a one-dimensional table or a numeric vector")
+            StopForUserError("Input data should be a one-dimensional table or a numeric vector")
         if (is.null(rownames(x)) && is.null(colnames(x)))
-            stop("Input data should have row or column names")
+            StopForUserError("Input data should have row or column names")
         if (ncol(x) == 1 && (nrow(x) > 1 || is.null(colnames(x))))
             x <- t(x)
         if (nrow(x) > 1)
-            stop("Input data should be a one-dimensional table or a numeric vector")
+            StopForUserError("Input data should be a one-dimensional table or a numeric vector")
     }
     if (mode == "bar")
     {
@@ -311,13 +310,13 @@ PictographChart <- function(x,
         else
             icon.nrow <- NA
         if (!is.null(dim(x)) && min(dim(x)) > 1)
-            stop("Input data should be a one-dimensional table or a numeric vector")
+            StopForUserError("Input data should be a one-dimensional table or a numeric vector")
         if (is.null(rownames(x)) && is.null(colnames(x)))
-            stop("Input data should have row or column names")
+            StopForUserError("Input data should have row or column names")
         if (nrow(x) == 1 && (ncol(x) > 1 || is.null(rownames(x))))
             x <- t(x)
         if (ncol(x) > 1)
-            stop("Input data should be a one-dimensional table or a numeric vector")
+            StopForUserError("Input data should be a one-dimensional table or a numeric vector")
     }
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
 
@@ -335,7 +334,7 @@ PictographChart <- function(x,
     #if (is.na(scale) && max(x) <=  1)
     #    scale <- 10^{round(log10(median(x)))}
     if (scale <= 0)
-        stop("Scale must be greater than zero\n")
+        StopForUserError("Scale must be greater than zero\n")
 
     if (all(is.na(total.icons)))
         total.icons <- ceiling(max(x)/scale)
@@ -515,7 +514,7 @@ PictographChart <- function(x,
 
         c.hex <- c.hex[1:c.length]
         if (any(is.na(c.hex)))
-            stop("Unknown color palette specified")
+            StopForUserError("Unknown color palette specified")
     }
     c.hex <- matrix(c.hex, n, m, byrow = !table.by.row)
     if (is.na(legend.icon.color))
@@ -601,5 +600,3 @@ PictographChart <- function(x,
     }
     return(graphic(json))
 }
-
-

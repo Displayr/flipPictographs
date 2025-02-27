@@ -95,6 +95,7 @@
 #' @param ... Other parameters passed to \code{iconWithText}.
 #' @importFrom plotly plot_ly layout toRGB config add_pie add_trace
 #' @importFrom janitor round_half_up
+#' @importFrom flipU StopForUserError
 #' @export
 #' @examples
 #' VisualizeNumber(4.0, display = "Rectangle", text.above = "Above", text.above.outside = TRUE)
@@ -264,7 +265,7 @@ VisualizeNumber <- function(x,
     {
         value <- if (display == "icon") 1.0 else x
         if (!is.numeric(value))
-            stop("Input value for pictographs cannot be non-numeric.")
+            StopForUserError("Input value for pictographs cannot be non-numeric.")
         if (display %in% c("icon", "pictograph - single"))
             total.icons <- 1.0
         if (display == "pictograph - single")
@@ -272,14 +273,14 @@ VisualizeNumber <- function(x,
             if (is.null(minimum.value) || !is.finite(minimum.value))
                 minimum.value <- 0.0
             if (maximum.value <= minimum.value)
-                stop("'Maximum value' (", maximum.value, ") must be greater than the ",
-                     "'Minimum value' (", minimum.value, ").")
+                StopForUserError("'Maximum value' (", maximum.value, ") must be greater than the ",
+                                 "'Minimum value' (", minimum.value, ").")
             value <- (x - minimum.value)/(maximum.value - minimum.value)
             if (value > 1)
-                stop("Input data cannot be greater 'Maximum value'. ",
-                     "Change 'Display' to 'Pictograph (repeated icons)' to show more than 1 icon.\n")
+                StopForUserError("Input data cannot be greater 'Maximum value'. ",
+                                 "Change 'Display' to 'Pictograph (repeated icons)' to show more than 1 icon.\n")
             if (value < 0)
-                stop("Input data cannot be smaller than 'Minimum value'.")
+                StopForUserError("Input data cannot be smaller than 'Minimum value'.")
             maximum.value <- 1.0
         }
         if (label.data.position %in% c("Above icons", "Below icons"))
@@ -327,7 +328,7 @@ VisualizeNumber <- function(x,
     if (display %in% c("donut", "gauge", "bar"))
     {
         if (!is.numeric(x) || !is.finite(x))
-            stop("Input data is non-numeric")
+            StopForUserError("Input data is non-numeric")
         if (!any(nzchar(base.color)))
             base.color <- rgb(230, 230, 230, maxColorValue = 255)
         if (is.na(maximum.value))
@@ -335,15 +336,15 @@ VisualizeNumber <- function(x,
         if (display == "donut")
             minimum.value <- 0.0
         if (maximum.value <= minimum.value)
-            stop("'Maximum value' (", maximum.value, ") must be greater than the 'Minimum value' (",
-                 minimum.value, ").")
+            StopForUserError("'Maximum value' (", maximum.value, ") must be greater than the 'Minimum value' (",
+                             minimum.value, ").")
         prop <- (x - minimum.value)/(maximum.value - minimum.value)
         if (prop > 1)
-            stop("Input data cannot be greater than 'Maximum value'.")
+            StopForUserError("Input data cannot be greater than 'Maximum value'.")
         if (prop < 0 && display == "donut")
-            stop("Input data cannot be smaller than zero.")
+            StopForUserError("Input data cannot be smaller than zero.")
         if (prop < 0 && display == "gauge")
-            stop("Input data cannot be smaller than 'Minimum value'.")
+            StopForUserError("Input data cannot be smaller than 'Minimum value'.")
     }
 
     if (display == "donut")
@@ -557,4 +558,3 @@ isTextInside <- function(text, outside)
         return(FALSE)
     return(TRUE)
 }
-

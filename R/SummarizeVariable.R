@@ -7,18 +7,18 @@
 #' @param category A comma-seperated list of the name or indices of the categories to include for 'Percentage'.
 #' @importFrom flipStatistics Mean WeightedTable
 #' @importFrom flipTransformations AsNumeric TextAsVector
-#' @importFrom flipU ConvertCommaSeparatedStringToVector
+#' @importFrom flipU ConvertCommaSeparatedStringToVector StopForUserError
 #' @importFrom verbs Sum
 #' @export
 SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], weights = NULL, subset = NULL, category = NULL)
 {
     if (!is.null(weights) && length(weights) > 1 && length(weights) != length(x))
-        stop("Weights should be the same length as the input variable")
+        StopForUserError("Weights should be the same length as the input variable")
 
     if (!is.null(subset) && length(subset) > 1)
     {
         if (length(subset) != length(x))
-           stop("Filters should have the same length as the input variable")
+           StopForUserError("Filters should have the same length as the input variable")
         x <- x[subset]
         if (!is.null(weights))
             weights <- weights[subset]
@@ -73,7 +73,7 @@ SummarizeVariable <- function(x, type = c("Average", "Sum", "Percentage")[1], we
 
     category.names <- levels(as.factor(x)) # only interested in labels so don't need to worry about values
     if (!any(nzchar(category)))
-        stop("Select one or more categories from \"", paste(category.names, collapse = "\", \""), "\".")
+        StopForUserError("Select one or more categories from \"", paste(category.names, collapse = "\", \""), "\".")
     category.selected <- ConvertCommaSeparatedStringToVector(as.character(category), text.qualifier = "\"")
     ind.not.selected <- which(!category.selected %in% category.names)
     if (length(ind.not.selected) > 0 && any(grepl(",", category.names, fixed = TRUE)))

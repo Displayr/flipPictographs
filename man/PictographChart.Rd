@@ -164,25 +164,11 @@ PictoStdChart(...)
 
 \item{label.pad}{Numeric specifying padding around the labels. Alternatively, the user can individually specify \code{label.left.pad} (horizontal space between left row label and icons), \code{label.right.pad} (horizontal space between right row label and icons).}
 
-\item{label.left.pad}{Horizontal spacing between row labels and icons.}
+\item{label.left.pad, label.right.pad}{Horizontal spacing between row labels and icons.}
 
-\item{label.right.pad}{Horizontal spacing between row labels and icons.}
+\item{label.left.align.horizontal, label.right.align.horizontal, label.top.align.horizontal, label.bottom.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
 
-\item{label.bottom.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
-
-\item{label.left.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
-
-\item{label.right.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
-
-\item{label.top.align.horizontal}{Horizontal alignment of row and column labels. One of \code{"left", "right"} or \code{"center"}.}
-
-\item{label.left.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
-
-\item{label.top.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
-
-\item{label.right.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
-
-\item{label.bottom.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
+\item{label.left.align.vertical, label.right.align.vertical, label.top.align.vertical, label.bottom.align.vertical}{Vertical alignment of row and column labels. One of \code{"top", "bottom"} or \code{"center"}.}
 
 \item{width.height.ratio}{Width-to-height ratio used to adjust row heights and column widths so they match the aspect ratio of the icon. Mis-specfication does not distort icon, but graphic will have extra spacing. When set to zero, row.height and column.width are unchanged, otherwise initial values are decreased to match \code{width.height.ratio}.}
 
@@ -194,29 +180,11 @@ PictoStdChart(...)
 
 \item{label.font.color}{Colour of labels. This can be a string or a 6-digit hex code.}
 
-\item{label.left.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+\item{label.left.font.color, label.right.font.color, label.top.font.color, label.bottom.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
 
-\item{label.right.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
+\item{label.left.font.size, label.right.font.size, label.top.font.size, label.bottom.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
 
-\item{label.top.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
-
-\item{label.bottom.font.color}{Font color of row/column labels which overrides the global \code{label.font.color} setting.}
-
-\item{label.left.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
-
-\item{label.top.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
-
-\item{label.right.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
-
-\item{label.bottom.font.size}{Font size of row/column labels which overrides the global \code{label.font.size} setting.}
-
-\item{label.left.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
-
-\item{label.top.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
-
-\item{label.bottom.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
-
-\item{label.right.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
+\item{label.left.font.weight, label.right.font.weight, label.top.font.weight, label.bottom.font.weight}{Font weight of row/column labels which overrides the global \code{label.font.weight} setting.}
 
 \item{show.label.data}{Boolean indicating whether or not to show data labels.}
 
