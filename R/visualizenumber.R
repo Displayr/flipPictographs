@@ -186,17 +186,8 @@ VisualizeNumber <- function(x,
     # Snapshot the input value before any normalisation (e.g. the percentage
     # rescaling of x below) so it can be exposed unchanged as the chart's data.
     chart.data <- x
-
-    # Attaches the visualized value as ChartData and the title (text.above) as
-    # ChartLabels$ChartTitle, so consumers can read the value and label it.
-    # Applied to whichever widget this function returns.
-    addChartAttributes <- function(widget)
-    {
-        attr(widget, "ChartData") <- chart.data
-        if (any(nzchar(text.above)))
-            attr(widget, "ChartLabels") <- list(ChartTitle = text.above)
-        widget
-    }
+    # Title to expose as the chart's data label, or NULL when no title is shown.
+    chart.labels <- if (any(nzchar(text.above))) list(ChartTitle = text.above) else NULL
 
     display <- switch(tolower(display), oval = "circle", circle = "circle", "number in an oval" = "circle",
                        rectangle = "rectangle", square = "rectangle", "number in a rectangle" = "rectangle",
@@ -314,7 +305,7 @@ VisualizeNumber <- function(x,
         }
         if (label.data.position == "None")
             label.str <- ""
-        return(addChartAttributes(iconsWithText(value, fill.icon.color = fill.color,
+        picto <- iconsWithText(value, fill.icon.color = fill.color,
             base.icon.color = base.color, maximum.value = maximum.value,
             total.icons = total.icons, ..., # other icon parameters?
             text.overlay = label.str, text.overlay.halign = tolower(label.data.halign),
@@ -337,7 +328,10 @@ VisualizeNumber <- function(x,
             text.above.font.weight = tolower(text.above.font.weight),
             background.color = if (background.opacity > 0) background.color else "transparent",
             margin.top = margin.top, margin.right = margin.right,
-            margin.bottom = margin.bottom, margin.left = margin.left)))
+            margin.bottom = margin.bottom, margin.left = margin.left)
+        attr(picto, "ChartData") <- chart.data
+        attr(picto, "ChartLabels") <- chart.labels
+        return(picto)
     }
 
     if (display %in% c("donut", "gauge", "bar"))
@@ -505,7 +499,9 @@ VisualizeNumber <- function(x,
     p$sizingPolicy$browser$padding <- 0
     class(p) <- c(class(p), "visualization-selector")
     attr(p, "can-run-in-root-dom") <- TRUE
-    return(addChartAttributes(p))
+    attr(p, "ChartData") <- chart.data
+    attr(p, "ChartLabels") <- chart.labels
+    return(p)
 }
 
 setText <- function(text, yalign, xalign, font, font.weight,    # parameters always supplied
