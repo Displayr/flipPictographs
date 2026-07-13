@@ -76,3 +76,22 @@ test_that("VisualizeNumber with SelectEntry",
     expect_equal(attr(value, "format"), "%")
     expect_equal(value, 0.122449, check.attributes = FALSE, tol = 1e-3)
 })
+
+test_that("ChartData and ChartTitle exposed on output",
+{
+    # Main (non-icon) return path
+    res <- VisualizeNumber(0.4, maximum.value = 1.0, text.above = "My title")
+    expect_equal(as.numeric(attr(res, "ChartData")), 0.4)
+    expect_equal(attr(res, "ChartLabels")$ChartTitle, "My title")
+
+    # Icon/pictograph return path
+    res.icon <- VisualizeNumber(ParseText("40%"), display = "Pictograph (single icon)",
+                    label.data.number.type = "Percentage",
+                    maximum.value = ParseText("100%"), text.above = "Icon title")
+    expect_false(is.null(attr(res.icon, "ChartData")))
+    expect_equal(attr(res.icon, "ChartLabels")$ChartTitle, "Icon title")
+
+    # No ChartTitle exposed when text.above is empty (the default)
+    res.no.title <- VisualizeNumber(0.4, maximum.value = 1.0)
+    expect_null(attr(res.no.title, "ChartLabels")$ChartTitle)
+})

@@ -320,6 +320,10 @@ PictographChart <- function(x,
     }
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, column.names.to.remove)
 
+    # Cleaned data matrix the pictograph represents, captured before x is
+    # rescaled for icon rendering, so it can be exposed as the chart's data.
+    chart.data <- x
+
     # Data labels
     label.data.values <- unlist(x) * (1+(99*label.data.100prc))
     if (!customize.label.data && max(label.data.values) <= 1)
@@ -598,5 +602,7 @@ PictographChart <- function(x,
         if(is.numeric(json))
             f.mspace <- f.mspace + json
     }
-    return(graphic(json))
+    g <- graphic(json)
+    attr(g, "ChartData") <- chart.data
+    return(g)
 }

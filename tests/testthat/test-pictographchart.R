@@ -20,3 +20,9 @@ test_that("Wide pictograph", {
 #    expect_error(suppressWarnings(PictographChart(x2, mode="bar", hide.base.image=T, graphic.width.inch=244/72, graphic.height.inch=583/72,
 #                                 show.label.data=T, label.data.position="Next to bar")), "Window is too narrow.")
 })
+
+test_that("ChartData exposed, no ChartTitle", {
+    res <- PictographChart(x1, show.legend = TRUE)
+    expect_equal(as.numeric(attr(res, "ChartData")), as.numeric(x1))
+    expect_null(attr(res, "ChartLabels"))
+})
