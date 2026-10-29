@@ -27,12 +27,13 @@ test_that("SinglePicto accepts autosize parameter", {
 })
 
 test_that("SinglePicto custom icon", {
+    server <- localImageServer()
     expect_error( SinglePicto(48,
                               total.icons = 1,
                               maximum.value = 100,
                               width.height.ratio = 1.125,
-                              image = "http://docs.displayr.com/images/5/51/Female_Blue.svg",
-                              base.image = "http://docs.displayr.com/images/7/70/Female_Grey.svg",
+                              image = server$url("/Female_Blue.svg"),
+                              base.image = server$url("/Female_Grey.svg"),
                               is.custom.url = TRUE) , NA)
 })
 
